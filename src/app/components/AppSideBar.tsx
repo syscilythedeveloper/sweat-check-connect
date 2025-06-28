@@ -1,5 +1,15 @@
 import React from "react";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import {
+  UsersRound,
+  Home,
+  Inbox,
+  Search,
+  UserRound,
+  Medal,
+  Headphones,
+  NotebookPen,
+  BotMessageSquare,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -12,6 +22,7 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import ContactCard from "@/components/contactcard";
 import { Button } from "@/components/ui/button";
 
 // Menu items.
@@ -24,43 +35,54 @@ const items = [
   {
     title: "Profile",
     url: "/profile",
+    icon: UserRound,
+  },
+  {
+    title: "Messsages",
+    url: "/messages",
     icon: Inbox,
   },
   {
     title: "Challenges",
     url: "/challenges",
-    icon: Calendar,
+    icon: Medal,
   },
   {
     title: "Connections",
     url: "/connections",
-    icon: Search,
+    icon: UsersRound,
   },
 
   {
     title: "Shared Playlists",
     url: "/shared-playlists",
-    icon: Settings,
+    icon: Headphones,
   },
   {
     title: "Plans",
     url: "/plans",
-    icon: Settings,
+    icon: NotebookPen,
+  },
+  {
+    title: "Discover",
+    url: "/discover",
+    icon: Search,
   },
   {
     title: "AskAI",
     url: "/askai",
-    icon: Settings,
+    icon: BotMessageSquare,
   },
 ];
 
 const AppSideBar = () => {
   return (
-    <Sidebar>
+    <Sidebar className="bg-gray-100 ">
       <SidebarHeader>
-        <h1>Sweat Check Connect</h1>
+        <ContactCard />
       </SidebarHeader>
-      <SidebarContent>
+
+      <SidebarContent className="mt-4">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -80,7 +102,7 @@ const AppSideBar = () => {
         <SidebarGroup>
           <Button
             variant="secondary"
-            className="w-full bg-green-500 hover:bg-green-600 text-white"
+            className="w-full bg-green-500 hover:bg-green-600 text-white mt-30 border-1 border-green-600 shadow-lg"
           >
             Check In
           </Button>

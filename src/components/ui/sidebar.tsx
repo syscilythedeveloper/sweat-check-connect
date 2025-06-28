@@ -277,7 +277,6 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      {/* <PanelLeftIcon /> */}
       {open ? <ArrowBigLeftDash /> : <ArrowBigRightDash />}
 
       <span className="sr-only">Toggle Sidebar</span>
