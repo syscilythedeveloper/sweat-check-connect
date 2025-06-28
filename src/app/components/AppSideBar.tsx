@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
@@ -28,28 +28,28 @@ const items = [
   },
   {
     title: "Challenges",
-    url: "#",
+    url: "/challenges",
     icon: Calendar,
   },
   {
     title: "Connections",
-    url: "#",
+    url: "/connections",
     icon: Search,
   },
 
   {
     title: "Shared Playlists",
-    url: "#",
+    url: "/shared-playlists",
     icon: Settings,
   },
   {
     title: "Plans",
-    url: "#",
+    url: "/plans",
     icon: Settings,
   },
   {
     title: "AskAI",
-    url: "#",
+    url: "/askai",
     icon: Settings,
   },
 ];
