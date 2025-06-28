@@ -1,8 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💪 Sweat Check Connect
 
-## Getting Started
+**The ultimate fitness social media platform that connects you with your fitness community through challenges, accountability, and shared experiences.**
 
-First, run the development server:
+Sweat Check Connect is a comprehensive fitness social platform built with Next.js that helps users stay motivated, connected, and accountable on their fitness journey through social features, AI recommendations, and community challenges.
+
+## ✨ Features
+
+### 🏆 **Challenge System**
+
+- Create and join fitness challenges with friends and community
+- Track progress with real-time leaderboards
+- Set personal and group accountability goals
+- Share workout achievements and milestones
+
+### 👥 **Social Network**
+
+- Follow other fitness enthusiasts
+- Share your fitness journey with photos and updates
+- Connect with like-minded individuals
+- Build your fitness community
+
+### 🤖 **AI-Powered Recommendations**
+
+- Get personalized workout suggestions
+- Receive nutrition advice based on your goals
+- AI-driven fitness coaching and tips
+- Smart recommendations for optimal performance
+
+### 🎵 **Spotify Integration**
+
+- Share your workout playlists
+- Discover new music from the community
+- Sync your favorite tracks for motivation
+- Create collaborative workout playlists
+
+### 🍎 **Nutrition & Training Plans**
+
+- Share and discover meal plans
+- Exchange gym workout routines
+- Save favorite plans from other users
+- Track nutritional goals and progress
+
+### 📊 **Progress Tracking**
+
+- Visual progress charts and analytics
+- Workout history and statistics
+- Goal setting and achievement tracking
+- Performance insights and trends
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.0 or later
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/sweat-check-connect.git
+cd sweat-check-connect
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+3. Set up environment variables:
+
+```bash
+cp .env.example .env.local
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
@@ -14,23 +92,60 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: [Next.js 15](https://nextjs.org/) with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **UI Components**: Radix UI primitives
+- **Font**: Geist Sans & Geist Mono
+- **Icons**: Lucide React
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── components/        # Page-specific components
+│   ├── dashboard/         # Dashboard pages
+│   └── globals.css        # Global styles
+├── components/            # Reusable UI components
+│   └── ui/               # shadcn/ui components
+└── lib/                  # Utility functions
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎯 Roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [ ] **Phase 1**: Basic social features and user profiles
+- [ ] **Phase 2**: Challenge system implementation
+- [ ] **Phase 3**: AI recommendations integration
+- [ ] **Phase 4**: Spotify API integration
+- [ ] **Phase 5**: Advanced analytics and insights
+- [ ] **Phase 6**: Mobile app development
 
-## Deploy on Vercel
+## 🤝 Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+We welcome contributions! Please feel free to submit issues and pull requests.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Icons by [Lucide](https://lucide.dev/)
+- Fonts by [Vercel](https://vercel.com/font)
+
+---
+
+**Ready to start your fitness journey? Join Sweat Check Connect today! 💪**
