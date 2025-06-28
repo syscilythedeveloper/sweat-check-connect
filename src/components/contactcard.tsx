@@ -16,16 +16,13 @@ const ContactCard = () => {
           <Image
             src={contactInfo.Image}
             alt="User Avatar"
-            width={50}
-            height={50}
+            width={45}
+            height={45}
             className="rounded-full"
           />
           <div>
-            <Link
-              href={`/profile`}
-              className="text-lg font-semibold hover:underline"
-            >
-              <p className="mt-6 text-blue-500 font-medium max-w-[150px] truncate text-sm">
+            <Link href={`/profile`}>
+              <p className="mt-6 text-blue-500 font-medium max-w-[150px] truncate text-sm hover:text-purple-500 transition-colors duration-200">
                 @{contactInfo.username}
               </p>
             </Link>
