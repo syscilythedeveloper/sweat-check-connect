@@ -20,14 +20,16 @@ const ContactCard = () => {
             height={50}
             className="rounded-full"
           />
-          <Link
-            href={`/profile`}
-            className="text-lg font-semibold hover:underline"
-          >
-            <p className="mt-6 text-blue-500 font-medium max-w-[150px] truncate text-sm">
-              @{contactInfo.username}
-            </p>
-          </Link>
+          <div>
+            <Link
+              href={`/profile`}
+              className="text-lg font-semibold hover:underline"
+            >
+              <p className="mt-6 text-blue-500 font-medium max-w-[150px] truncate text-sm">
+                @{contactInfo.username}
+              </p>
+            </Link>
+          </div>
         </div>
         <div>
           <CardDescription className="mt-2 text-sm">

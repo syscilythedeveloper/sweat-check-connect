@@ -19,9 +19,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 import ContactCard from "@/components/contactcard";
 import { Button } from "@/components/ui/button";
 
@@ -81,8 +81,9 @@ const AppSideBar = () => {
       <SidebarHeader>
         <ContactCard />
       </SidebarHeader>
+      <Separator className="my-8" />
 
-      <SidebarContent className="mt-4">
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -99,18 +100,16 @@ const AppSideBar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <Separator className="mt-20 mb-2" />
         <SidebarGroup>
           <Button
             variant="secondary"
-            className="w-full bg-green-500 hover:bg-green-600 text-white mt-30 border-1 border-green-600 shadow-lg"
+            className="w-full border-1 "
           >
             Check In
           </Button>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <p>© 2023 Sweat Check Connect</p>
-      </SidebarFooter>
     </Sidebar>
   );
 };
