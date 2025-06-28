@@ -80,7 +80,7 @@ const AppSideBar = () => {
         <SidebarGroup>
           <Button
             variant="secondary"
-            className="w-full"
+            className="w-full bg-green-500 hover:bg-green-600 text-white"
           >
             Check In
           </Button>
