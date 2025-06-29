@@ -22,7 +22,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import ContactCard from "@/components/contactcard";
+import ContactCard from "@/components/ContactCard";
 import { Button } from "@/components/ui/button";
 
 // Menu items.

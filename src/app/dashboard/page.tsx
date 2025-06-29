@@ -1,11 +1,11 @@
 import React from "react";
 
+import Feed from "@/components/Feed";
+
 const page = () => {
   return (
     <div className="flex h-screen">
-      <div className="flex-1 p-4">
-        <p>This is the dashboard</p>
-      </div>
+      <Feed />
     </div>
   );
 };
