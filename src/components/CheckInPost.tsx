@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Heart, MessageCircle, MapPin } from "lucide-react";
-import { Post } from "@/types/post"; // Assuming you have a Post type defined in a types file
+import { Post } from "@/types/post";
+import Link from "next/link";
 
 interface CheckInPostProps {
-  post: Post; // This says: "CheckInPost expects ONE prop called 'post' that contains a Post object"
+  post: Post;
 }
 
 const CheckInPost = ({ post }: CheckInPostProps) => {
@@ -29,14 +30,18 @@ const CheckInPost = ({ post }: CheckInPostProps) => {
             />
 
             <div>
-              <p className="font-semibold text-sm">{post.user.username}</p>
+              <Link href={`/profile/${post.user.username}`}>
+                <p className="font-semibold text-sm hover:text-blue-500">
+                  @{post.user.username}
+                </p>
+              </Link>
               <div className="flex items-center text-xs text-muted-foreground">
                 <MapPin className="w-3 h-3 mr-1" />
                 {post.location} • {post.timestamp}
               </div>
             </div>
           </div>
-          <div className="w-28 bg-primary text-primary-foreground text-xs backdrop-blur-sm shadow-lg rounded-lg align-text-right">
+          <div className="w-28 bg-secondary text-primary-foreground text-xs backdrop-blur-sm shadow-lg rounded-lg align-text-right">
             {post.focus}
           </div>
         </div>
