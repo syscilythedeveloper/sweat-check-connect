@@ -3,29 +3,20 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Heart, MessageCircle, MapPin } from "lucide-react";
+import { Post } from "@/types/post"; // Assuming you have a Post type defined in a types file
 
-const post = {
-  id: 1,
-  title: "gym_checkin",
-  type: "gym_checkin",
-  user: {
-    username: "sys_lifts",
-    profilePhoto: "/images/user.png",
-  },
-  timestamp: "2h",
-  image: "/images/workoutpost.jpeg",
-  caption:
-    "Crushed leg day! 💪 New PR on squats - 185lbs x 5 reps. Feeling stronger every week!",
-  location: "Gold's Gym Downtown",
-  likes: 24,
-  comments: 8,
-  liked: false,
-};
+interface CheckInPostProps {
+  post: Post; // This says: "CheckInPost expects ONE prop called 'post' that contains a Post object"
+}
 
-const CheckInPost = () => {
+const CheckInPost = ({ post }: CheckInPostProps) => {
+  if (!post || !post.user) {
+    return <div>Loading...</div>;
+  }
   return (
     <Card className="w-full max-w-lg mx-auto">
       {/* Header */}
+
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -45,7 +36,7 @@ const CheckInPost = () => {
             </div>
           </div>
           <div className="w-28 bg-primary text-primary-foreground text-xs backdrop-blur-sm shadow-lg rounded-lg align-text-right">
-            💪 Gym Check-in
+            {post.focus}
           </div>
         </div>
       </CardHeader>
