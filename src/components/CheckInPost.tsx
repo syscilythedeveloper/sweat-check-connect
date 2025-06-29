@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Heart, MessageCircle, MapPin } from "lucide-react";
+import { Heart, MessageCircle, Repeat2, MapPin } from "lucide-react";
 import { Post } from "@/types/post";
 import Link from "next/link";
 
@@ -93,6 +93,13 @@ const CheckInPost = ({ post }: CheckInPostProps) => {
             >
               <MessageCircle className="w-4 h-4 mr-1" />
               {post.comments}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2"
+            >
+              <Repeat2 className="w-4 h-4 mr-1" />
             </Button>
           </div>
         </div>
