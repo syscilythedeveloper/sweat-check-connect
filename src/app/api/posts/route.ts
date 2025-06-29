@@ -8,6 +8,7 @@ const posts = [
     id: 1,
     title: "gym_checkin",
     type: "gym_checkin",
+    mediaType: "image",
     user: {
       username: "sys_lifts",
       profilePhoto: "/images/user.png",
@@ -26,12 +27,13 @@ const posts = [
     id: 2,
     title: "morning_run",
     type: "cardio_session",
+    mediaType: "video",
     user: {
       username: "runner_jane",
       profilePhoto: "/images/user2.png",
     },
     timestamp: "4h",
-    image: "/images/morning_run.jpeg",
+    image: "/videos/foodvid.mov",
     focus: "Cardio, Endurance",
     caption:
       "Beautiful sunrise run along the waterfront! 🌅 5 miles in 42 minutes. Nothing beats starting the day with fresh air and endorphins!",
@@ -44,9 +46,10 @@ const posts = [
     id: 3,
     title: "yoga_flow",
     type: "yoga_session",
+    mediaType: "image",
     user: {
       username: "zen_master_mike",
-      profilePhoto: "/images/user3.png",
+      profilePhoto: "/images/foodpost.jpeg",
     },
     timestamp: "6h",
     image: "/images/yoga_pose.jpeg",
@@ -62,6 +65,7 @@ const posts = [
     id: 4,
     title: "strength_training",
     type: "gym_checkin",
+    mediaType: "image",
     user: {
       username: "iron_woman_23",
       profilePhoto: "/images/user4.png",
@@ -80,6 +84,7 @@ const posts = [
     id: 5,
     title: "swimming_laps",
     type: "cardio_session",
+    mediaType: "video",
     user: {
       username: "pool_shark_sam",
       profilePhoto: "/images/user5.png",
@@ -98,6 +103,7 @@ const posts = [
     id: 6,
     title: "cycling_adventure",
     type: "cardio_session",
+    mediaType: "video",
     user: {
       username: "bike_life_brad",
       profilePhoto: "/images/user6.png",
@@ -116,6 +122,7 @@ const posts = [
     id: 7,
     title: "hiit_workout",
     type: "home_workout",
+    mediaType: "image",
     user: {
       username: "fit_at_home_sarah",
       profilePhoto: "/images/user7.png",
@@ -134,6 +141,7 @@ const posts = [
     id: 8,
     title: "rock_climbing",
     type: "adventure_sport",
+    mediaType: "image",
     user: {
       username: "vertical_limit_vic",
       profilePhoto: "/images/user8.png",
@@ -152,6 +160,7 @@ const posts = [
     id: 9,
     title: "boxing_training",
     type: "combat_sport",
+    mediaType: "video",
     user: {
       username: "knockout_kelly",
       profilePhoto: "/images/user9.png",
@@ -170,6 +179,7 @@ const posts = [
     id: 10,
     title: "pilates_class",
     type: "studio_class",
+    mediaType: "image",
     user: {
       username: "core_queen_emma",
       profilePhoto: "/images/user10.png",

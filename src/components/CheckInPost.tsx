@@ -25,8 +25,9 @@ const CheckInPost = ({ post }: CheckInPostProps) => {
               alt="User Avatar"
               width={40}
               height={40}
-              className="rounded-full"
+              className="rounded-full object-cover aspect-square"
             />
+
             <div>
               <p className="font-semibold text-sm">{post.user.username}</p>
               <div className="flex items-center text-xs text-muted-foreground">
@@ -42,16 +43,24 @@ const CheckInPost = ({ post }: CheckInPostProps) => {
       </CardHeader>
 
       <CardContent className="p-0 border-1 border-gray-200 rounded-lg">
-        {/* Image Container */}
         <div className="relative ">
-          <Image
-            src={post.image}
-            alt="Gym post"
-            width={400}
-            height={400}
-            loading="lazy"
-            className="w-full aspect-[4/3] object-contain shadow-lg rounded-lg"
-          />
+          {post.mediaType === "video" ? (
+            <video
+              src={post.image} // or post.videoUrl
+              controls
+              className="w-full aspect-[4/3] object-contain shadow-lg rounded-lg"
+              // Optional thumbnail
+            />
+          ) : (
+            <Image
+              src={post.image}
+              alt="Gym post"
+              width={400}
+              height={400}
+              loading="lazy"
+              className="w-full aspect-[4/3] object-contain shadow-lg rounded-lg"
+            />
+          )}
         </div>
 
         {/* Caption and Actions */}
