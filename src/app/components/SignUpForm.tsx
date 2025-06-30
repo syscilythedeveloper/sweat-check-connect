@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const LoginForm = () => {
+const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,7 +24,7 @@ const LoginForm = () => {
             Welcome Back
           </CardTitle>
           <p className="text-sm text-muted-foreground text-center">
-            Sign in to your Sweat Check Connect account
+            Sign up for your Sweat Check Connect account
           </p>
         </CardHeader>
 
@@ -61,18 +61,18 @@ const LoginForm = () => {
               type="submit"
               className="w-full"
             >
-              Login
+              Sign Up
             </Button>
 
             <div className="text-center text-sm">
               <span className="text-muted-foreground">
-                Don&apos;t have an account?{" "}
+                Already have an Account?{" "}
               </span>
               <Link
-                href="/signup"
+                href="/login"
                 className="text-primary hover:underline font-medium"
               >
-                Sign up
+                Log in
               </Link>
             </div>
           </form>
@@ -82,4 +82,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignUpForm;
