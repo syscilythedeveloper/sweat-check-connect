@@ -53,6 +53,7 @@ const CheckInPost = ({ post }: CheckInPostProps) => {
             <video
               src={post.image} // or post.videoUrl
               controls
+              loop
               className="w-full aspect-[4/3] object-contain shadow-lg rounded-lg"
               // Optional thumbnail
             />
