@@ -10,7 +10,7 @@ export default function Home() {
         Your hub for fitness challenges, shared playlists, and more!
       </p>
       <Image
-        src="/images/fitness-logo.png"
+        src="/images/workoutpost.jpeg"
         alt="Fitness Logo"
         width={200}
         height={200}
