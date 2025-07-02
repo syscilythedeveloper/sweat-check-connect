@@ -11,9 +11,25 @@ const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const createUser = async (email: string, password: string) => {
+    console.log("Create User Function called");
+
+    const response = await fetch("/api/sign-up", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    return response.json();
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", { email, password });
+    //if user already exists, return error
+
+    console.log("Sign Up attempt:", { email, password });
+    createUser(email, password);
   };
 
   return (

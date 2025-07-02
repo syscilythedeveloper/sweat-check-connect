@@ -55,12 +55,13 @@ const CheckInPost = ({ post }: CheckInPostProps) => {
               controls
               loop
               className="w-full aspect-[4/3] object-contain shadow-lg rounded-lg"
+              title={post.caption}
               // Optional thumbnail
             />
           ) : (
             <Image
               src={post.image}
-              alt="Gym post"
+              alt={post.caption}
               width={400}
               height={400}
               loading="lazy"
