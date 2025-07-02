@@ -1,3 +1,10 @@
+//[]need to handle: when user already exists, return error
+//[]need to handle: when user is created, return success message
+//[]need to handle: when user is created, redirect to login page
+//[]need to handle: when user is created, store user data in local storage or session
+//[]need to handle: when user is created, show success message
+//[]need to handle: after email and password are set, show another form to set first name, last name, email address and profile photo
+
 "use client";
 
 import React, { useState } from "react";
@@ -12,7 +19,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
 
   const createUser = async (email: string, password: string) => {
-    console.log("Create User Function called");
+    console.log("Create User Function called", email, password);
 
     const response = await fetch("/api/sign-up", {
       method: "POST",
@@ -21,15 +28,35 @@ const SignUpForm = () => {
       },
       body: JSON.stringify({ email, password }),
     });
+
+    // Log the response for debugging
+    console.log("Response status:", response.status);
+    console.log("Response headers:", response.headers);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error creating user:", errorData);
+      throw new Error(errorData.error || "Failed to create user");
+    }
     return response.json();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     //if user already exists, return error
-
-    console.log("Sign Up attempt:", { email, password });
-    createUser(email, password);
+    createUser(email, password)
+      .then((data) => {
+        console.log("User created successfully:", data);
+        // Store user data in local storage or session
+        localStorage.setItem("user", JSON.stringify(data.user));
+        // Redirect to login page
+        window.location.href = "/login";
+      })
+      .catch((error) => {
+        console.error("Error creating user:", error);
+      });
+    setEmail("");
+    setPassword("");
   };
 
   return (
