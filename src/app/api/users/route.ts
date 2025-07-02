@@ -1,30 +1,8 @@
 import bcrypt from "bcrypt";
-//import postgres from "postgres";
+
 import { prisma } from "../../../../prisma/utils/prisma";
 
-//const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
-
 async function createUser(userData: { email: string; password: string }) {
-  // await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  // await sql`
-  //   CREATE TABLE IF NOT EXISTS users (
-  //     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  //     first_name VARCHAR(255),
-  //     last_name VARCHAR(255),
-  //     email TEXT NOT NULL UNIQUE,
-  //     password TEXT NOT NULL,
-  //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  //   );
-  // `;
-  // const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-  // const insertedUser = await sql`
-  //   INSERT INTO users (first_name, last_name, email, password)
-  //   VALUES ( NULL, NULL, ${userData.email}, ${hashedPassword})
-  //   RETURNING id, email, created_at;
-  // `;
-
-  // return insertedUser[0]; // Return the first inserted user
   const hashedPassword = await bcrypt.hash(userData.password, 10);
   console.log("create user function called with data:", userData);
 
@@ -63,5 +41,29 @@ export async function POST(request: Request) {
       },
       { status: 500 }
     );
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get("email");
+    console.log("Fetching users with email:", email);
+    const user = await prisma.user.findUnique({
+      where: {
+        email: `${email}`,
+      },
+    });
+
+    console.log("User found:", user ? "Yes" : "No");
+
+    // Return true if user exists, false if not
+    return Response.json({
+      exists: user !== null,
+      ...(user && { user: { id: user.id, email: user.email } }), // Optionally include basic user info
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return Response.json({ error: "Failed to fetch users" }, { status: 500 });
   }
 }

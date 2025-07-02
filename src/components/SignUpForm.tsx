@@ -17,28 +17,59 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [signUpError, setSignUpError] = useState("");
+  const [signUpSuccess, setSignUpSuccess] = useState("");
+
+  const validateNewUser = async (email: string) => {
+    console.log("Checking for user", email);
+    const response = await fetch(
+      `/api/users?email=${encodeURIComponent(email)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.ok) {
+      const data = await response.json(); // ✅ Parse the JSON
+      console.log("Response from getUser:", data.exists);
+      return data.exists; // ✅ Return the actual data
+    } else {
+      throw new Error("Failed to check user existence");
+    }
+  };
 
   const createUser = async (email: string, password: string) => {
+    const userExists = await validateNewUser(email);
+    if (userExists) {
+      setSignUpError("User already exists. Please log in.");
+      return;
+    } else setSignUpError("");
     console.log("Create User Function called", email, password);
+    try {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      setSignUpSuccess("Successful Sign Up!");
 
-    const response = await fetch("/api/sign-up", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    // Log the response for debugging
-    console.log("Response status:", response.status);
-    console.log("Response headers:", response.headers);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Error creating user:", errorData);
-      throw new Error(errorData.error || "Failed to create user");
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error creating user:", errorData);
+        throw new Error(errorData.error || "Failed to create user");
+      }
+      setEmail("");
+      setPassword("");
+      return response.json();
+    } catch (error) {
+      console.error("Error in createUser:", error);
+      setSignUpError("Failed to create user. Please try again.");
+      return;
     }
-    return response.json();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -55,8 +86,6 @@ const SignUpForm = () => {
       .catch((error) => {
         console.error("Error creating user:", error);
       });
-    setEmail("");
-    setPassword("");
   };
 
   return (
@@ -78,6 +107,7 @@ const SignUpForm = () => {
           >
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
+
               <Input
                 id="email"
                 type="email"
@@ -87,6 +117,12 @@ const SignUpForm = () => {
                 required
               />
             </div>
+            {signUpError && (
+              <p className="text-red-500 text-sm">{signUpError}</p>
+            )}
+            {signUpSuccess && (
+              <p className="text-green-500 text-sm">{signUpSuccess}</p>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
