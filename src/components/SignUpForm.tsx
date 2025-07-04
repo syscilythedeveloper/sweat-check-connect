@@ -19,6 +19,8 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [signUpError, setSignUpError] = useState("");
   const [signUpSuccess, setSignUpSuccess] = useState("");
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateNewUser = async (email: string) => {
     console.log("Checking for user", email);
@@ -40,12 +42,44 @@ const SignUpForm = () => {
     }
   };
 
+  const validatePassword = (password: string) => {
+    const errors: string[] = [];
+
+    if (password.length < 8) {
+      errors.push("Password must be at least 8 characters long.");
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push("Password must contain at least one uppercase letter.");
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push("Password must contain at least one lowercase letter.");
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push("Password must contain at least one number.");
+    }
+    if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
+      errors.push("Password must contain at least one special character.");
+    }
+
+    setPasswordErrors(errors);
+    return errors.length === 0;
+  };
+
   const createUser = async (email: string, password: string) => {
+    setSignUpError("");
+    setSignUpSuccess("");
+    setPasswordErrors([]);
     const userExists = await validateNewUser(email);
+    const isValidPassword = validatePassword(password);
+
     if (userExists) {
       setSignUpError("User already exists. Please log in.");
       return;
-    } else setSignUpError("");
+    }
+
+    if (!isValidPassword) {
+      return;
+    } else setPasswordErrors([]);
     console.log("Create User Function called", email, password);
     try {
       const response = await fetch("/api/users", {
@@ -56,14 +90,15 @@ const SignUpForm = () => {
         body: JSON.stringify({ email, password }),
       });
       setSignUpSuccess("Successful Sign Up!");
+      setEmail("");
+      setPassword("");
 
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error creating user:", errorData);
         throw new Error(errorData.error || "Failed to create user");
       }
-      setEmail("");
-      setPassword("");
+
       return response.json();
     } catch (error) {
       console.error("Error in createUser:", error);
@@ -74,18 +109,9 @@ const SignUpForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    //if user already exists, return error
-    createUser(email, password)
-      .then((data) => {
-        console.log("User created successfully:", data);
-        // Store user data in local storage or session
-        localStorage.setItem("user", JSON.stringify(data.user));
-        // Redirect to login page
-        window.location.href = "/login";
-      })
-      .catch((error) => {
-        console.error("Error creating user:", error);
-      });
+    setIsLoading(true);
+    createUser(email, password);
+    setIsLoading(false);
   };
 
   return (
@@ -113,7 +139,11 @@ const SignUpForm = () => {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setSignUpError("");
+                  setSignUpSuccess("");
+                }}
                 required
               />
             </div>
@@ -135,12 +165,20 @@ const SignUpForm = () => {
                 required
               />
             </div>
+            {passwordErrors.length > 0 && (
+              <ul className="text-red-500 text-sm list-disc ml-5">
+                {passwordErrors.map((err, idx) => (
+                  <li key={idx}>{err}</li>
+                ))}
+              </ul>
+            )}
 
             <Button
               type="submit"
               className="w-full"
+              disabled={isLoading}
             >
-              Sign Up
+              {isLoading ? "Signing Up..." : "Sign Up"}
             </Button>
 
             <div className="text-center text-sm">
