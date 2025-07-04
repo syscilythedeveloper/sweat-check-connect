@@ -17,7 +17,7 @@ import {
   validatePassword,
   validateNewUser,
   saveUser,
-} from "./SignUpForm.utils";
+} from "./utils/userValidation";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");

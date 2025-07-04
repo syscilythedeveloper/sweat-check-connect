@@ -2,7 +2,8 @@ import {
   validatePassword,
   validateNewUser,
   saveUser,
-} from "../SignUpForm.utils";
+  validateLogin,
+} from "../utils/userValidation";
 
 beforeEach(() => {
   global.fetch = jest.fn();
@@ -87,5 +88,25 @@ describe("saveUser", () => {
     await expect(saveUser("test@example.com", "ValidPass1!")).rejects.toThrow(
       "Email already exists"
     );
+  });
+});
+
+describe("User Validation", () => {
+  it("validates user and saves user successfully", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({}),
+    });
+    const result = await validateLogin("test@example.com", "ValidPass1!");
+    expect(result).toEqual({ success: true });
+  });
+
+  it("returns error if user credentials are invalid", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Invalid credentials" }),
+    });
+    const result = await validateLogin("test@example.com", "InvalidPass!");
+    expect(result).toEqual({ error: "Invalid credentials" });
   });
 });

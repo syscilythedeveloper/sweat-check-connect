@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import SignUpForm from "../SignUpForm";
-import * as utils from "../SignUpForm.utils";
+import * as utils from "../utils/userValidation";
 
 // Mock the utility functions
-jest.mock("../SignUpForm.utils");
+jest.mock("../utils/userValidation");
 
 describe("SignUpForm UI", () => {
   beforeEach(() => {

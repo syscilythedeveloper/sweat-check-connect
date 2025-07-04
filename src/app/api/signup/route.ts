@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 
 import { prisma } from "../../../../prisma/utils/prisma";
 
-async function createUser(userData: { email: string; password: string }) {
+async function addUser(userData: { email: string; password: string }) {
   const hashedPassword = await bcrypt.hash(userData.password, 10);
   console.log("create user function called with data:", userData);
 
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const { email, password } = await request.json();
     console.log("request data:", { email, password });
 
-    const result = await createUser({ email, password });
+    const result = await addUser({ email, password });
 
     return Response.json({
       message: "User created successfully",
@@ -48,6 +48,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get("email");
+
     console.log("Fetching users with email:", email);
     const user = await prisma.user.findUnique({
       where: {
