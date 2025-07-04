@@ -28,3 +28,22 @@ export function validateNewUser(email: string): Promise<boolean> {
     })
     .then((data) => data.exists);
 }
+export async function saveUser(
+  email: string,
+  password: string
+): Promise<Response> {
+  const response = await fetch("/api/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Failed to create user");
+  }
+
+  return response.json();
+}

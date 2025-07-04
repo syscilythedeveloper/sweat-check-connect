@@ -1,4 +1,8 @@
-import { validatePassword, validateNewUser } from "../SignUpForm.utils";
+import {
+  validatePassword,
+  validateNewUser,
+  saveUser,
+} from "../SignUpForm.utils";
 
 beforeEach(() => {
   global.fetch = jest.fn();
@@ -7,7 +11,7 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-describe("validatePassword", () => {
+describe("validate Password", () => {
   it("returns all errors for a bad password", () => {
     expect(validatePassword("abc")).toEqual([
       "Password must be at least 8 characters long.",
@@ -26,13 +30,18 @@ describe("validatePassword", () => {
       "Password must contain at least one lowercase letter.",
     ]);
   });
+  it("returns errors for missing special character", () => {
+    expect(validatePassword("ValidPass12")).toEqual([
+      "Password must contain at least one special character.",
+    ]);
+  });
 
   it("returns no errors for a valid password", () => {
     expect(validatePassword("ValidPass1!")).toEqual([]);
   });
 });
 
-describe("validate user", () => {
+describe("Validate User", () => {
   it("returns true if user exists", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
@@ -56,6 +65,27 @@ describe("validate user", () => {
     });
     await expect(validateNewUser("fail@example.com")).rejects.toThrow(
       "Failed to check user existence"
+    );
+  });
+});
+
+describe("saveUser", () => {
+  it("returns data on successful user creation", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ user: { id: "1", email: "test@example.com" } }),
+    });
+    const result = await saveUser("test@example.com", "ValidPass1!");
+    expect(result).toEqual({ user: { id: "1", email: "test@example.com" } });
+  });
+
+  it("throws error if response is not ok", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Email already exists" }),
+    });
+    await expect(saveUser("test@example.com", "ValidPass1!")).rejects.toThrow(
+      "Email already exists"
     );
   });
 });

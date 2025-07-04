@@ -13,7 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { validatePassword, validateNewUser } from "./SignUpForm.utils";
+import {
+  validatePassword,
+  validateNewUser,
+  saveUser,
+} from "./SignUpForm.utils";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -22,49 +26,6 @@ const SignUpForm = () => {
   const [signUpSuccess, setSignUpSuccess] = useState("");
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  // const validateNewUser = async (email: string) => {
-  //   console.log("Checking for user", email);
-  //   const response = await fetch(
-  //     `/api/users?email=${encodeURIComponent(email)}`,
-  //     {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   );
-  //   if (response.ok) {
-  //     const data = await response.json();
-  //     console.log("Response from getUser:", data.exists);
-  //     return data.exists;
-  //   } else {
-  //     throw new Error("Failed to check user existence");
-  //   }
-  // };
-
-  // const validatePassword = (password: string) => {
-  //   const errors: string[] = [];
-
-  //   if (password.length < 8) {
-  //     errors.push("Password must be at least 8 characters long.");
-  //   }
-  //   if (!/[A-Z]/.test(password)) {
-  //     errors.push("Password must contain at least one uppercase letter.");
-  //   }
-  //   if (!/[a-z]/.test(password)) {
-  //     errors.push("Password must contain at least one lowercase letter.");
-  //   }
-  //   if (!/[0-9]/.test(password)) {
-  //     errors.push("Password must contain at least one number.");
-  //   }
-  //   if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
-  //     errors.push("Password must contain at least one special character.");
-  //   }
-
-  //   setPasswordErrors(errors);
-
-  // };
 
   const createUser = async (email: string, password: string) => {
     setSignUpError("");
@@ -82,27 +43,11 @@ const SignUpForm = () => {
     if (errors.length > 0) {
       return;
     }
-
-    console.log("Create User Function called", email, password);
     try {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      await saveUser(email, password);
       setSignUpSuccess("Successful Sign Up!");
       setEmail("");
       setPassword("");
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error creating user:", errorData);
-        throw new Error(errorData.error || "Failed to create user");
-      }
-
-      return response.json();
     } catch (error) {
       console.error("Error in createUser:", error);
       setSignUpError("Failed to create user. Please try again.");
