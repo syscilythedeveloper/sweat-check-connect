@@ -149,6 +149,7 @@ const config: Config = {
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
