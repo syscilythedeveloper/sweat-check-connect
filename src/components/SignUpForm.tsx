@@ -1,8 +1,8 @@
-//[]need to handle: when user already exists, return error
-//[]need to handle: when user is created, return success message
-//[]need to handle: when user is created, redirect to login page
-//[]need to handle: when user is created, store user data in local storage or session
-//[]need to handle: when user is created, show success message
+//[x]need to handle: when user already exists, return error
+//[x]need to handle: when user is created, return success message
+//[x]need to handle: when user is created, redirect to login page
+//[x]need to handle: when user is created, store user data in local storage or session
+//[x]need to handle: when user is created, show success message
 //[]need to handle: after email and password are set, show another form to set first name, last name, email address and profile photo
 
 "use client";
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { validatePassword, validateNewUser } from "./SignUpForm.utils";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -22,64 +23,66 @@ const SignUpForm = () => {
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const validateNewUser = async (email: string) => {
-    console.log("Checking for user", email);
-    const response = await fetch(
-      `/api/users?email=${encodeURIComponent(email)}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    if (response.ok) {
-      const data = await response.json(); // ✅ Parse the JSON
-      console.log("Response from getUser:", data.exists);
-      return data.exists; // ✅ Return the actual data
-    } else {
-      throw new Error("Failed to check user existence");
-    }
-  };
+  // const validateNewUser = async (email: string) => {
+  //   console.log("Checking for user", email);
+  //   const response = await fetch(
+  //     `/api/users?email=${encodeURIComponent(email)}`,
+  //     {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
+  //   if (response.ok) {
+  //     const data = await response.json();
+  //     console.log("Response from getUser:", data.exists);
+  //     return data.exists;
+  //   } else {
+  //     throw new Error("Failed to check user existence");
+  //   }
+  // };
 
-  const validatePassword = (password: string) => {
-    const errors: string[] = [];
+  // const validatePassword = (password: string) => {
+  //   const errors: string[] = [];
 
-    if (password.length < 8) {
-      errors.push("Password must be at least 8 characters long.");
-    }
-    if (!/[A-Z]/.test(password)) {
-      errors.push("Password must contain at least one uppercase letter.");
-    }
-    if (!/[a-z]/.test(password)) {
-      errors.push("Password must contain at least one lowercase letter.");
-    }
-    if (!/[0-9]/.test(password)) {
-      errors.push("Password must contain at least one number.");
-    }
-    if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
-      errors.push("Password must contain at least one special character.");
-    }
+  //   if (password.length < 8) {
+  //     errors.push("Password must be at least 8 characters long.");
+  //   }
+  //   if (!/[A-Z]/.test(password)) {
+  //     errors.push("Password must contain at least one uppercase letter.");
+  //   }
+  //   if (!/[a-z]/.test(password)) {
+  //     errors.push("Password must contain at least one lowercase letter.");
+  //   }
+  //   if (!/[0-9]/.test(password)) {
+  //     errors.push("Password must contain at least one number.");
+  //   }
+  //   if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
+  //     errors.push("Password must contain at least one special character.");
+  //   }
 
-    setPasswordErrors(errors);
-    return errors.length === 0;
-  };
+  //   setPasswordErrors(errors);
+
+  // };
 
   const createUser = async (email: string, password: string) => {
     setSignUpError("");
     setSignUpSuccess("");
     setPasswordErrors([]);
     const userExists = await validateNewUser(email);
-    const isValidPassword = validatePassword(password);
 
     if (userExists) {
       setSignUpError("User already exists. Please log in.");
       return;
     }
 
-    if (!isValidPassword) {
+    const errors = validatePassword(password);
+    setPasswordErrors(errors);
+    if (errors.length > 0) {
       return;
-    } else setPasswordErrors([]);
+    }
+
     console.log("Create User Function called", email, password);
     try {
       const response = await fetch("/api/users", {
@@ -107,10 +110,10 @@ const SignUpForm = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    createUser(email, password);
+    await createUser(email, password);
     setIsLoading(false);
   };
 
