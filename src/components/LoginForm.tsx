@@ -2,6 +2,7 @@
 //when the user logs in, validate that they exist
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +14,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loginSuccess, setLoginSuccess] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +24,11 @@ const LoginForm = () => {
     console.log("Login result:", result);
     if (result.success) {
       console.log("Login successful:", result);
-      setLoginSuccess("Login successful!");
+      setLoginSuccess("Login successful! Redirecting to dashboard...");
       setLoginError("");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000); // Small delay to show success message
     } else {
       setLoginError(result.errors?.join(", ") || "An unknown error occurred.");
     }

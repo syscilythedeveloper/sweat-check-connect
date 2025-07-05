@@ -134,7 +134,7 @@ const SignUpForm = () => {
                 Already have an Account?{" "}
               </span>
               <Link
-                href="/login"
+                href="/sign-in"
                 className="text-primary hover:underline font-medium"
               >
                 Log in
