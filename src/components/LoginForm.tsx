@@ -86,7 +86,7 @@ const LoginForm = () => {
                 Don&apos;t have an account?{" "}
               </span>
               <Link
-                href="/signup"
+                href="/sign-up"
                 className="text-primary hover:underline font-medium"
               >
                 Sign up

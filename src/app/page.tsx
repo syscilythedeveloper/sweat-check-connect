@@ -1,4 +1,4 @@
-import Image from "next/image";
+//import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Feed from "@/components/Feed";
