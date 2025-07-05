@@ -72,22 +72,3 @@ export async function validateLogin(
     return { success: false, errors: ["An unknown error occurred"] };
   }
 }
-// export function validateExistingUser(
-//   email: string,
-//   password: string
-// ): Promise<{ success: boolean; errors?: string[] }> {
-//   return fetch("/api/login", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ email, password }),
-//   })
-//     .then((response) => {
-//       if (!response.ok) {
-//         return { success: false, errors: ["Invalid email or password"] };
-//       }
-//       return { success: true };
-//     })
-//     .catch((error) => ({ success: false, errors: [error.message] }));
-// }
