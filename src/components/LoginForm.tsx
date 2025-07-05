@@ -1,5 +1,12 @@
+/*
+Now, once the user is signed in. I want to store their sign in information. As I will be using this to access their posts later. How can I do this?
+
+You can store the user's information in a global state management solution like Redux or Context API. Alternatively, you can use local storage or session storage to persist the user's information across sessions.
+
+*/
+
 "use client";
-//when the user logs in, validate that they exist
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
