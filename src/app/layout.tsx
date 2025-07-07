@@ -85,7 +85,6 @@ export const metadata: Metadata = {
   title: "Sweat Check Connect",
   description: "Your hub for fitness challenges, shared playlists, and more!",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -93,7 +92,10 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html
+        lang="en"
+        suppressHydrationWarning
+      >
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
@@ -117,29 +119,25 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* Signed In: Show sidebar layout */}
-            <SignedIn>
-              <SidebarProvider>
-                <AppSidebar />
-                <main className="flex-1">
-                  <div className="flex justify-between items-center p-4">
-                    <SidebarTrigger />
-                    {/* <ModeToggle /> */}
-                  </div>
-                  {children}
-                </main>
-              </SidebarProvider>
-            </SignedIn>
+            <div suppressHydrationWarning>
+              {/* Signed In: Show sidebar layout */}
+              <SignedIn>
+                <SidebarProvider>
+                  <AppSidebar />
+                  <main className="flex-1">
+                    <div className="flex justify-between items-center p-4">
+                      <SidebarTrigger />
+                    </div>
+                    {children}
+                  </main>
+                </SidebarProvider>
+              </SignedIn>
 
-            {/* Signed Out: Show full-width layout without sidebar */}
-            <SignedOut>
-              <main className="flex-1">
-                {/* <div className="flex justify-end items-center p-4">
-                  <ModeToggle />
-                </div> */}
-                {children}
-              </main>
-            </SignedOut>
+              {/* Signed Out: Show full-width layout without sidebar */}
+              <SignedOut>
+                <main className="flex-1">{children}</main>
+              </SignedOut>
+            </div>
           </ThemeProvider>
         </body>
       </html>
