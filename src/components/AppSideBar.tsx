@@ -24,6 +24,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import ContactCard from "@/components/ContactCard";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/mode-toggle";
 
 // Menu items.
 const items = [
@@ -81,12 +82,15 @@ const AppSideBar = () => {
       <SidebarHeader>
         <ContactCard />
       </SidebarHeader>
-      <Separator className="my-8" />
+      <Separator className="mt-4" />
 
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              <div className="flex items-center justify-end px-2 py-2">
+                <ModeToggle />
+              </div>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -100,7 +104,7 @@ const AppSideBar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <Separator className="mt-20 mb-2" />
+        <Separator className="mt-15 mb-2" />
         <SidebarGroup>
           <Button
             variant="secondary"
