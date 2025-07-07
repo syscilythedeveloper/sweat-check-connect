@@ -12,10 +12,17 @@ const isProtectedRoute = createRouteMatcher([
   "/discover(.*)",
   "/askai(.*)",
   "/api/checkins(.*)",
-  "/api/webhooks/clerk(.*)",
 ]);
 
+// Define public API routes (webhooks should be public)
+const isPublicApiRoute = createRouteMatcher(["/api/webhooks(.*)"]);
+
 export default clerkMiddleware(async (auth, req) => {
+  // Skip authentication for public API routes (webhooks)
+  if (isPublicApiRoute(req)) {
+    return;
+  }
+
   // If the route is protected, require authentication
   if (isProtectedRoute(req)) {
     await auth.protect();
