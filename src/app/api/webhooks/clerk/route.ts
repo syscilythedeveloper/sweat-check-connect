@@ -5,7 +5,7 @@ import prisma from "../../../../../prisma/utils/prisma";
 
 export async function POST(req: Request) {
   const secret = process.env.SIGNING_SECRET;
-  console.log("Webhook request received" + process.env.SIGNING_SECRET);
+
   if (!secret) return new Response("Missing secret", { status: 500 });
   const wh = new Webhook(secret);
   const body = await req.text();
