@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "../../../../prisma/utils/prisma";
 
 export async function POST(req: Request) {
+  console.log("Creating post request received");
   const { userId: clerkId } = await auth();
   if (!clerkId) return new Response("Unauthorized", { status: 401 });
   const user = await prisma.user.findUnique({
