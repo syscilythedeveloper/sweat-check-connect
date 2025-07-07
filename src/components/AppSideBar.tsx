@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import {
   UsersRound,
   Home,
@@ -24,6 +25,16 @@ import {
 import { Separator } from "@/components/ui/separator";
 import ContactCard from "@/components/ContactCard";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/mode-toggle";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import CheckInForm from "@/components/CheckInForm";
 
 // Menu items.
 const items = [
@@ -38,7 +49,7 @@ const items = [
     icon: UserRound,
   },
   {
-    title: "Messsages",
+    title: "Messages",
     url: "/messages",
     icon: Inbox,
   },
@@ -52,7 +63,6 @@ const items = [
     url: "/connections",
     icon: UsersRound,
   },
-
   {
     title: "Shared Playlists",
     url: "/shared-playlists",
@@ -76,17 +86,22 @@ const items = [
 ];
 
 const AppSideBar = () => {
+  const [isCheckInOpen, setIsCheckInOpen] = useState(false);
+
   return (
-    <Sidebar className="bg-gray-100 ">
+    <Sidebar className="bg-gray-100">
       <SidebarHeader>
         <ContactCard />
       </SidebarHeader>
-      <Separator className="my-8" />
+      <Separator className="mt-4" />
 
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              <div className="flex items-center justify-end px-2 py-2">
+                <ModeToggle />
+              </div>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -100,14 +115,34 @@ const AppSideBar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <Separator className="mt-20 mb-2" />
+
+        <Separator className="mt-15 mb-2" />
+
         <SidebarGroup>
-          <Button
-            variant="secondary"
-            className="w-full border-1 "
+          <Dialog
+            open={isCheckInOpen}
+            onOpenChange={setIsCheckInOpen}
           >
-            Check In
-          </Button>
+            <DialogTrigger asChild>
+              <Button
+                variant="secondary"
+                className="w-full border-1"
+              >
+                Check In
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Daily Check-In</DialogTitle>
+                <DialogDescription>
+                  How are you feeling today? Share your workout status!
+                </DialogDescription>
+              </DialogHeader>
+
+              {/* Add your check-in form content here */}
+              <CheckInForm onClose={() => setIsCheckInOpen(false)} />
+            </DialogContent>
+          </Dialog>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
