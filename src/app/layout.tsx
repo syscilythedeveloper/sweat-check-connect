@@ -1,61 +1,3 @@
-// import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
-// import "./globals.css";
-// import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-// import AppSidebar from "@/components/AppSideBar";
-// import { ThemeProvider } from "@/components/theme-provider";
-// import { ModeToggle } from "@/components/mode-toggle";
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
-
-// export const metadata: Metadata = {
-//   title: "Sweat Check Connect",
-//   description: "Other names: SweatSync, ",
-// };
-
-// export default function RootLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-//   return (
-//     <html
-//       lang="en"
-//       suppressHydrationWarning
-//     >
-//       <head />
-//       <body
-//         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-//       >
-//         <ThemeProvider
-//           attribute="class"
-//           defaultTheme="system"
-//           enableSystem
-//           disableTransitionOnChange
-//         >
-//           <SidebarProvider>
-//             <AppSidebar />
-//             <main className="flex-1">
-//               <div className="flex justify-between items-center p-4">
-//                 <SidebarTrigger />
-//                 <ModeToggle />
-//               </div>
-//               {children}
-//             </main>
-//           </SidebarProvider>
-//         </ThemeProvider>
-//       </body>
-//     </html>
-//   );
-// }
 import { type Metadata } from "next";
 import {
   ClerkProvider,
@@ -74,17 +16,20 @@ import { ThemeProvider } from "@/components/theme-provider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Sweat Check Connect",
   description: "Your hub for fitness challenges, shared playlists, and more!",
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -120,7 +65,6 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div suppressHydrationWarning>
-              {/* Signed In: Show sidebar layout */}
               <SignedIn>
                 <SidebarProvider>
                   <AppSidebar />
@@ -133,7 +77,6 @@ export default function RootLayout({
                 </SidebarProvider>
               </SignedIn>
 
-              {/* Signed Out: Show full-width layout without sidebar */}
               <SignedOut>
                 <main className="flex-1">{children}</main>
               </SignedOut>
