@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import prisma from "../../../prisma/utils/prisma";
+//import prisma from "../../../prisma/utils/prisma";
 import PostInputs from "@/components/PostInputs";
 import { redirect } from "next/navigation";
 
