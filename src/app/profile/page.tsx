@@ -1,15 +1,17 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import prisma from "../../../prisma/utils/prisma";
 import PostInputs from "@/components/PostInputs";
-
-import React from "react";
+import { redirect } from "next/navigation";
 
 export default async function Profile() {
-  const user = await currentUser();
-  if (!user) return <div className="flex justify-center">Sign in to post</div>;
+  const { userId } = await auth();
+
+  if (!userId) {
+    redirect("/sign-in");
+  }
 
   const posts = await prisma.post.findMany({
-    where: { author: { clerkId: user.id } },
+    where: { author: { clerkId: userId } },
     orderBy: { createdAt: "desc" },
   });
 
