@@ -1,33 +1,6 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-// Define which routes should be protected (require authentication)
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/profile(.*)",
-  "/messages(.*)",
-  "/challenges(.*)",
-  "/connections(.*)",
-  "/shared-playlists(.*)",
-  "/plans(.*)",
-  "/discover(.*)",
-  "/askai(.*)",
-  "/api/checkins(.*)",
-]);
-
-// Define public API routes (webhooks should be public)
-const isPublicApiRoute = createRouteMatcher(["/api/webhooks(.*)"]);
-
-export default clerkMiddleware(async (auth, req) => {
-  // Skip authentication for public API routes (webhooks)
-  if (isPublicApiRoute(req)) {
-    return;
-  }
-
-  // If the route is protected, require authentication
-  if (isProtectedRoute(req)) {
-    await auth.protect();
-  }
-});
+export default clerkMiddleware();
 
 export const config = {
   matcher: [
