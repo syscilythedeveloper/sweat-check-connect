@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Webhook } from "svix";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
@@ -32,17 +33,38 @@ export async function POST(req: Request) {
 
       console.log("Creating user with clerkId:", id);
 
-      await prisma.user.upsert({
-        where: { clerkId: id },
-        update: {},
-        create: {
-          clerkId: id,
-          email: email_addresses[0].email_address,
-          name: `${first_name} ${last_name}`,
-        },
-      });
+      try {
+        // First try to upsert by clerkId
+        await prisma.user.upsert({
+          where: { clerkId: id },
+          update: {},
+          create: {
+            clerkId: id,
+            email: email_addresses[0].email_address,
+            name: `${first_name} ${last_name}`,
+          },
+        });
 
-      console.log("User created successfully");
+        console.log("User created successfully");
+      } catch (error: any) {
+        if (error.code === "P2002" && error.meta?.target?.includes("email")) {
+          console.log(
+            "Email already exists, updating existing user with clerkId"
+          );
+
+          await prisma.user.update({
+            where: { email: email_addresses[0].email_address },
+            data: {
+              clerkId: id,
+              name: `${first_name} ${last_name}`,
+            },
+          });
+
+          console.log("Existing user updated with new clerkId");
+        } else {
+          throw error;
+        }
+      }
     }
 
     return new Response("OK", { status: 200 });
