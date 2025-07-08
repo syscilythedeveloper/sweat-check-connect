@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const media = formData.get("media") as File;
 
     const user = await prisma.user.findUnique({
-      where: { clerkId: userId }, // Fixed: use userId not clerkUserId
+      where: { clerkId: userId },
     });
 
     if (!user) {
@@ -29,13 +29,12 @@ export async function POST(req: NextRequest) {
 
     const videoUrl = await uploadVideoToStorage(media);
 
-    // Save to database with the URL
     const checkIn = await prisma.checkIn.create({
       data: {
         userId: user.id,
         caption,
         privacy,
-        videoUrl, // This is how you'll access the video later!
+        videoUrl,
         fileName: media.name,
         fileSize: media.size,
         mimeType: media.type,
