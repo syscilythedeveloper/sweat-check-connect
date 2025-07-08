@@ -1,13 +1,5 @@
 import React, { useState, useRef } from "react";
-import {
-  Camera,
-  UploadCloud,
-  Video,
-  Globe,
-  Users,
-  Lock,
-  X,
-} from "lucide-react";
+import { Camera, Video, Globe, Users, Lock, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CheckInForm = ({ onClose }: { onClose: () => void }) => {
@@ -90,8 +82,6 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-start justify-center p-2 sm:p-4 font-sans">
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto mt-4 sm:mt-8 relative">
-        {/* ... existing close button and title ... */}
-
         <form
           onSubmit={handleSubmit}
           className="space-y-4 sm:space-y-6"
@@ -135,15 +125,12 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-4">
-                <UploadCloud
+                <Video
                   size={40}
                   className="text-gray-400 mb-2 sm:mb-3 sm:w-12 sm:h-12"
                 />
                 <p className="text-gray-700 font-semibold text-base sm:text-lg">
-                  Upload Your Workout Video
-                </p>
-                <p className="text-gray-500 text-xs sm:text-sm mt-1">
-                  Drag & drop or click to browse
+                  Check in!
                 </p>
               </div>
             )}
