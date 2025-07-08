@@ -5,6 +5,11 @@ import { PrismaClient } from "@prisma/client";
 import { uploadVideoToStorage } from "../../../lib/storage"; // Adjust the import path as needed
 
 const prisma = new PrismaClient();
+enum Privacy {
+  public = "public",
+  friends = "friends",
+  private = "private",
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const caption = formData.get("caption") as string;
-    const privacy = formData.get("privacy") as string;
+    const privacy = formData.get("privacy") as Privacy;
     const media = formData.get("media") as File;
 
     const user = await prisma.user.findUnique({
@@ -34,7 +39,7 @@ export async function POST(req: NextRequest) {
         userId: user.id,
         caption,
         privacy,
-        videoUrl,
+        videoUrl, // This is how you'll access the video later!
         fileName: media.name,
         fileSize: media.size,
         mimeType: media.type,
