@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+//[TODO ] make profile page dynamic for each user
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
