@@ -1,12 +1,5 @@
 import { type Metadata } from "next";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -44,20 +37,6 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -69,15 +48,21 @@ export default function RootLayout({
                 <SidebarProvider>
                   <AppSidebar />
                   <main className="flex-1">
-                    <div className="flex justify-between items-center p-4">
+                    {/* Move header inside main and combine with sidebar trigger */}
+                    <header className="flex justify-between items-center p-4 h-8 bg-gradient-to-b from-black/30 to-transparent">
                       <SidebarTrigger />
-                    </div>
+                      <div className="flex items-center gap-4">
+                        <UserButton />
+                      </div>
+                    </header>
                     {children}
                   </main>
                 </SidebarProvider>
               </SignedIn>
 
               <SignedOut>
+                {/* Keep separate header for signed out users */}
+
                 <main className="flex-1">{children}</main>
               </SignedOut>
             </div>
