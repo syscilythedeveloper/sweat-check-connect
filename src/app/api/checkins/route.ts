@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../../prisma/utils/prisma";
 
 import { uploadVideoToStorage } from "../../../lib/storage"; // Adjust the import path as needed
 
-const prisma = new PrismaClient();
 enum Privacy {
   public = "public",
   friends = "friends",
