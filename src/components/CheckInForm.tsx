@@ -1,3 +1,5 @@
+// [to do] - add in toast message for if a user needs to sign out and back in
+
 import React, { useState, useRef } from "react";
 import {
   Camera,
