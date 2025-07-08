@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   UsersRound,
   Home,
@@ -24,17 +24,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Toaster } from "react-hot-toast";
 import { Separator } from "@/components/ui/separator";
+import CheckInDialog from "@/components/CheckInDialog";
 import ContactCard from "@/components/ContactCard";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import CheckInForm from "@/components/CheckInForm";
 
 // Menu items.
 const items = [
@@ -86,8 +79,6 @@ const items = [
 ];
 
 const AppSideBar = () => {
-  const [isCheckInOpen, setIsCheckInOpen] = useState(false);
-
   return (
     <>
       <Toaster />
@@ -121,27 +112,16 @@ const AppSideBar = () => {
           <Separator className="mt-10 mb-2" />
 
           <SidebarGroup>
-            <Dialog
-              open={isCheckInOpen}
-              onOpenChange={setIsCheckInOpen}
-            >
-              <DialogTrigger asChild>
+            <CheckInDialog
+              trigger={
                 <Button
                   variant="secondary"
                   className="w-full border-1"
                 >
                   Check In
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-none w-screen h-screen p-0 m-0 rounded-none border-none [&>button]:hidden">
-                <DialogHeader className="sr-only">
-                  <DialogTitle>New Post</DialogTitle>
-                </DialogHeader>
-
-                {/* Add your check-in form content here */}
-                <CheckInForm onClose={() => setIsCheckInOpen(false)} />
-              </DialogContent>
-            </Dialog>
+              }
+            />
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>

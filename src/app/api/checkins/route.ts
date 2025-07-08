@@ -28,7 +28,14 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      // More helpful error message
+      console.error(`User not found for clerkId: ${userId}`);
+      return NextResponse.json(
+        {
+          error: "User account not found. Please try signing out and back in.",
+        },
+        { status: 404 }
+      );
     }
 
     const blob = await put(media.name, media, {
