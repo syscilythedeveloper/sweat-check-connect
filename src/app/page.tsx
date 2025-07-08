@@ -7,9 +7,7 @@ import CheckInDialog from "@/components/CheckInDialog";
 export default async function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* 🎯 Hero Section - subtract header height */}
       <section className="relative h-[calc(100vh-1rem)] flex items-center justify-center overflow-hidden">
-        {/* Background Image/Video */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/hero-workout.png"
@@ -38,13 +36,6 @@ export default async function Home() {
           </p>
 
           <SignedIn>
-            {/* <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
-            >
-              Check In
-              <ArrowRight className="w-5 h-5" />
-            </Link> */}
             <CheckInDialog
               trigger={
                 <button className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105">
