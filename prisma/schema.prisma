@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
@@ -9,19 +8,96 @@ datasource db {
 }
 
 model User {
-  id      Int     @id @default(autoincrement())
-  clerkId String  @unique
-  email   String  @unique
-  name    String?
-  posts   Post[]
+  id                     Int          @id @default(autoincrement())
+  clerkId                String       @unique
+  email                  String       @unique
+  name                   String?
+  avatar                 String?
+  bio                    String?
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+  checkIns               CheckIn[]
+  comments               Comment[]
+  receivedFriendRequests Friendship[] @relation("FriendshipReceiver")
+  sentFriendRequests     Friendship[] @relation("FriendshipSender")
+  likes                  Like[]
+  receivedMessages       Message[]    @relation("ReceivedMessages")
+  sentMessages           Message[]    @relation("SentMessages")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
+model CheckIn {
+  id           String    @id @default(cuid())
+  userId       Int
+  caption      String
+  videoUrl     String
+  fileName     String
+  fileSize     Int
+  mimeType     String
+  duration     Float?
+  thumbnailUrl String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  privacy      Privacy   @default(public)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments     Comment[]
+  likes        Like[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  userId    Int
+  checkInId String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  checkIn   CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    Int
+  checkInId String
+  createdAt DateTime @default(now())
+  checkIn   CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, checkInId])
+}
+
+model Friendship {
+  id         String           @id @default(cuid())
+  senderId   Int
+  receiverId Int
+  status     FriendshipStatus @default(pending)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  receiver   User             @relation("FriendshipReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender     User             @relation("FriendshipSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   Int
+  receiverId Int
+  content    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+enum Privacy {
+  public
+  friends
+  private
+}
+
+enum FriendshipStatus {
+  pending
+  accepted
+  blocked
 }
