@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { put } from "@vercel/blob";
 import prisma from "../../../../prisma/utils/prisma";
-
-import { uploadVideoToStorage } from "../../../lib/storage"; // Adjust the import path as needed
 
 enum Privacy {
   public = "public",
@@ -19,6 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     const formData = await req.formData();
+
     const caption = formData.get("caption") as string;
     const privacy = formData.get("privacy") as Privacy;
     const media = formData.get("media") as File;
@@ -31,14 +31,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const videoUrl = await uploadVideoToStorage(media);
+    const blob = await put(media.name, media, {
+      access: "public",
+      addRandomSuffix: true,
+    });
 
     const checkIn = await prisma.checkIn.create({
       data: {
         userId: user.id,
         caption,
         privacy,
-        videoUrl, // This is how you'll access the video later!
+        videoUrl: blob.url,
         fileName: media.name,
         fileSize: media.size,
         mimeType: media.type,
