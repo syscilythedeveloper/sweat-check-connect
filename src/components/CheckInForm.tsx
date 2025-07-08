@@ -165,7 +165,12 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to submit check-in. Please try again.");
+      toast.error("Error submitting check-in. Please try again.", {
+        duration: 4000,
+        position: "top-center",
+        style: { background: "#ef4444", color: "white" },
+        icon: "❌",
+      });
     } finally {
       setIsSubmitting(false);
     }
