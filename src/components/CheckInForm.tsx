@@ -1,6 +1,15 @@
 import React, { useState, useRef } from "react";
-import { Camera, Video, Globe, Users, Lock, X } from "lucide-react";
+import {
+  Camera,
+  Video,
+  Globe,
+  Users,
+  Lock,
+  X,
+  BicepsFlexed,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -11,7 +20,6 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("video/")) {
@@ -21,19 +29,94 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
         return;
       }
 
-      setVideoFile(file);
-      const url = URL.createObjectURL(file);
-      setVideoPreviewUrl(url);
-
-      // Create a temporary video element to get dimensions
+      // Create a temporary video element to check duration
       const tempVideo = document.createElement("video");
+      const url = URL.createObjectURL(file);
       tempVideo.src = url;
-      tempVideo.onloadedmetadata = () => {};
+
+      tempVideo.onloadedmetadata = () => {
+        const duration = tempVideo.duration;
+
+        // Check if video is between 15-30 seconds
+        if (duration < 15) {
+          toast.error(
+            `Video too short (${duration.toFixed(1)}s). Need 15-30 seconds.`,
+            {
+              duration: 4000,
+              position: "top-center",
+              style: {
+                background: "#ef4444",
+                color: "white",
+              },
+              icon: "⏱️",
+            }
+          );
+          URL.revokeObjectURL(url);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+          return;
+        }
+
+        if (duration > 30) {
+          toast.error(
+            `Video too long (${duration.toFixed(1)}s). Need 15-30 seconds.`,
+            {
+              duration: 4000,
+              position: "top-center",
+              style: {
+                background: "#ef4444",
+                color: "white",
+              },
+              icon: "⏱️",
+            }
+          );
+          URL.revokeObjectURL(url);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+          return;
+        }
+
+        toast.success(`Perfect! Video meets requirements`, {
+          duration: 3000,
+          position: "top-center",
+          style: {
+            background: "#10b981",
+            color: "white",
+          },
+          icon: (
+            <BicepsFlexed
+              size={16}
+              className="text-white"
+            />
+          ),
+        });
+
+        setVideoFile(file);
+        setVideoPreviewUrl(url);
+        console.log(`✅ Video duration: ${duration.toFixed(1)} seconds`);
+      };
+
+      tempVideo.onerror = () => {
+        toast.error("Error loading video file", {
+          duration: 4000,
+          position: "top-center",
+          style: {
+            background: "#ef4444",
+            color: "white",
+          },
+        });
+        URL.revokeObjectURL(url);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      };
     } else {
+      toast.error("Please upload a valid video file", {
+        duration: 4000,
+        position: "top-center",
+        style: {
+          background: "#ef4444",
+          color: "white",
+        },
+      });
       setVideoFile(null);
       setVideoPreviewUrl(null);
-
-      console.error("Please upload a valid video file.");
     }
   };
 
@@ -63,7 +146,16 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
       });
 
       if (response.ok) {
-        alert("Workout check-in posted!");
+        toast.success("Check-in submitted successfully!", {
+          duration: 4000,
+          position: "top-center",
+          style: {
+            background: "#10b981",
+            color: "white",
+          },
+          icon: "✅",
+        });
+
         setCaption("");
         setPrivacy("public");
         handleRemoveVideo();
@@ -86,6 +178,9 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
           onSubmit={handleSubmit}
           className="space-y-4 sm:space-y-6"
         >
+          <h5 className="text-2xl text-center sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
+            New Post
+          </h5>
           {/* Upload Area */}
           <div
             className="relative border-2 border-dashed border-purple-400 rounded-lg sm:rounded-xl p-4 sm:p-6 text-center cursor-pointer hover:bg-purple-50 transition-colors"
@@ -130,10 +225,21 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
                   className="text-gray-400 mb-2 sm:mb-3 sm:w-12 sm:h-12"
                 />
                 <p className="text-gray-700 font-semibold text-base sm:text-lg">
-                  Check in!
+                  Upload Your Workout Video
+                </p>
+                <p className="text-purple-600 text-xs sm:text-sm mt-1 font-medium">
+                  Must be 15-30 seconds long
+                </p>
+                <p className="text-gray-500 text-xs sm:text-sm mt-1">
+                  Tap to upload
                 </p>
               </div>
             )}
+          </div>
+          <div className="text-center">
+            <p className="text-xs text-gray-500">
+              📹 Video requirements: 15-30 seconds, max 50MB
+            </p>
           </div>
 
           {/* Caption */}
@@ -217,15 +323,8 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
-              type="button"
-              onClick={onClose}
-              className="w-full sm:w-auto px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition flex items-center justify-center gap-2 text-sm sm:text-base"
-            >
-              Cancel
-            </button>
-            <button
               type="submit"
-              disabled={isSubmitting || !caption.trim()}
+              disabled={isSubmitting || !caption.trim() || !videoFile}
               className="w-full sm:flex-1 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition flex items-center justify-center gap-2 disabled:opacity-50 text-sm sm:text-base"
             >
               <Video
@@ -233,6 +332,13 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
                 className="sm:w-6 sm:h-6"
               />
               {isSubmitting ? "Posting..." : "Post Workout"}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full sm:w-auto px-6 py-3 border bg-red-200 border-gray-100 text-gray-700 font-medium rounded-xl hover:bg-red-500 transition flex items-center justify-center gap-2 text-sm sm:text-base"
+            >
+              Cancel
             </button>
           </div>
         </form>
