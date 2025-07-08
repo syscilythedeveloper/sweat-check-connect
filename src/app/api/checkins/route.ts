@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { PrismaClient } from "@prisma/client";
+
+import { uploadVideoToStorage } from "../../../lib/storage"; // Adjust the import path as needed
+
+const prisma = new PrismaClient();
+enum Privacy {
+  public = "public",
+  friends = "friends",
+  private = "private",
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,65 +20,33 @@ export async function POST(req: NextRequest) {
     }
 
     const formData = await req.formData();
-    const mood = formData.get("mood") as string;
-    const workoutStatus = formData.get("workoutStatus") as string;
     const caption = formData.get("caption") as string;
+    const privacy = formData.get("privacy") as Privacy;
     const media = formData.get("media") as File;
-    const mediaType = formData.get("mediaType") as string;
 
-    console.log("Creating check-in:", {
-      userId,
-      mood,
-      workoutStatus,
-      caption,
-      media: media
-        ? {
-            name: media.name,
-            size: media.size,
-            type: media.type,
-            mediaType: mediaType,
-          }
-        : null,
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
     });
 
-    // Handle media upload based on type
-    if (media) {
-      if (mediaType === "video") {
-        // Handle video upload - you'll need cloud storage for this
-        console.log("Uploading video:", {
-          name: media.name,
-          size: media.size,
-          type: media.type,
-        });
-
-        // Example: Upload to cloud storage (AWS S3, Cloudinary, etc.)
-        // const videoUrl = await uploadVideoToCloud(media);
-      } else if (mediaType === "image") {
-        // Handle image upload
-        console.log("Uploading image:", {
-          name: media.name,
-          size: media.size,
-          type: media.type,
-        });
-
-        // Example: Upload to cloud storage
-        // const imageUrl = await uploadImageToCloud(media);
-      }
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Save check-in data to database
-    // await prisma.checkIn.create({
-    //   data: {
-    //     userId,
-    //     mood,
-    //     workoutStatus,
-    //     caption,
-    //     mediaUrl: media ? uploadedUrl : null,
-    //     mediaType: media ? mediaType : null,
-    //   }
-    // });
+    const videoUrl = await uploadVideoToStorage(media);
 
-    return NextResponse.json({ success: true });
+    const checkIn = await prisma.checkIn.create({
+      data: {
+        userId: user.id,
+        caption,
+        privacy,
+        videoUrl, // This is how you'll access the video later!
+        fileName: media.name,
+        fileSize: media.size,
+        mimeType: media.type,
+      },
+    });
+
+    return NextResponse.json({ success: true, checkIn });
   } catch (error) {
     console.error("Error creating check-in:", error);
     return NextResponse.json(
