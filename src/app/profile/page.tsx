@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //[TODO ] make profile page dynamic for each user
 "use client";
@@ -13,8 +14,8 @@ const ProfilePage = () => {
   // You'll eventually fetch this from your database
   const [userProfile, setUserProfile] = useState({
     id: user?.id || "user123",
-    name: user?.firstName || "FitFanatic23",
-    avatar: user?.imageUrl || "/images/default-avatar.png",
+    name: user?.firstName || "sys_thealchemist",
+    avatar: user?.imageUrl || "/images/user.png",
     bio: "Passionate about fitness, healthy living, and crushing new goals! Join me on my journey to a stronger self.",
     stats: {
       totalCheckIns: 125,

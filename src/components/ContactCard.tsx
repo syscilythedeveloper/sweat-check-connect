@@ -1,3 +1,7 @@
+/*
+useUserContext to display user information in a contact card
+ 
+ */
 import React from "react";
 import { Card, CardDescription, CardHeader } from "@/components/ui/card";
 import Image from "next/image";

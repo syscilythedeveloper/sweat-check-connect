@@ -1,4 +1,5 @@
 // [to do] - add in toast message for if a user needs to sign out and back in
+//[] add in spinner while check in posts
 
 import React, { useState, useRef } from "react";
 import {
@@ -263,7 +264,7 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
               onChange={(e) => setCaption(e.target.value)}
               rows={3}
               placeholder="What did you achieve today? Share your progress and thoughts!"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition resize-none text-sm sm:text-base"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition resize-none text-sm sm:text-base text-gray-800 placeholder-gray-500"
             ></textarea>
           </div>
 

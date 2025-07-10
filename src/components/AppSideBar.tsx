@@ -4,12 +4,9 @@ import {
   UsersRound,
   Home,
   Inbox,
-  Search,
   UserRound,
   Medal,
   Headphones,
-  NotebookPen,
-  BotMessageSquare,
 } from "lucide-react";
 
 import {
@@ -61,21 +58,6 @@ const items = [
     url: "/shared-playlists",
     icon: Headphones,
   },
-  {
-    title: "Plans",
-    url: "/plans",
-    icon: NotebookPen,
-  },
-  {
-    title: "Discover",
-    url: "/discover",
-    icon: Search,
-  },
-  {
-    title: "AskAI",
-    url: "/askai",
-    icon: BotMessageSquare,
-  },
 ];
 
 const AppSideBar = () => {
@@ -109,7 +91,7 @@ const AppSideBar = () => {
             </SidebarGroupContent>
           </SidebarGroup>
 
-          <Separator className="mt-10 mb-2" />
+          <Separator className="mt-20 mb-2" />
 
           <SidebarGroup>
             <CheckInDialog
