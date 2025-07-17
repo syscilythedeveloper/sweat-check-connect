@@ -6,12 +6,16 @@ import React from "react";
 import { Card, CardDescription, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
 const ContactCard = () => {
+  const { user } = useUser();
+  console.log("User data:", user);
+
   const contactInfo = {
-    Image: "/images/user.png",
-    username: "sys_thealchemist",
-    joined: "06/01/2025",
+    Image: user?.imageUrl || "/images/user.png",
+    username: user?.username || "defaultUser",
+    joined: user?.createdAt || "06/01/2025",
   };
   return (
     <Card>
@@ -34,7 +38,10 @@ const ContactCard = () => {
         </div>
         <div>
           <CardDescription className="mt-2 text-sm">
-            Member Since: {contactInfo.joined}
+            Member Since:{" "}
+            {typeof contactInfo.joined === "string"
+              ? contactInfo.joined
+              : contactInfo.joined.toLocaleDateString()}
           </CardDescription>
         </div>
       </CardHeader>
