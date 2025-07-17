@@ -25,42 +25,44 @@ import CheckInDialog from "@/components/CheckInDialog";
 import ContactCard from "@/components/ContactCard";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "/dashboard",
-    icon: Home,
-  },
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: UserRound,
-  },
-  {
-    title: "Messages",
-    url: "/messages",
-    icon: Inbox,
-  },
-  {
-    title: "Challenges",
-    url: "/challenges",
-    icon: Medal,
-  },
-  {
-    title: "Connections",
-    url: "/connections",
-    icon: UsersRound,
-  },
-  {
-    title: "Shared Playlists",
-    url: "/shared-playlists",
-    icon: Headphones,
-  },
-];
+import { useUser } from "@clerk/nextjs";
 
 const AppSideBar = () => {
+  const { user } = useUser();
+
+  // Menu items.
+  const items = [
+    {
+      title: "Home",
+      url: "/dashboard",
+      icon: Home,
+    },
+    {
+      title: "Profile",
+      url: `/profile/${user?.username || "defaultUser"}`,
+      icon: UserRound,
+    },
+    {
+      title: "Messages",
+      url: "/messages",
+      icon: Inbox,
+    },
+    {
+      title: "Challenges",
+      url: "/challenges",
+      icon: Medal,
+    },
+    {
+      title: "Connections",
+      url: "/connections",
+      icon: UsersRound,
+    },
+    {
+      title: "Shared Playlists",
+      url: "/shared-playlists",
+      icon: Headphones,
+    },
+  ];
   return (
     <>
       <Toaster />

@@ -4,17 +4,20 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { Camera, Users, Trophy, Calendar, MapPin, Clock } from "lucide-react";
+import { Users, Trophy, Calendar, MapPin, Clock } from "lucide-react";
 
 // Main Profile Component
 const ProfilePage = () => {
+  const params = useParams();
+  console.log("Profile params:", params);
   const { user } = useUser();
 
   // You'll eventually fetch this from your database
   const [userProfile, setUserProfile] = useState({
     id: user?.id || "user123",
-    name: user?.firstName || "sys_thealchemist",
+    name: user?.username || "sys_thealchemist",
     avatar: user?.imageUrl || "/images/user.png",
     bio: "Passionate about fitness, healthy living, and crushing new goals! Join me on my journey to a stronger self.",
     stats: {
@@ -120,9 +123,6 @@ const ProfilePage = () => {
                 width={160}
                 height={160}
               />
-              <button className="absolute bottom-0 right-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full p-2 shadow-md hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-110">
-                <Camera className="w-5 h-5" />
-              </button>
             </div>
 
             <div className="text-center sm:text-left flex-grow">
