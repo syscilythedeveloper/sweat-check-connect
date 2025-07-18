@@ -180,8 +180,8 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-900 dark:to-slate-800 flex items-start justify-center p-2 sm:p-4 font-sans">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto mt-4 sm:mt-8 relative border border-gray-100 dark:border-slate-700">
+    <div className="flex items-center justify-center w-full h-full">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto mt-8 sm:mt-8 relative border border-gray-100 dark:border-slate-700">
         <form
           onSubmit={handleSubmit}
           className="space-y-4 sm:space-y-6"
