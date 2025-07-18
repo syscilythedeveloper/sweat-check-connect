@@ -25,6 +25,7 @@ import CheckInDialog from "@/components/CheckInDialog";
 import ContactCard from "@/components/ContactCard";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
+import QuickStats from "./QuickStats";
 import { useUser } from "@clerk/nextjs";
 
 const AppSideBar = () => {
@@ -68,8 +69,9 @@ const AppSideBar = () => {
       <Toaster />
 
       <Sidebar className="border border-transparent bg-transparent dark:bg-slate-900 rounded-2xl shadow-[0_0_20px_8px_rgba(63,23,154,0.3)]  p-4 space-y-4">
-        <SidebarHeader>
+        <SidebarHeader className="space-y-2">
           <ContactCard />
+          <QuickStats />
         </SidebarHeader>
         <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
