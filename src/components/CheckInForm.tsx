@@ -13,10 +13,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
+  const router = useRouter();
 
   const [caption, setCaption] = useState("");
   const [privacy, setPrivacy] = useState("public");
@@ -166,6 +168,7 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
       } else {
         throw new Error("Failed to submit check-in");
       }
+      router.push("/dashboard");
     } catch (error) {
       console.error(error);
       toast.error("Error submitting check-in. Please try again.", {
