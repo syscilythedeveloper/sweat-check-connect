@@ -318,9 +318,9 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
                 <input
                   type="radio"
                   name="privacy"
-                  value="friends"
-                  checked={privacy === "friends"}
-                  onChange={() => setPrivacy("friends")}
+                  value="followersOnly"
+                  checked={privacy === "followersOnly"}
+                  onChange={() => setPrivacy("followersOnly")}
                   className="form-radio h-4 w-4 sm:h-5 sm:w-5 text-purple-600"
                 />
                 <span className="ml-2 text-gray-800 flex items-center gap-1 text-sm sm:text-base">
@@ -328,24 +328,7 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
                     size={14}
                     className="sm:w-4 sm:h-4"
                   />{" "}
-                  Friends Only
-                </span>
-              </label>
-              <label className="inline-flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="privacy"
-                  value="private"
-                  checked={privacy === "private"}
-                  onChange={() => setPrivacy("private")}
-                  className="form-radio h-4 w-4 sm:h-5 sm:w-5 text-purple-600"
-                />
-                <span className="ml-2 text-gray-800 flex items-center gap-1 text-sm sm:text-base">
-                  <Lock
-                    size={14}
-                    className="sm:w-4 sm:h-4"
-                  />{" "}
-                  Private
+                  Followers Only
                 </span>
               </label>
             </div>

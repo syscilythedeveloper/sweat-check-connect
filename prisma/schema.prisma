@@ -8,9 +8,9 @@ datasource db {
 }
 
 model User {
-  id                     Int          @id @default(autoincrement())
-  clerkId                String       @unique
+  id                     String       @id @default(cuid())
   email                  String       @unique
+  username              String       @unique
   name                   String?
   avatar                 String?
   bio                    String?
@@ -18,17 +18,18 @@ model User {
   updatedAt              DateTime     @updatedAt
   checkIns               CheckIn[]
   comments               Comment[]
-  receivedFriendRequests Friendship[] @relation("FriendshipReceiver")
-  sentFriendRequests     Friendship[] @relation("FriendshipSender")
+  followers Follows[] @relation("following") // users who follow this user
+  following Follows[] @relation("follower") // users this user follows
   likes                  Like[]
   receivedMessages       Message[]    @relation("ReceivedMessages")
   sentMessages           Message[]    @relation("SentMessages")
-  username              String       @unique 
+  receivedNotifications   Notification[] @relation("userNotifications") // notifications received by a user
+  sentNotifications       Notification[] @relation("notificationSender") // notifications triggered by a user
 }
 
 model CheckIn {
   id           String    @id @default(cuid())
-  userId       Int
+  userId       String
   caption      String
   videoUrl     String
   fileName     String
@@ -42,22 +43,24 @@ model CheckIn {
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments     Comment[]
   likes        Like[]
+  notifications Notification[]
 }
 
 model Comment {
   id        String   @id @default(cuid())
   content   String
-  userId    Int
+  userId    String
   checkInId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   checkIn   CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications Notification[]
 }
 
 model Like {
   id        String   @id @default(cuid())
-  userId    Int
+  userId    String
   checkInId String
   createdAt DateTime @default(now())
   checkIn   CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
@@ -66,39 +69,66 @@ model Like {
   @@unique([userId, checkInId])
 }
 
-model Friendship {
-  id         String           @id @default(cuid())
-  senderId   Int
-  receiverId Int
-  status     FriendshipStatus @default(pending)
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
-  receiver   User             @relation("FriendshipReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
-  sender     User             @relation("FriendshipSender", fields: [senderId], references: [id], onDelete: Cascade)
 
-  @@unique([senderId, receiverId])
+model Follows{
+  followerId String
+  followingId String
+  createdAt DateTime @default(now())
+
+  // Relations
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@index([followerId,followingId]) // composite index for faster queries
+  @@id([followerId, followingId]) // composite primary key prevents duplicate follows
 }
+
+
 
 model Message {
   id         String   @id @default(cuid())
-  senderId   Int
-  receiverId Int
+  senderId   String
+  receiverId String
   content    String
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
   sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  notifications Notification[] 
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  receiverId    String                  
+  senderId String                  
+  type      NotificationType        
+  read      Boolean  @default(false)
+  checkinId String?
+  commentId String?
+  createdAt DateTime @default(now())
+  messageId String?
+  
+  
+  // Relations
+  receiver   User     @relation("userNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
+  notificationSender   User     @relation("notificationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  checkin   CheckIn? @relation(fields: [checkinId], references: [id], onDelete: Cascade)
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([receiverId, createdAt])
 }
 
 enum Privacy {
   public
-  friends
-  private
+  followersOnly
 }
 
-enum FriendshipStatus {
-  pending
-  accepted
-  blocked
+
+
+enum NotificationType {
+  LIKE     
+  COMMENT 
+  FOLLOW   
 }

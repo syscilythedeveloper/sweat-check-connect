@@ -5,8 +5,7 @@ import prisma from "../../../../prisma/utils/prisma";
 
 enum Privacy {
   public = "public",
-  friends = "friends",
-  private = "private",
+  followersOnly = "followersOnly",
 }
 
 export async function POST(req: NextRequest) {
@@ -20,11 +19,11 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
 
     const caption = formData.get("caption") as string;
-    const privacy = formData.get("privacy") as Privacy;
+    const privacy = (formData.get("privacy") as Privacy) || Privacy.public;
     const media = formData.get("media") as File;
 
     const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
+      where: { id: userId },
     });
 
     if (!user) {

@@ -36,10 +36,10 @@ export async function POST(req: Request) {
       try {
         // First try to upsert by clerkId
         await prisma.user.upsert({
-          where: { clerkId: id },
+          where: { id: id },
           update: {},
           create: {
-            clerkId: id,
+            id: id,
             email: email_addresses[0].email_address,
             name: `${first_name} ${last_name}`,
             username:
@@ -50,14 +50,12 @@ export async function POST(req: Request) {
         console.log("User created successfully");
       } catch (error: any) {
         if (error.code === "P2002" && error.meta?.target?.includes("email")) {
-          console.log(
-            "Email already exists, updating existing user with clerkId"
-          );
+          console.log("Email already exists, updating existing user with id");
 
           await prisma.user.update({
             where: { email: email_addresses[0].email_address },
             data: {
-              clerkId: id,
+              id: id,
               name: `${first_name} ${last_name}`,
               username:
                 username || email_addresses[0].email_address.split("@")[0],
@@ -69,6 +67,30 @@ export async function POST(req: Request) {
           throw error;
         }
       }
+    }
+
+    if (event.type === "user.updated") {
+      const {
+        id,
+        email_addresses,
+        first_name,
+        last_name,
+        username,
+        image_url,
+      } = event.data;
+      console.log("User updated event data:", event.data);
+
+      await prisma.user.update({
+        where: { id: id },
+        data: {
+          email: email_addresses[0].email_address,
+          name: `${first_name} ${last_name}`,
+          username: username || email_addresses[0].email_address.split("@")[0],
+          avatar: image_url || undefined,
+        },
+      });
+
+      console.log("User updated successfully");
     }
 
     return new Response("OK", { status: 200 });

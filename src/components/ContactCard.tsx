@@ -13,7 +13,7 @@ const ContactCard = () => {
   console.log("User data:", user);
 
   const contactInfo = {
-    Image: user?.imageUrl || "/images/user.png",
+    Image: user?.imageUrl || "/images/defaultUser.png",
     username: user?.username || "defaultUser",
     joined: user?.createdAt || "06/01/2025",
   };
@@ -26,7 +26,7 @@ const ContactCard = () => {
             alt="User Avatar"
             width={45}
             height={45}
-            className="rounded-full"
+            className="rounded-full object-cover w-10 h-10 border border-gray-300 dark:border-gray-700"
           />
           <div>
             <Link href={`/profile/${contactInfo.username}`}>
