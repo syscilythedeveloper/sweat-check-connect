@@ -85,7 +85,7 @@
   --chart-4: #00c851; /* Progress */
   --chart-5: #ffd700; /* Success */
 
-  --sidebar: #f8f9fa;
+  --sidebar: #ffffff;
   --sidebar-foreground: #1a1a1a;
   --sidebar-primary: #ff4500;
   --sidebar-primary-foreground: #ffffff;
@@ -99,6 +99,7 @@
   /* Elite Performance - Dark Mode */
   --background: #121212; /* Deep Charcoal */
   --foreground: #ffffff; /* Pure White */
+  /* Steel Gray */
   --card: #1e1e1e; /* Steel Gray */
   --card-foreground: #ffffff;
   --popover: #1e1e1e;
@@ -127,13 +128,13 @@
   --chart-4: #76ff03; /* Progress */
   --chart-5: #ffab00; /* Success */
 
-  --sidebar: #1e1e1e;
+  --sidebar: #0f172b;
   --sidebar-foreground: #ffffff;
   --sidebar-primary: #ff5722;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #1e1e1e;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-border: rgba(100, 80, 169, 0.1);
   --sidebar-ring: #ff5722;
 }
 

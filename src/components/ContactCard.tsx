@@ -3,7 +3,7 @@ useUserContext to display user information in a contact card
  
  */
 import React from "react";
-import { Card, CardDescription, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
@@ -13,36 +13,42 @@ const ContactCard = () => {
   console.log("User data:", user);
 
   const contactInfo = {
-    Image: user?.imageUrl || "/images/defaultUser.png",
+    Image: user?.imageUrl || "/images/user.png",
     username: user?.username || "defaultUser",
+    name: user?.fullName || user?.firstName || "User",
     joined: user?.createdAt || "06/01/2025",
   };
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center gap-1 mt">
-          <Image
-            src={contactInfo.Image}
-            alt="User Avatar"
-            width={45}
-            height={45}
-            className="rounded-full object-cover w-10 h-10 border border-gray-300 dark:border-gray-700"
-          />
-          <div>
-            <Link href={`/profile/${contactInfo.username}`}>
-              <p className="mt-6 text-blue-500 font-medium max-w-[150px] truncate text-sm hover:text-purple-500 transition-colors duration-200">
-                @{contactInfo.username}
-              </p>
-            </Link>
+    <Card className="bg-gray-200 dark:bg-slate-800 shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] border border-transparent rounded-2xl p-4">
+      <CardHeader className="p-0">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {/* Avatar */}
+            <div className="relative">
+              <Image
+                src={contactInfo.Image}
+                alt="User Avatar"
+                width={48}
+                height={48}
+                className="rounded-full object-cover w-[40px] h-[40px] ring-2 ring-purple-200 dark:ring-purple-600"
+              />
+            </div>
+
+            {/* User Info */}
+            <div className="flex flex-col">
+              {contactInfo.name != "User" && (
+                <h3 className="font-bold text-sm text-gray-900 dark:text-white ">
+                  {contactInfo.name}
+                </h3>
+              )}
+              <Link href={`/profile/${contactInfo.username}`}>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  @{contactInfo.username}
+                </p>
+              </Link>
+            </div>
           </div>
-        </div>
-        <div>
-          <CardDescription className="mt-2 text-sm">
-            Member Since:{" "}
-            {typeof contactInfo.joined === "string"
-              ? contactInfo.joined
-              : contactInfo.joined.toLocaleDateString()}
-          </CardDescription>
         </div>
       </CardHeader>
     </Card>

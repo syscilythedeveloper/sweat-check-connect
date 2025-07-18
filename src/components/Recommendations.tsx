@@ -27,7 +27,7 @@ const Recommendations = () => {
   return (
     <div className="max-w-sm mx-auto p-4 space-y-4">
       {" "}
-      <div className="bg-gray-200 dark:bg-slate-900 rounded-2xl shadow-lg p-4 space-y-4">
+      <div className="bg-gray-200 dark:bg-slate-900 rounded-2xl shadow-[0_0_20px_8px_rgba(63,23,154,0.3)]  p-4 space-y-4">
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between mb-4 ">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2 ">

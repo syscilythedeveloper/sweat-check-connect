@@ -66,47 +66,50 @@ const AppSideBar = () => {
   return (
     <>
       <Toaster />
-      <Sidebar className="bg-gray-100">
+
+      <Sidebar className="border border-transparent bg-transparent dark:bg-slate-900 rounded-2xl shadow-[0_0_20px_8px_rgba(63,23,154,0.3)]  p-4 space-y-4">
         <SidebarHeader>
           <ContactCard />
         </SidebarHeader>
-        <Separator className="mt-4" />
+        <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
         <SidebarContent>
-          <SidebarGroup>
+          <SidebarGroup className="bg-gray-200 dark:bg-slate-800 shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] border border-transparent rounded-2xl mt-4 mb-2">
             <SidebarGroupContent>
               <SidebarMenu>
                 <div className="flex items-center justify-end px-2 py-2">
                   <ModeToggle />
                 </div>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                <Separator className="my-1 bg-secondary" />
+                <div className="space-y-3">
+                  {items.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <a href={item.url}>
+                          <item.icon />
+                          <span className="text-lg font-small text-gray-900 dark:text-white">
+                            {item.title}
+                          </span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </div>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+          <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
-          <Separator className="mt-20 mb-2" />
-
-          <SidebarGroup>
-            <CheckInDialog
-              trigger={
-                <Button
-                  variant="secondary"
-                  className="w-full border-1"
-                >
-                  Check In
-                </Button>
-              }
-            />
-          </SidebarGroup>
+          <CheckInDialog
+            trigger={
+              <Button
+                variant="outline"
+                className="w-full text-sm py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all dark:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
+              >
+                Check In
+              </Button>
+            }
+          />
         </SidebarContent>
       </Sidebar>
     </>
