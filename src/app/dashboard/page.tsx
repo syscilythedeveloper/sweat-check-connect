@@ -7,7 +7,9 @@ const page = () => {
   return (
     <div className="flex h-screen">
       <Feed />
-      <Recommendations />
+      <div className="hidden lg:block">
+        <Recommendations />
+      </div>
     </div>
   );
 };
