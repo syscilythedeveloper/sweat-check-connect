@@ -76,13 +76,13 @@ const AppSideBar = () => {
         <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
         <SidebarContent>
-          <SidebarGroup className="bg-gray-200 dark:bg-slate-800 shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] border border-transparent rounded-2xl mt-4 mb-2">
+          <SidebarGroup className="bg-gray-100 dark:bg-slate-800 shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] border border-transparent rounded-2xl mt-4 mb-2">
             <SidebarGroupContent>
               <SidebarMenu>
-                <div className="flex items-center justify-end px-2 py-2">
+                <div className="flex items-center justify-end px-2 ">
                   <ModeToggle />
                 </div>
-                <Separator className="my-1 bg-secondary" />
+                <Separator className=" bg-secondary" />
                 <div className="space-y-3">
                   {items.map((item) => (
                     <SidebarMenuItem key={item.title}>

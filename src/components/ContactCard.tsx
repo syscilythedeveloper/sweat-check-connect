@@ -20,7 +20,7 @@ const ContactCard = () => {
   };
 
   return (
-    <Card className="bg-gray-200 dark:bg-slate-800 shadow-[0_0_10px_2px_rgba(168,85,247,0.2)] border border-transparent rounded-2xl p-4">
+    <Card className="bg-gray-100 dark:bg-slate-800 shadow-[0_0_10px_2px_rgba(168,85,247,0.2)] border border-transparent rounded-2xl p-4">
       <CardHeader className="p-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
