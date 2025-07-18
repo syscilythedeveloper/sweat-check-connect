@@ -30,7 +30,7 @@ const CheckInDialog = ({ trigger, className }: CheckInDialogProps) => {
       >
         {trigger}
       </DialogTrigger>
-      <DialogContent className="max-w-none w-screen h-screen p-0 m-0 rounded-none border-none [&>button]:hidden">
+      <DialogContent className="max-w-none w-screen h-screen p-0 m-0 rounded-none border-none flex items-center justify-center [&>button]:hidden">
         <DialogHeader className="sr-only">
           <DialogTitle>New Post</DialogTitle>
         </DialogHeader>
