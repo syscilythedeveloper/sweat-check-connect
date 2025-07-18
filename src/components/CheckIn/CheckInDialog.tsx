@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import CheckInForm from "@/components/CheckInForm";
+import CheckInForm from "@/components/CheckIn/CheckInForm";
 
 interface CheckInDialogProps {
   trigger: React.ReactNode;

@@ -3,8 +3,8 @@ import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/AppSideBar";
-import { ThemeProvider } from "@/components/theme-provider";
+import AppSidebar from "@/components/SignedInUser/AppSideBar";
+import { ThemeProvider } from "@/components/SignedInUser/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

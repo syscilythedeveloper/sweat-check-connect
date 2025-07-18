@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { UserPlus } from "lucide-react";
 import { followUser } from "@/utils/userInteractions";
 

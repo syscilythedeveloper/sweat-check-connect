@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { ArrowRight } from "lucide-react";
-import CheckInDialog from "@/components/CheckInDialog";
+import CheckInDialog from "@/components/CheckIn/CheckInDialog";
 
 export default async function Home() {
   return (

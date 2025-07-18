@@ -21,10 +21,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Toaster } from "react-hot-toast";
 import { Separator } from "@/components/ui/separator";
-import CheckInDialog from "@/components/CheckInDialog";
-import ContactCard from "@/components/ContactCard";
+import CheckInDialog from "@/components/CheckIn/CheckInDialog";
+import ContactCard from "@/components/SignedInUser/ContactCard";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggle } from "@/components/SignedInUser/mode-toggle";
 import QuickStats from "./QuickStats";
 import { useUser } from "@clerk/nextjs";
 
