@@ -9,7 +9,7 @@ interface ConnectionCardProps {
   user: {
     id: string;
     username: string;
-    avatarUrl: string;
+    avatar: string;
     bio?: string;
   };
   type: "recommendation" | "friend";
@@ -20,7 +20,7 @@ const ConnectionCard = ({ user, type }: ConnectionCardProps) => {
     <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 transition-transform transform hover:scale-[1.01]">
       <div className="flex items-center space-x-3 mb-3">
         <Image
-          src={user.avatarUrl || "/images/user.png"}
+          src={user.avatar || "/images/user.png"}
           alt={`${user.username}'s avatar`}
           width={40}
           height={40}
@@ -48,7 +48,7 @@ const ConnectionCard = ({ user, type }: ConnectionCardProps) => {
             className="w-full text-sm py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all"
           >
             <UserPlus />
-            Add to Crew
+            Follow
           </Button>
         )}
         {type === "friend" && (

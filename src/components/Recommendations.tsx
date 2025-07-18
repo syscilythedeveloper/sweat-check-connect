@@ -1,28 +1,27 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import ConnectionCard from "./ConnectionCard";
 import { Users } from "lucide-react";
 
+type User = {
+  id: string;
+  username: string;
+  avatar: string;
+  bio?: string;
+};
+
 const Recommendations = () => {
-  const users = [
-    {
-      id: "1",
-      username: "john_doe",
-      avatarUrl: "/images/user.png",
-      bio: "Fitness enthusiast and tech lover",
-    },
-    {
-      id: "2",
-      username: "jane_smith",
-      avatarUrl: "/images/foodpost.jpeg",
-      bio: "Loves hiking and outdoor adventures",
-    },
-    {
-      id: "3",
-      username: "alex_jones",
-      avatarUrl: "/images/workoutpost.jpeg",
-      bio: "Tech blogger and AI enthusiast",
-    },
-  ];
+  const [users, setUsers] = React.useState<User[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/users");
+      const users = await response.json();
+      console.log("Fetched users:", users);
+      setUsers(users);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="max-w-sm mx-auto p-4 space-y-4">
