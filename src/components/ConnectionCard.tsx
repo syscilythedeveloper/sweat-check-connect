@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { UserPlus } from "lucide-react";
+import { followUser } from "@/utils/userInteractions";
 
 interface ConnectionCardProps {
   user: {
@@ -20,11 +21,11 @@ const ConnectionCard = ({ user, type }: ConnectionCardProps) => {
     <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 transition-transform transform hover:scale-[1.01]">
       <div className="flex items-center space-x-3 mb-3">
         <Image
-          src={user.avatar || "/images/user.png"}
+          src={user.avatar || "/images/defaultUser.png"}
           alt={`${user.username}'s avatar`}
           width={40}
           height={40}
-          className="rounded-full object-cover w-[40px] h-[40px]"
+          className="rounded-full object-cover w-[40px] h-[40px] border border-gray-300 dark:border-gray-600"
         />
         <div className="flex-1">
           <Link href={`/profile/${user.username}`}>
@@ -46,6 +47,7 @@ const ConnectionCard = ({ user, type }: ConnectionCardProps) => {
           <Button
             variant="outline"
             className="w-full text-sm py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all"
+            onClick={() => followUser(user.username)}
           >
             <UserPlus />
             Follow

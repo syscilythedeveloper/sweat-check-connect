@@ -10,7 +10,6 @@ import { useUser } from "@clerk/nextjs";
 
 const ContactCard = () => {
   const { user } = useUser();
-  console.log("User data:", user);
 
   const contactInfo = {
     Image: user?.imageUrl || "/images/user.png",
