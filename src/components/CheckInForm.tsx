@@ -180,18 +180,18 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-start justify-center p-2 sm:p-4 font-sans">
-      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto mt-4 sm:mt-8 relative">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-900 dark:to-slate-800 flex items-start justify-center p-2 sm:p-4 font-sans">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto mt-4 sm:mt-8 relative border border-gray-100 dark:border-slate-700">
         <form
           onSubmit={handleSubmit}
           className="space-y-4 sm:space-y-6"
         >
-          <h5 className="text-2xl text-center sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
+          <h5 className="text-2xl text-center sm:text-3xl font-bold text-gray-800 dark:text-white mb-4 sm:mb-6">
             New Post
           </h5>
           {/* Upload Area */}
           <div
-            className="relative border-2 border-dashed border-purple-400 rounded-lg sm:rounded-xl p-4 sm:p-6 text-center cursor-pointer hover:bg-purple-50 transition-colors"
+            className="relative border-2 border-dashed border-purple-400 dark:border-purple-700 rounded-lg sm:rounded-xl p-4 sm:p-6 text-center cursor-pointer hover:bg-purple-50 dark:hover:bg-slate-900 transition-colors"
             onClick={() => !videoFile && fileInputRef.current?.click()}
           >
             <input
@@ -203,7 +203,7 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
               className="hidden"
             />
             {videoPreviewUrl ? (
-              <div className="relative w-full h-48 sm:h-56 md:h-64 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="relative w-full h-48 sm:h-56 md:h-64 bg-gray-100 dark:bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
                 <video
                   src={videoPreviewUrl}
                   controls
@@ -253,22 +253,22 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
               <div className="flex flex-col items-center justify-center py-4">
                 <Video
                   size={40}
-                  className="text-gray-400 mb-2 sm:mb-3 sm:w-12 sm:h-12"
+                  className="text-purple-400 dark:text-purple-500 mb-2 sm:mb-3 sm:w-12 sm:h-12"
                 />
-                <p className="text-gray-700 font-semibold text-base sm:text-lg">
+                <p className="text-gray-700 dark:text-gray-200 font-semibold text-base sm:text-lg">
                   Upload Your Workout Video
                 </p>
-                <p className="text-purple-600 text-xs sm:text-sm mt-1 font-medium">
+                <p className="text-purple-600 dark:text-purple-400 text-xs sm:text-sm mt-1 font-medium">
                   Must be 15-30 seconds long
                 </p>
-                <p className="text-gray-500 text-xs sm:text-sm mt-1">
+                <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mt-1">
                   Tap to upload
                 </p>
               </div>
             )}
           </div>
           <div className="text-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               📹 Video requirements: 15-30 seconds, max 50MB
             </p>
           </div>
@@ -277,9 +277,13 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
           <div>
             <label
               htmlFor="caption"
-              className="text-gray-700 text-sm font-medium mb-2 flex items-center gap-2"
+              className="text-gray-700 dark:text-gray-200 text-sm font-medium mb-2 flex items-center gap-2"
             >
-              <Camera size={16} /> Caption Your Workout
+              <Camera
+                size={16}
+                className="text-purple-500 dark:text-purple-400"
+              />{" "}
+              Caption Your Workout
             </label>
             <textarea
               id="caption"
@@ -287,14 +291,18 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
               onChange={(e) => setCaption(e.target.value)}
               rows={3}
               placeholder="What did you achieve today? Share your progress and thoughts!"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition resize-none text-sm sm:text-base text-gray-800 placeholder-gray-500"
+              className="w-full p-3 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition resize-none text-sm sm:text-base text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 bg-white dark:bg-slate-900"
             ></textarea>
           </div>
 
           {/* Privacy */}
           <div>
-            <label className="text-gray-700 text-sm font-medium mb-2 flex items-center gap-2">
-              <Lock size={16} /> Who can see this?
+            <label className="text-gray-700 dark:text-gray-200 text-sm font-medium mb-2 flex items-center gap-2">
+              <Lock
+                size={16}
+                className="text-purple-500 dark:text-purple-400"
+              />{" "}
+              Who can see this?
             </label>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <label className="inline-flex items-center cursor-pointer">
@@ -304,12 +312,12 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
                   value="public"
                   checked={privacy === "public"}
                   onChange={() => setPrivacy("public")}
-                  className="form-radio h-4 w-4 sm:h-5 sm:w-5 text-purple-600"
+                  className="form-radio h-4 w-4 sm:h-5 sm:w-5 text-purple-600 dark:text-purple-400"
                 />
-                <span className="ml-2 text-gray-800 flex items-center gap-1 text-sm sm:text-base">
+                <span className="ml-2 text-gray-800 dark:text-gray-100 flex items-center gap-1 text-sm sm:text-base">
                   <Globe
                     size={14}
-                    className="sm:w-4 sm:h-4"
+                    className="text-purple-400 dark:text-purple-500 sm:w-4 sm:h-4"
                   />{" "}
                   Public
                 </span>
@@ -321,12 +329,12 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
                   value="followersOnly"
                   checked={privacy === "followersOnly"}
                   onChange={() => setPrivacy("followersOnly")}
-                  className="form-radio h-4 w-4 sm:h-5 sm:w-5 text-purple-600"
+                  className="form-radio h-4 w-4 sm:h-5 sm:w-5 text-purple-600 dark:text-purple-400"
                 />
-                <span className="ml-2 text-gray-800 flex items-center gap-1 text-sm sm:text-base">
+                <span className="ml-2 text-gray-800 dark:text-gray-100 flex items-center gap-1 text-sm sm:text-base">
                   <Users
                     size={14}
-                    className="sm:w-4 sm:h-4"
+                    className="text-purple-400 dark:text-purple-500 sm:w-4 sm:h-4"
                   />{" "}
                   Followers Only
                 </span>
@@ -343,14 +351,14 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
             >
               <Video
                 size={20}
-                className="sm:w-6 sm:h-6"
+                className="text-white sm:w-6 sm:h-6"
               />
               {isSubmitting ? "Posting..." : "Post Workout"}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-6 py-3 border bg-red-200 border-gray-100 text-gray-700 font-medium rounded-xl hover:bg-red-500 transition flex items-center justify-center gap-2 text-sm sm:text-base"
+              className="w-full sm:w-auto px-6 py-3 border bg-red-200 dark:bg-red-900 border-gray-100 dark:border-red-900 text-gray-700 dark:text-gray-200 font-medium rounded-xl hover:bg-red-500 dark:hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm sm:text-base"
             >
               Cancel
             </button>

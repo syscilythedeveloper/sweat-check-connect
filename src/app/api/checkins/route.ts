@@ -27,7 +27,6 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      // More helpful error message
       console.error(`User not found for clerkId: ${userId}`);
       return NextResponse.json(
         {
