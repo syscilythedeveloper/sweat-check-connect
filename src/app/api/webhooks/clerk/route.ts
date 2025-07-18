@@ -29,9 +29,9 @@ export async function POST(req: Request) {
     console.log("Webhook verified, event type:", event.type);
 
     if (event.type === "user.created") {
-      const { id, email_addresses, first_name, last_name } = event.data;
-
-      console.log("Creating user with clerkId:", id);
+      const { id, email_addresses, first_name, last_name, username } =
+        event.data;
+      console.log("User created event data:", event.data);
 
       try {
         // First try to upsert by clerkId
@@ -42,6 +42,8 @@ export async function POST(req: Request) {
             clerkId: id,
             email: email_addresses[0].email_address,
             name: `${first_name} ${last_name}`,
+            username:
+              username || email_addresses[0].email_address.split("@")[0],
           },
         });
 
@@ -57,6 +59,8 @@ export async function POST(req: Request) {
             data: {
               clerkId: id,
               name: `${first_name} ${last_name}`,
+              username:
+                username || email_addresses[0].email_address.split("@")[0],
             },
           });
 

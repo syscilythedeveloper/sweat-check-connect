@@ -23,6 +23,7 @@ model User {
   likes                  Like[]
   receivedMessages       Message[]    @relation("ReceivedMessages")
   sentMessages           Message[]    @relation("SentMessages")
+  username              String       @unique 
 }
 
 model CheckIn {

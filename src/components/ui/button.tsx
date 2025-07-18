@@ -14,7 +14,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "text-gray-500 border bg-background hover:bg-yellow-200 hover:border-2 hover:border-chart-5 hover:text-accent-foreground dark:bg-border/40 dark:border-secondary-shadow dark:hover:bg-input/50 dark:hover:border-border",
+          "text-card-foreground border bg-background hover:bg-yellow-200 hover:border-2 hover:border-chart-5 hover:text-muted-foreground dark:bg-border/40 dark:border-secondary-shadow dark:hover:bg-input/50 dark:hover:border-secondary",
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 dark:border-secondary-shadow",
         ghost:

@@ -230,7 +230,7 @@ const FilterTab = ({
 );
 
 // Check-in Card Component
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const CheckInCard = ({ item }: { item: any }) => (
   <>
     <div className="p-4">

@@ -64,3 +64,19 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    console.log("Search params:", searchParams);
+    //need to implement logic to fetch checkins based on userId
+
+    return NextResponse.json("Got it");
+  } catch (error) {
+    console.error("Error fetching check-ins:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch check-ins" },
+      { status: 500 }
+    );
+  }
+}

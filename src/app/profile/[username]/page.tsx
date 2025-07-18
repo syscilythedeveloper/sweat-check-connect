@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-//[TODO ] make profile page dynamic for each user
+
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -13,8 +13,24 @@ const ProfilePage = () => {
   const params = useParams();
   console.log("Profile params:", params);
   const { user } = useUser();
+  const username = params.username || user?.username || "defaultUser";
 
-  // You'll eventually fetch this from your database
+  const [checkIns, setCheckIns] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCheckIns() {
+      setLoading(true);
+      const res = await fetch(`/api/checkins?username=${username}`);
+      const data = await res.json();
+      setCheckIns(data);
+      setLoading(false);
+      console.log("Fetched check-ins:", data);
+    }
+    fetchCheckIns();
+  }, [username]);
+
+  // fetch this info from db
   const [userProfile, setUserProfile] = useState({
     id: user?.id || "user123",
     name: user?.username || "sys_thealchemist",
