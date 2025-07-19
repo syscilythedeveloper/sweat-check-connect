@@ -13,14 +13,14 @@ type User = {
 const Recommendations = () => {
   const [users, setUsers] = React.useState<User[]>([]);
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRecommendations = async () => {
       const response = await fetch("/api/recommendations");
       const users = await response.json();
       console.log("Fetched users:", users);
       setUsers(users);
     };
 
-    fetchData();
+    fetchRecommendations();
   }, []);
 
   return (
