@@ -17,6 +17,13 @@ interface ConnectionCardProps {
 }
 
 const ConnectionCard = ({ user, type }: ConnectionCardProps) => {
+  const [isFollowing, setIsFollowing] = React.useState(false);
+  const handleFollow = async () => {
+    const res = await followUser(user.username);
+    if (res.ok) {
+      setIsFollowing(true);
+    }
+  };
   return (
     <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 transition-transform transform hover:scale-[1.01]">
       <div className="flex items-center space-x-3 mb-3">
@@ -47,10 +54,11 @@ const ConnectionCard = ({ user, type }: ConnectionCardProps) => {
           <Button
             variant="outline"
             className="w-full text-sm py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all"
-            onClick={() => followUser(user.username)}
+            onClick={handleFollow}
+            disabled={isFollowing}
           >
-            <UserPlus />
-            Follow
+            {!isFollowing && <UserPlus />}
+            {isFollowing ? "Following" : "Follow"}
           </Button>
         )}
         {type === "friend" && (

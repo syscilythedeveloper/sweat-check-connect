@@ -14,7 +14,7 @@ const Recommendations = () => {
   const [users, setUsers] = React.useState<User[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/users");
+      const response = await fetch("/api/recommendations");
       const users = await response.json();
       console.log("Fetched users:", users);
       setUsers(users);
