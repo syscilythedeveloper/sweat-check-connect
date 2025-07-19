@@ -172,7 +172,7 @@ const FriendsSection = ({
       <div className="text-center py-12">
         <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-          No friends found
+          You dont follow anyone yet
         </h3>
         <p className="text-gray-600 dark:text-gray-400">
           Try adjusting your search terms
