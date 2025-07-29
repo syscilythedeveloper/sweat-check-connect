@@ -14,12 +14,14 @@ import {
   CheckCircle,
   Star,
 } from "lucide-react";
+import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
 
 const ChallengesPage = () => {
   //const { user } = useUser();
   const [activeTab, setActiveTab] = useState("discover");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   // Mock challenges data
   const [challenges] = useState([
@@ -170,7 +172,10 @@ const ChallengesPage = () => {
             </p>
           </div>
 
-          <button className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all transform hover:scale-105 flex items-center gap-2">
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all transform hover:scale-105 flex items-center gap-2"
+          >
             <Plus className="w-5 h-5" />
             Create Challenge
           </button>
@@ -232,6 +237,26 @@ const ChallengesPage = () => {
           />
         </div>
       </div>
+
+      {/* Create Challenge Form Modal */}
+      {showCreateForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 w-full max-w-md mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                Create Challenge
+              </h2>
+              <button
+                onClick={() => setShowCreateForm(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                ✕
+              </button>
+            </div>
+            <CreateChallengeForm />
+          </div>
+        </div>
+      )}
 
       {/* Challenges Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -384,6 +409,8 @@ const ChallengeCard = ({ challenge }: { challenge: any }) => (
       {/* Creator Info */}
       <div className="flex items-center gap-2 mb-4">
         <Image
+          width={24}
+          height={24}
           src={challenge.creatorAvatar}
           alt={challenge.creator}
           className="w-6 h-6 rounded-full"

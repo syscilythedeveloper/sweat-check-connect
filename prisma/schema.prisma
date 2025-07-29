@@ -31,6 +31,7 @@ model CheckIn {
   id           String    @id @default(cuid())
   userId       String
   caption      String
+  challengeId  String? 
   videoUrl     String
   fileName     String
   fileSize     Int
@@ -45,6 +46,9 @@ model CheckIn {
   likes        Like[]
   notifications Notification[]
 }
+
+
+
 
 model Comment {
   id        String   @id @default(cuid())
@@ -108,8 +112,6 @@ model Notification {
   commentId String?
   createdAt DateTime @default(now())
   messageId String?
-  
-  
   // Relations
   receiver   User     @relation("userNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
   notificationSender   User     @relation("notificationSender", fields: [senderId], references: [id], onDelete: Cascade)
