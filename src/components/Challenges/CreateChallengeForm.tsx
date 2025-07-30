@@ -154,7 +154,7 @@ const CreateChallengeForm = () => {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white"
+                      className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white rounded-2xl p-6 focus:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
                       placeholder="e.g. 30-Day Plank Challenge"
                       {...field}
                     />
@@ -174,7 +174,7 @@ const CreateChallengeForm = () => {
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      className="resize-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white"
+                      className="resize-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white rounded-2xl p-6 focus:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
                       placeholder="Describe the challenge goals, rules, etc."
                       rows={4}
                       {...field}
@@ -268,7 +268,7 @@ const CreateChallengeForm = () => {
                           type="number"
                           min={1}
                           max={31}
-                          className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white"
+                          className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white rounded-2xl p-6 focus:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
                           placeholder="e.g. 7"
                           {...field}
                           onChange={(e) => {
@@ -294,7 +294,7 @@ const CreateChallengeForm = () => {
                           type="number"
                           min={2}
                           max={10}
-                          className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white"
+                          className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white rounded-2xl p-6 focus:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
                           placeholder="e.g. 10"
                           {...field}
                           onChange={(e) => {
