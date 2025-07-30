@@ -158,10 +158,10 @@ const ChallengesPage = () => {
   const myCompletedChallenges = challenges.filter((c) => c.progress === 100);
 
   return (
-    <div className="max-w-7xl mx-auto p-4 space-y-6">
+    <div className="w-full max-w-full mx-auto p-2 sm:p-4 space-y-4 overflow-x-hidden">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-3 sm:p-6">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
               <Trophy className="w-8 h-8 text-yellow-600" />
@@ -182,7 +182,7 @@ const ChallengesPage = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="flex flex-col md:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
           {/* Search */}
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -241,7 +241,7 @@ const ChallengesPage = () => {
       {/* Create Challenge Form Modal */}
       {showCreateForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-          <div className="bg-white dark:bg-slate-800 w-full max-w-md mx-4 rounded-2xl shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] p-6 ">
+          <div className="bg-white dark:bg-slate-800 w-full max-w-md mx-2 sm:mx-4 rounded-2xl shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] p-3 sm:p-6 ">
             <div className="flex items-center justify-between mb-4 ">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                 Create Challenge
@@ -259,7 +259,7 @@ const ChallengesPage = () => {
       )}
 
       {/* Challenges Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
         {filteredChallenges.map((challenge) => (
           <ChallengeCard
             key={challenge.id}
