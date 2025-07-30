@@ -17,7 +17,6 @@ export interface ChallengeCardProps {
   participants: number;
   isJoined: boolean;
   progress: number;
-  currentDay: number;
   creator: string;
   creatorAvatar: string;
   rewards: string[];

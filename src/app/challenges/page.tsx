@@ -72,8 +72,8 @@ const ChallengesPage = () => {
 
       completionRate: 89,
       tags: ["walking", "steps", "daily", "habits"],
-      startDate: "2025-01-08",
-      endDate: "2025-01-28",
+      startDate: "2025-07-26",
+      endDate: "2025-08-05",
     },
     {
       id: "4",
