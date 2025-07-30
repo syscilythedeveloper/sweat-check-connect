@@ -62,7 +62,7 @@ const ChallengeCard = ({ challenge }: { challenge: ChallengeCardProps }) => (
       </div>
 
       {challenge.isJoined ? (
-        <div className="mb-4">
+        <div className="my-4">
           <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
             <span>Progress</span>
             <span>
