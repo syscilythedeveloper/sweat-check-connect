@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { Trophy, Plus, Search, Play, CheckCircle } from "lucide-react";
 import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
 import ChallengeCard from "@/components/Challenges/ChallengeCard";
+
 const ChallengesPage = () => {
   //const { user } = useUser();
   const [activeTab, setActiveTab] = useState("discover");
@@ -26,9 +27,8 @@ const ChallengesPage = () => {
       progress: 67,
       currentDay: 20,
       creator: "RunningClub",
-      creatorAvatar: "/images/running-club.png",
+      creatorAvatar: "/images/defaultUser.png",
       rewards: ["Marathon Medal", "Endurance Badge", "500 Points"],
-      isPopular: true,
       completionRate: 78,
       tags: ["running", "endurance", "daily"],
       startDate: "2025-01-01",
@@ -47,9 +47,8 @@ const ChallengesPage = () => {
       progress: 0,
       currentDay: 0,
       creator: "StrengthGuild",
-      creatorAvatar: "/images/strength-guild.png",
+      creatorAvatar: "/images/defaultUser.png",
       rewards: ["Strength Master Badge", "Upper Body Trophy", "1000 Points"],
-      isPopular: true,
       completionRate: 65,
       tags: ["pushups", "strength", "bodyweight"],
       startDate: "2025-01-15",
@@ -68,9 +67,9 @@ const ChallengesPage = () => {
       progress: 33,
       currentDay: 7,
       creator: "WalkingClub",
-      creatorAvatar: "/images/walking-club.png",
+      creatorAvatar: "/images/defaultUser.png",
       rewards: ["Walker Badge", "Consistency Medal", "300 Points"],
-      isPopular: false,
+
       completionRate: 89,
       tags: ["walking", "steps", "daily", "habits"],
       startDate: "2025-01-08",
@@ -89,7 +88,7 @@ const ChallengesPage = () => {
       progress: 0,
       currentDay: 0,
       creator: "ZenFitness",
-      creatorAvatar: "/images/zen-fitness.png",
+      creatorAvatar: "/images/defaultUser.png",
       rewards: ["Mindfulness Badge", "Flexibility Trophy", "400 Points"],
       isPopular: false,
       completionRate: 82,
@@ -110,7 +109,7 @@ const ChallengesPage = () => {
       progress: 50,
       currentDay: 14,
       creator: "HIITMasters",
-      creatorAvatar: "/images/hiit-masters.png",
+      creatorAvatar: "/images/defaultUser.png",
       rewards: ["HIIT Warrior Badge", "Cardio King Trophy", "800 Points"],
       isPopular: true,
       completionRate: 72,
@@ -148,7 +147,7 @@ const ChallengesPage = () => {
   return (
     <div className="w-full max-w-full mx-auto p-2 sm:p-4 space-y-4 overflow-x-hidden">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-3 sm:p-6">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-purple-glow p-3 sm:p-6">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
@@ -229,7 +228,7 @@ const ChallengesPage = () => {
       {/* Create Challenge Form Modal */}
       {showCreateForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-          <div className="bg-white dark:bg-slate-800 w-full max-w-md mx-2 sm:mx-4 rounded-2xl shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] p-3 sm:p-6 ">
+          <div className="bg-white dark:bg-slate-800 w-full max-w-md mx-2 sm:mx-4 rounded-2xl shadow-purple-glow p-3 sm:p-6 ">
             <div className="flex items-center justify-between mb-4 ">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                 Create Challenge
@@ -247,7 +246,7 @@ const ChallengesPage = () => {
       )}
 
       {/* Challenges Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 ">
         {filteredChallenges.map((challenge) => (
           <ChallengeCard
             key={challenge.id}

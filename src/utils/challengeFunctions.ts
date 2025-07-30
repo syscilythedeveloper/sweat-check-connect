@@ -10,3 +10,7 @@ export function createChallenge(data: ChallengeData) {
     body: JSON.stringify(data),
   });
 }
+
+export function calculateGains(duration: number) {
+  return 10 * duration + duration;
+}

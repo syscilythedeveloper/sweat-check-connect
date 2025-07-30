@@ -68,7 +68,7 @@ const AppSideBar = () => {
     <>
       <Toaster />
 
-      <Sidebar className="border border-transparent bg-transparent dark:bg-slate-900 rounded-2xl shadow-[0_0_20px_8px_rgba(63,23,154,0.3)]  p-4 space-y-4">
+      <Sidebar className="border border-transparent bg-transparent dark:bg-slate-900 rounded-2xl shadow-purple-glow  p-4 space-y-4">
         <SidebarHeader className="space-y-2">
           <ContactCard />
           <QuickStats />
@@ -76,7 +76,7 @@ const AppSideBar = () => {
         <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
         <SidebarContent>
-          <SidebarGroup className="bg-gray-100 dark:bg-slate-800 shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] border border-transparent rounded-2xl mt-4 mb-2">
+          <SidebarGroup className="bg-gray-100 dark:bg-slate-800 shadow-purple-glow border border-transparent rounded-2xl mt-4 mb-2">
             <SidebarGroupContent>
               <SidebarMenu>
                 <div className="flex items-center justify-end px-2 ">
@@ -103,14 +103,7 @@ const AppSideBar = () => {
           <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
           <CheckInDialog
-            trigger={
-              <Button
-                variant="outline"
-                className="w-full text-sm py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all dark:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
-              >
-                Check In
-              </Button>
-            }
+            trigger={<Button variant="outline">Check In</Button>}
           />
         </SidebarContent>
       </Sidebar>

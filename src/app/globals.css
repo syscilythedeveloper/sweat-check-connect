@@ -3,6 +3,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@layer utilities {
+  .shadow-purple-glow {
+    box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.4);
+  }
+  .shadow-red-glow {
+    box-shadow: 0 0 10px 2px rgba(255, 69, 0, 0.4);
+  }
+  .shadow-blue-glow {
+    box-shadow: 0 0 10px 2px rgba(0, 123, 255, 0.4);
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
