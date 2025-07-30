@@ -1,4 +1,5 @@
 import { ChallengeData } from "@/types/challenge";
+//import prisma from "../../prisma/utils/prisma";
 
 export function createChallenge(data: ChallengeData) {
   return fetch(`/api/challenges/`, {

@@ -4,4 +4,5 @@ export interface ChallengeData {
   startDate: string;
   endDate: string;
   maxParticipants: number;
+  creatorId: string;
 }

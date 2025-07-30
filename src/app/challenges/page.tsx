@@ -176,7 +176,7 @@ const ChallengesPage = () => {
             onClick={() => setShowCreateForm(true)}
             className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all transform hover:scale-105 flex items-center gap-2"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-5 h-5 " />
             Create Challenge
           </button>
         </div>
@@ -240,9 +240,9 @@ const ChallengesPage = () => {
 
       {/* Create Challenge Form Modal */}
       {showCreateForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 w-full max-w-md mx-4">
-            <div className="flex items-center justify-between mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
+          <div className="bg-white dark:bg-slate-800 w-full max-w-md mx-4 rounded-2xl shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] p-6 ">
+            <div className="flex items-center justify-between mb-4 ">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                 Create Challenge
               </h2>
