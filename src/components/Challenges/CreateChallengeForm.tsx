@@ -185,12 +185,11 @@ const CreateChallengeForm = () => {
               )}
             />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <FormField
                 control={form.control}
                 name="startDate"
                 render={({ field }) => {
-                  // Parse MM/DD/YYYY to Date
                   const valueAsDate =
                     field.value && /^\d{2}\/\d{2}\/\d{4}$/.test(field.value)
                       ? new Date(
@@ -241,7 +240,6 @@ const CreateChallengeForm = () => {
                                 field.onChange(`${mm}/${dd}/${yyyy}`);
                               }
                             }}
-                            // Optionally restrict selectable dates to today and next 365 days:
                             disabled={(date) => {
                               const today = new Date();
                               const max = new Date();
@@ -256,61 +254,70 @@ const CreateChallengeForm = () => {
                   );
                 }}
               />
-              <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-200">
-                      Duration (days)
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={31}
-                        className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white"
-                        placeholder="e.g. 7"
-                        {...field}
-                        onChange={(e) => {
-                          // Remove leading zeros and allow empty string
-                          const val = e.target.value.replace(/^0+/, "");
-                          field.onChange(val === "" ? "" : Number(val));
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="duration"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700 dark:text-gray-200">
+                        Duration (days)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={31}
+                          className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white"
+                          placeholder="e.g. 7"
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/^0+/, "");
+                            field.onChange(val === "" ? "" : Number(val));
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="maxParticipants"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700 dark:text-gray-200">
+                        Max Participants
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={2}
+                          max={10}
+                          className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white"
+                          placeholder="e.g. 10"
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/^0+/, "");
+                            field.onChange(val === "" ? "" : Number(val));
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+              </div>
               {Number(form.watch("duration")) > 31 && (
-                <div className="col-span-2 text-red-500 text-sm mt-1">
+                <div className="text-red-500 text-sm mt-1">
                   Duration cannot exceed 31 days.
                 </div>
               )}
-              <FormField
-                control={form.control}
-                name="maxParticipants"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-200">
-                      Max Participants
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={2}
-                        max={10}
-                        className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white"
-                        placeholder="e.g. 10"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
+              {Number(form.watch("maxParticipants")) > 10 && (
+                <div className="text-red-500 text-sm mt-1">
+                  Max participants cannot exceed 10.
+                </div>
+              )}
             </div>
             {form.watch("startDate") && form.watch("duration") && (
               <div className="bg-blue-50 dark:bg-slate-900 border border-blue-200 dark:border-slate-600 rounded-lg p-3">
