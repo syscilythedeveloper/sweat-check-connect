@@ -336,9 +336,10 @@ const CreateChallengeForm = () => {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white text-lg py-2 rounded-xl shadow-md transition duration-200"
+              variant="outline"
+              className="w-full text-md py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all dark:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
             >
-              🚀 Launch Challenge
+              🏁 Create & Compete
             </Button>
           </form>
         </Form>
