@@ -14,3 +14,10 @@ export function createChallenge(data: ChallengeData) {
 export function calculateGains(duration: number) {
   return 10 * duration + duration;
 }
+
+export function calculateDaysUntilStart(startDate: string) {
+  const start = new Date(startDate);
+  const today = new Date();
+  const diffTime = start.getTime() - today.getTime();
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}

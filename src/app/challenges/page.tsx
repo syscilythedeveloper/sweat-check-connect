@@ -31,8 +31,8 @@ const ChallengesPage = () => {
       rewards: ["Marathon Medal", "Endurance Badge", "500 Points"],
       completionRate: 78,
       tags: ["running", "endurance", "daily"],
-      startDate: "2025-01-01",
-      endDate: "2025-01-30",
+      startDate: "2025-08-15",
+      endDate: "2025-09-30",
     },
     {
       id: "2",
@@ -51,8 +51,8 @@ const ChallengesPage = () => {
       rewards: ["Strength Master Badge", "Upper Body Trophy", "1000 Points"],
       completionRate: 65,
       tags: ["pushups", "strength", "bodyweight"],
-      startDate: "2025-01-15",
-      endDate: "2025-02-26",
+      startDate: "2025-08-01",
+      endDate: "2025-09-26",
     },
     {
       id: "3",
@@ -93,8 +93,8 @@ const ChallengesPage = () => {
       isPopular: false,
       completionRate: 82,
       tags: ["yoga", "meditation", "flexibility", "mindfulness"],
-      startDate: "2025-02-01",
-      endDate: "2025-02-28",
+      startDate: "2025-08-15",
+      endDate: "2025-09-10",
     },
     {
       id: "5",

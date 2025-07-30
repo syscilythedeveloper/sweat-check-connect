@@ -4,7 +4,10 @@ import { HeartPlus, CheckCircle, Users } from "lucide-react";
 import { ChallengeCardProps } from "@/types/challenge";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import { calculateGains } from "@/utils/challengeFunctions";
+import {
+  calculateGains,
+  calculateDaysUntilStart,
+} from "@/utils/challengeFunctions";
 const tagColorClasses = [
   "bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300",
   "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300",
@@ -80,7 +83,7 @@ const ChallengeCard = ({ challenge }: { challenge: ChallengeCardProps }) => (
         <div className="my-6 flex items-center gap-2 justify-center">
           <div className="h-3 w-3 rounded-full bg-blue-500" />
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            Starts in {challenge.duration - challenge.currentDay} days
+            Starts in {calculateDaysUntilStart(challenge.startDate)} days
           </div>
         </div>
       )}
