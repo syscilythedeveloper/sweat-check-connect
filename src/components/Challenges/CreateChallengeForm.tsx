@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
-
+import toast from "react-hot-toast";
 import {
   Popover,
   PopoverContent,
@@ -116,6 +116,9 @@ const CreateChallengeForm = () => {
           const result = response.json();
 
           console.log("Challenge created:", result);
+          toast.success(
+            `Challenge "${challengeData.title}" created successfully!`
+          );
 
           form.reset();
         } else {
