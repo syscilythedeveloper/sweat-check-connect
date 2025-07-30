@@ -27,6 +27,7 @@ import { createChallenge } from "@/utils/challengeFunctions";
 import React from "react";
 import { useUser } from "@clerk/nextjs";
 import { ChevronDownIcon } from "lucide-react";
+import { X } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(3, {
@@ -61,6 +62,7 @@ const formSchema = z.object({
     .max(10, {
       message: "Maximum participants cannot exceed 10.",
     }),
+  tags: z.array(z.enum(["cardio", "weight", "glute"])).optional(),
 });
 
 const calculateEndDate = (startDate: string, duration: number): string => {
@@ -78,9 +80,20 @@ const calculateEndDate = (startDate: string, duration: number): string => {
 };
 
 type FormData = z.infer<typeof formSchema>;
-const CreateChallengeForm = () => {
+const MAX_TAGS = 3;
+
+type CreateChallengeFormProps = {
+  setShowCreateForm?: (show: boolean) => void;
+};
+
+const CreateChallengeForm = ({
+  setShowCreateForm,
+}: CreateChallengeFormProps) => {
   const { user } = useUser();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [tagInput, setTagInput] = React.useState("");
+  const [tags, setTags] = React.useState<string[]>([]);
+  const [tagError, setTagError] = React.useState("");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -93,9 +106,38 @@ const CreateChallengeForm = () => {
     },
   });
 
+  const handleTagInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTagInput(e.target.value);
+    setTagError("");
+  };
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if ((e.key === "Enter" || e.key === ",") && tagInput.trim()) {
+      e.preventDefault();
+      if (tags.length >= MAX_TAGS) {
+        setTagError("Maximum of 3 tags allowed");
+        return;
+      }
+      const newTag = tagInput.trim().replace(/,$/, "");
+      if (newTag && !tags.includes(newTag)) {
+        setTags([...tags, newTag]);
+        setTagInput("");
+      }
+    }
+  };
+
+  const removeTag = (tag: string) => {
+    setTags(tags.filter((t) => t !== tag));
+    setTagError("");
+  };
+
   const onSubmit = (formData: FormData) => {
     if (!user?.id) {
       alert("You must be signed in to create a challenge.");
+      return;
+    }
+    if (tags.length > MAX_TAGS) {
+      setTagError("Maximum of 3 tags allowed");
       return;
     }
 
@@ -106,6 +148,7 @@ const CreateChallengeForm = () => {
 
     const challengeData: ChallengeData = {
       ...formData,
+      tags,
       endDate, // calculated here
       creatorId: user.id,
     };
@@ -121,6 +164,7 @@ const CreateChallengeForm = () => {
           );
 
           form.reset();
+          if (setShowCreateForm) setShowCreateForm(false); // Close modal on submit
         } else {
           alert("Failed to create challenge. Please try again.");
         }
@@ -322,6 +366,56 @@ const CreateChallengeForm = () => {
                 </div>
               )}
             </div>
+            <FormField
+              control={form.control}
+              name="tags"
+              render={() => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 dark:text-gray-200">
+                    Tags (optional)
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex flex-wrap items-center gap-2 bg-transparent rounded-xl min-h-[48px] px-3 py-2 border border-gray-300 dark:border-slate-600 focus-within:ring-2 focus-within:ring-violet-500 transition">
+                      {tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="flex items-center gap-1 px-3 py-1 rounded-full bg-violet-600/20 text-violet-300 text-sm font-medium"
+                        >
+                          {tag}
+                          <button
+                            type="button"
+                            className="ml-1 focus:outline-none group"
+                            tabIndex={-1}
+                            onClick={() => removeTag(tag)}
+                          >
+                            <X className="w-4 h-4 text-violet-400 group-hover:text-violet-500 transition-colors" />
+                          </button>
+                        </span>
+                      ))}
+                      {tags.length < MAX_TAGS && (
+                        <input
+                          type="text"
+                          value={tagInput}
+                          onChange={handleTagInput}
+                          onKeyDown={handleTagKeyDown}
+                          className="bg-transparent outline-none border-none text-violet-300 placeholder-violet-400 flex-1 min-w-[80px] py-1 px-2 text-sm"
+                          placeholder={
+                            tags.length === 0
+                              ? "Add a tag and press Enter or Comma"
+                              : ""
+                          }
+                          disabled={tags.length >= MAX_TAGS}
+                        />
+                      )}
+                    </div>
+                  </FormControl>
+                  {tagError && (
+                    <div className="text-xs text-red-400 mt-1">{tagError}</div>
+                  )}
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
             {form.watch("startDate") && form.watch("duration") && (
               <div className="bg-blue-50 dark:bg-slate-900 border border-blue-200 dark:border-slate-600 rounded-lg p-3">
                 <p className="text-sm text-blue-700 dark:text-blue-300">
@@ -334,13 +428,23 @@ const CreateChallengeForm = () => {
               </div>
             )}
 
-            <Button
-              type="submit"
-              variant="outline"
-              className="w-full text-md py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all dark:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
-            >
-              🏁 Create & Compete
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-1/2 text-md py-2 border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-all"
+                onClick={() => setShowCreateForm && setShowCreateForm(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="outline"
+                className="w-1/2 text-md py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all dark:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
+              >
+                🏁 Create & Compete
+              </Button>
+            </div>
           </form>
         </Form>
       )}
