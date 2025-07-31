@@ -6,21 +6,31 @@ export function getFollowers(userId: string) {
   const followers = [
     {
       id: "5",
-      username: "HIIT Warrior",
-      bio: "Complete 20 high-intensity interval training sessions in 30 days. Boost your fitness and burn fat!",
+      username: "Jalen Hurts",
+      bio: "I like to lift weights and throw touchdowns",
       avatar: "/images/defaultUser.png",
+      userFollows: true,
     },
     {
       id: "6",
-      username: "Strength Training Enthusiast",
-      bio: "Lift weights at least 3 times a week for 6 weeks. Build muscle and strength!",
+      username: "Pops",
+      bio: "Everytime I'm in the kitchen, you in the kitchen. Eating up all the food.",
       avatar: "/images/defaultUser.png",
+      userFollows: true,
     },
     {
       id: "7",
-      username: "Cycling Champion",
-      bio: "Cycle at least 100 miles in 30 days. Great for cardio and leg strength!",
+      username: "Deebo",
+      bio: "My bike.",
       avatar: "/images/defaultUser.png",
+      userFollows: false,
+    },
+    {
+      id: "8",
+      username: "Money Mike",
+      bio: "Don't be sorry. Be Careful",
+      avatar: "/images/defaultUser.png",
+      userFollows: false,
     },
   ];
   return followers;
@@ -64,20 +74,38 @@ export function getNewConnections(userId: string) {
   const newConnections = [
     {
       id: "8",
-      username: "HIIT Warrior",
-      bio: "Complete 20 high-intensity interval training sessions in 30 days. Boost your fitness and burn fat!",
+      username: "Daffy Duck",
+      bio: "Quack that azz up and lift weights",
       avatar: "/images/defaultUser.png",
     },
     {
       id: "9",
-      username: "Strength Training Enthusiast",
-      bio: "Lift weights at least 3 times a week for 6 weeks. Build muscle and strength!",
+      username: "Mystikal",
+      bio: "I came in with the mic in my hand. Don't make me have to put my foot in yo ass be cool",
       avatar: "/images/defaultUser.png",
     },
     {
       id: "10",
-      username: "Cycling Champion",
+      username: "Lance Armstrong",
       bio: "Cycle at least 100 miles in 30 days. Great for cardio and leg strength!",
+      avatar: "/images/defaultUser.png",
+    },
+    {
+      id: "11",
+      username: "Boosie",
+      bio: "Purple drank and weight lifting",
+      avatar: "/images/defaultUser.png",
+    },
+    {
+      id: "12",
+      username: "Soulja Boy",
+      bio: "I like to crank that and lift weights at the same time",
+      avatar: "/images/defaultUser.png",
+    },
+    {
+      id: "13",
+      username: "Tyra Banks",
+      bio: "Since yall are so obsessed with me, I might as well lift weights",
       avatar: "/images/defaultUser.png",
     },
   ];

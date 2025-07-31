@@ -172,7 +172,15 @@ const ProfilePage = () => {
                     {userProfile.stats.friends}
                   </span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Friends
+                    Followers
+                  </span>
+                </div>
+                <div className="text-center">
+                  <span className="block text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    52
+                  </span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    Following
                   </span>
                 </div>
               </div>
@@ -192,9 +200,14 @@ const ProfilePage = () => {
               onClick={() => setActiveTab("challenges")}
             />
             <TabButton
-              label="Friends"
-              isActive={activeTab === "friends"}
-              onClick={() => setActiveTab("friends")}
+              label="Followers"
+              isActive={activeTab === "followers"}
+              onClick={() => setActiveTab("followers")}
+            />
+            <TabButton
+              label="Following"
+              isActive={activeTab === "following"}
+              onClick={() => setActiveTab("following")}
             />
           </div>
 
@@ -206,7 +219,10 @@ const ProfilePage = () => {
             {activeTab === "challenges" && (
               <ChallengesSection challenges={userProfile.challenges} />
             )}
-            {activeTab === "friends" && (
+            {activeTab === "followers" && (
+              <FriendsSection friends={userProfile.friends} />
+            )}
+            {activeTab === "following" && (
               <FriendsSection friends={userProfile.friends} />
             )}
           </div>

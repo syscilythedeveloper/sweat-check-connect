@@ -9,4 +9,5 @@ export interface ConnectionCardProps {
   username: string;
   avatar: string;
   bio?: string;
+  userFollows?: boolean;
 }

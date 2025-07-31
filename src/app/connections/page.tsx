@@ -51,7 +51,7 @@ const Connections = () => {
   return (
     <div className="w-full max-w-6xl mx-auto p-2 sm:p-4 space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-[0_0_10px_2px_rgba(168,85,247,0.4)] p-6 ">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-[0_0_16px_4px_rgba(30,41,59,0.6)] dark:shadow-[0_0_24px_6px_rgba(30,41,59,0.9)] p-6 ">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
@@ -71,34 +71,39 @@ const Connections = () => {
           />
         </div>
         {/* Tabs */}
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 shadow-[0_0_8px_2px_rgba(30,41,59,0.3)] dark:shadow-[0_0_12px_3px_rgba(30,41,59,0.7)] rounded-xl p-1">
           <TabButton
             label="New Connections"
             count={newConnections.length}
             isActive={activeTab === connectionType.not_connected}
             onClick={() => setActiveTab(connectionType.not_connected)}
-            icon={<Users className="w-4 h-4" />}
+            icon={
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            }
           />
-
           <TabButton
             label="Followers"
             count={followers.length}
             isActive={activeTab === connectionType.followed_by}
             onClick={() => setActiveTab(connectionType.followed_by)}
-            icon={<Users className="w-4 h-4" />}
+            icon={
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            }
           />
           <TabButton
             label="Following"
             count={following.length}
             isActive={activeTab === connectionType.following}
             onClick={() => setActiveTab(connectionType.following)}
-            icon={<Users className="w-4 h-4" />}
+            icon={
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            }
           />
         </div>
       </div>
       {/* Content */}
-      {/* Challenges Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 ">
+      {/* Connections List */}
+      <div className="flex flex-col gap-4">
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
           : displayedConnections.map((connection) => (
@@ -106,6 +111,11 @@ const Connections = () => {
                 key={connection.id}
                 connection={connection}
                 connectionStatus={activeTab}
+                userFollows={
+                  activeTab === connectionType.followed_by
+                    ? connection.userFollows
+                    : undefined
+                }
               />
             ))}
       </div>
