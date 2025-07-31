@@ -48,7 +48,7 @@ export function getChallengesInProgress(userId: string) {
   const joinedChallenges = [
     {
       id: "1",
-      title: "30-Day Running Streak",
+      title: "Running Streak",
       description:
         "Run at least 5K every day for 30 consecutive days. Build consistency and endurance!",
       duration: 30,
@@ -56,12 +56,12 @@ export function getChallengesInProgress(userId: string) {
       creator: "RunningClub",
       creatorAvatar: "/images/defaultUser.png",
       tags: ["running", "endurance", "daily"],
-      startDate: "2025-08-15",
-      endDate: "2025-09-30",
+      startDate: "2025-07-20",
+      endDate: "2025-08-15",
     },
     {
       id: "2",
-      title: "30-Day Yoga Challenge",
+      title: "Yoga Challenge",
       description:
         "Practice yoga for at least 20 minutes every day for 30 days. Improve flexibility and mindfulness.",
       duration: 15,

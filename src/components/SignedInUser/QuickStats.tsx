@@ -5,7 +5,7 @@ const QuickStats = ({ streak = 5, weeklyProgress = 3, weeklyGoal = 7 }) => {
   const progressPercent = Math.min((weeklyProgress / weeklyGoal) * 100, 100);
 
   return (
-    <div className="bg-sidebar-accent dark:bg-slate-800 rounded-xl shadow-[0_0_6px_1px_rgba(168,85,247,0.4)] p-3 flex flex-col gap-2 border border-gray-100 dark:border-transparent w-full max-w-xs">
+    <div className="bg-sidebar-accent-foreground dark:bg-slate-800 rounded-xl shadow-[0_0_6px_1px_rgba(168,85,247,0.4)] p-3 flex flex-col gap-2 border border-gray-100 dark:border-transparent w-full max-w-xs">
       <div className="flex items-center gap-2">
         <Flame className="text-orange-500 w-4 h-4" />
         <span className="text-base font-bold text-gray-900 dark:text-white">

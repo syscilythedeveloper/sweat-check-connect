@@ -2,19 +2,22 @@
 import React, { useState } from "react";
 
 //import { useUser } from "@clerk/nextjs";
-import { Trophy, Plus, Search, Play, CheckCircle } from "lucide-react";
+import { Plus, Search, Play, CheckCircle } from "lucide-react";
 import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
 import ChallengeCard from "@/components/Challenges/ChallengeCard";
+
 import {
   getChallengesInProgress,
   getNewChallenges,
   getCompletedChallenges,
 } from "@/utils/challengeFunctions";
-import { ChallengeCardProps } from "@/types/challenge";
+import { ChallengeCardProps, ChallengeMode } from "@/types/challenge";
 
 const ChallengesPage = () => {
   //const { user } = useUser();
-  const [activeTab, setActiveTab] = useState("discover");
+  const [activeTab, setActiveTab] = useState<ChallengeMode>(
+    ChallengeMode.discover
+  );
 
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -25,11 +28,11 @@ const ChallengesPage = () => {
   const categories = ["all", "Cardio", "Strength", "Lifestyle", "Wellness"];
 
   let displayedChallenges: ChallengeCardProps[] = [];
-  if (activeTab === "discover") {
+  if (activeTab === ChallengeMode.discover) {
     displayedChallenges = newChallenges;
-  } else if (activeTab === "joined") {
+  } else if (activeTab === ChallengeMode.joined) {
     displayedChallenges = challengesInProgress;
-  } else if (activeTab === "completed") {
+  } else if (activeTab === ChallengeMode.completed) {
     displayedChallenges = completedChallenges;
   }
 
@@ -40,8 +43,7 @@ const ChallengesPage = () => {
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              <Trophy className="w-8 h-8 text-yellow-600" />
-              Challenges
+              🏆 Challenges
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
               Push your limits and achieve your goals
@@ -93,21 +95,21 @@ const ChallengesPage = () => {
             label="Discover"
             count={newChallenges.length}
             isActive={activeTab === "discover"}
-            onClick={() => setActiveTab("discover")}
+            onClick={() => setActiveTab(ChallengeMode.discover)}
             icon={<Search className="w-4 h-4" />}
           />
           <TabButton
             label="Current Challenges"
             count={challengesInProgress.length}
             isActive={activeTab === "joined"}
-            onClick={() => setActiveTab("joined")}
+            onClick={() => setActiveTab(ChallengeMode.joined)}
             icon={<Play className="w-4 h-4" />}
           />
           <TabButton
             label="Completed"
             count={completedChallenges.length}
             isActive={activeTab === "completed"}
-            onClick={() => setActiveTab("completed")}
+            onClick={() => setActiveTab(ChallengeMode.completed)}
             icon={<CheckCircle className="w-4 h-4" />}
           />
         </div>
@@ -139,6 +141,7 @@ const ChallengesPage = () => {
           <ChallengeCard
             key={challenge.id}
             challenge={challenge}
+            mode={activeTab}
           />
         ))}
       </div>
@@ -146,7 +149,6 @@ const ChallengesPage = () => {
       {/* Empty State */}
       {displayedChallenges.length === 0 && (
         <div className="text-center py-12">
-          <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
             No challenges found
           </h3>
@@ -177,7 +179,7 @@ const TabButton = ({
     onClick={onClick}
     className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all ${
       isActive
-        ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg"
+        ? "bg-purple-500/50 text-white shadow-lg"
         : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
     }`}
   >

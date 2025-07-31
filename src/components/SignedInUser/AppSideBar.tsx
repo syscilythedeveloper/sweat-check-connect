@@ -76,7 +76,7 @@ const AppSideBar = () => {
         <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
         <SidebarContent>
-          <SidebarGroup className="bg-sidebar-accent border border-transparent rounded-2xl mt-4 mb-2 shadow-purple-glow">
+          <SidebarGroup className="bg-sidebar-accent-foreground border border-transparent rounded-2xl mt-4 mb-2 shadow-purple-glow">
             <SidebarGroupContent>
               <SidebarMenu>
                 <div className="flex items-center justify-end px-2 ">
