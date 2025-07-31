@@ -1,15 +1,107 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+// Recent Activity Section
+const RecentActivitySection = ({ activities }: { activities: any[] }) => (
+  <div className="bg-slate-800/80 shadow-slate-glow rounded-3xl p-8 mb-10">
+    <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+      <span className="text-blue-400 text-2xl">🏃</span>
+      Recent Activity
+    </h2>
+    <div className="space-y-6">
+      {activities.length > 0 ? (
+        activities.map((act) => (
+          <div
+            key={act.id}
+            className="flex items-center justify-between py-4 border-b border-slate-700 last:border-b-0"
+          >
+            <div>
+              <div className="text-lg text-white font-semibold">
+                {act.activity}
+              </div>
+              <div className="text-slate-300 text-sm">{act.notes}</div>
+              <div className="text-slate-400 text-xs mt-1 flex gap-4">
+                {act.date && <span>{act.date}</span>}
+                {act.duration && <span>{act.duration}</span>}
+                {act.distance && <span>{act.distance}</span>}
+              </div>
+            </div>
+            <div>
+              <span className="bg-blue-900 text-blue-300 px-3 py-1 rounded-full text-xs font-bold">
+                Workout
+              </span>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p className="text-slate-400 text-center text-lg">
+          No recent activity yet.
+        </p>
+      )}
+    </div>
+  </div>
+);
+
+// Achievements Section
+const AchievementsSection = ({ achievements }: { achievements: any[] }) => (
+  <div className="bg-slate-800/80 shadow-slate-glow rounded-3xl p-8 mb-10">
+    <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+      <span className="text-yellow-400 text-2xl">🏅</span>
+      Achievements
+    </h2>
+    <div className="space-y-4">
+      {achievements.length > 0 ? (
+        achievements.map((ach) => (
+          <div
+            key={ach.id}
+            className={`rounded-xl p-6 font-semibold text-lg text-white ${
+              ach.status === "Completed"
+                ? "bg-gradient-to-r from-yellow-500 to-orange-500"
+                : "bg-gradient-to-r from-blue-700 to-purple-700"
+            }`}
+          >
+            {ach.name}
+            {ach.completedDate && (
+              <span className="ml-4 bg-green-700 text-green-200 px-3 py-1 rounded-full text-xs font-bold">
+                Completed
+              </span>
+            )}
+            {ach.progress && (
+              <span className="ml-4 bg-blue-900 text-blue-300 px-3 py-1 rounded-full text-xs font-bold">
+                {ach.progress}
+              </span>
+            )}
+            {ach.startDate && (
+              <span className="ml-4 bg-purple-900 text-purple-300 px-3 py-1 rounded-full text-xs font-bold">
+                Upcoming
+              </span>
+            )}
+          </div>
+        ))
+      ) : (
+        <p className="text-slate-400 text-center text-lg">
+          No achievements yet.
+        </p>
+      )}
+    </div>
+  </div>
+);
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-"use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Users, Trophy, Calendar, MapPin, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Main Profile Component
 const ProfilePage = () => {
+  // Tab state for toggling Recent Activity and Achievements
+  const [activeTab, setActiveTab] = useState<"activity" | "achievements">(
+    "activity"
+  );
   const params = useParams();
   console.log("Profile params:", params);
   const { user } = useUser();
@@ -123,110 +215,125 @@ const ProfilePage = () => {
     ],
   });
 
-  const [activeTab, setActiveTab] = useState("checkins");
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900 font-sans p-4 sm:p-6 lg:p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl dark:shadow-2xl p-6 sm:p-8 lg:p-10 transform transition-all duration-300 hover:shadow-2xl dark:hover:shadow-blue-500/10 border dark:border-slate-700">
-          {/* Profile Header */}
-          <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-6 sm:space-y-0 sm:space-x-8 mb-8 pb-8 border-b border-gray-200 dark:border-slate-600">
-            <div className="relative">
+    <div className="min-h-screen bg-slate-900 font-sans p-4 sm:p-6 lg:p-8 rounded-2xl my-4 mx-6 shadow-header-glow">
+      <div className="max-w-5xl mx-auto">
+        {/* Profile Header - Screenshot Style */}
+        <div className="flex items-center gap-8 mb-8 bg-slate-900/50 px-8 py-10 shadow-header-glow rounded-2xl">
+          {/* Avatar with shadow glow and overlay label */}
+          <div className="relative">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full shadow-slate-glow flex items-center justify-center bg-slate-900">
               <Image
                 src={userProfile.avatar}
                 alt="User Avatar"
-                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-gradient-to-r from-blue-400 to-purple-400 shadow-lg transition-transform duration-300 hover:scale-105"
+                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-gradient-to-r from-blue-400 to-purple-400 shadow-lg"
                 width={160}
                 height={160}
               />
             </div>
-
-            <div className="text-center sm:text-left flex-grow">
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 dark:text-white mb-2 leading-tight">
-                {userProfile.name}
+            {/* Overlay label */}
+          </div>
+          {/* Main info */}
+          <div className="flex-1">
+            <div className="flex flex-col gap-2">
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
+                Syscily Brown
               </h1>
-              <p className="text-gray-600 dark:text-gray-300 text-lg mb-4 italic">
-                {userProfile.bio}
-              </p>
-
-              {/* Stats */}
-              <div className="flex justify-center sm:justify-start space-x-6">
-                <div className="text-center">
-                  <span className="block text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    {userProfile.stats.totalCheckIns}
-                  </span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Check-ins
-                  </span>
-                </div>
-                <div className="text-center">
-                  <span className="block text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    {userProfile.stats.challengesCompleted}
-                  </span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Challenges
-                  </span>
-                </div>
-                <div className="text-center">
-                  <span className="block text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    {userProfile.stats.friends}
-                  </span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Followers
-                  </span>
-                </div>
-                <div className="text-center">
-                  <span className="block text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    52
-                  </span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Following
-                  </span>
-                </div>
-              </div>
+              <span className="text-xl text-slate-400 font-mono">
+                @sys_capone
+              </span>
+            </div>
+            {/* Fitness tags */}
+            <div className="flex flex-wrap gap-4 mt-4 text-lg">
+              <span className="flex items-center gap-2 text-slate-200">
+                <span>🏃</span> Marathon runner
+              </span>
+              <span className="flex items-center gap-2 text-slate-200">
+                <span>💪</span> Strength training enthusiast
+              </span>
+              <span className="flex items-center gap-2 text-slate-200">
+                <span>🌱</span> Plant-based athlete
+              </span>
+            </div>
+            {/* Location and join date */}
+            <div className="flex items-center gap-6 mt-4 text-slate-400 text-base">
+              <span className="flex items-center gap-2">
+                <MapPin className="w-5 h-5" /> San Francisco, CA
+              </span>
+              <span className="flex items-center gap-2">
+                <Calendar className="w-5 h-5" /> Joined March 2023
+              </span>
             </div>
           </div>
-
-          {/* Navigation Tabs */}
-          <div className="flex justify-center sm:justify-start mb-8 space-x-2 sm:space-x-4 border-b border-gray-200 dark:border-slate-600 pb-4">
-            <TabButton
-              label="Check-ins"
-              isActive={activeTab === "checkins"}
-              onClick={() => setActiveTab("checkins")}
-            />
-            <TabButton
-              label="Challenges"
-              isActive={activeTab === "challenges"}
-              onClick={() => setActiveTab("challenges")}
-            />
-            <TabButton
-              label="Followers"
-              isActive={activeTab === "followers"}
-              onClick={() => setActiveTab("followers")}
-            />
-            <TabButton
-              label="Following"
-              isActive={activeTab === "following"}
-              onClick={() => setActiveTab("following")}
-            />
-          </div>
-
-          {/* Content Sections */}
-          <div>
-            {activeTab === "checkins" && (
-              <CheckInsSection checkIns={userProfile.checkIns} />
-            )}
-            {activeTab === "challenges" && (
-              <ChallengesSection challenges={userProfile.challenges} />
-            )}
-            {activeTab === "followers" && (
-              <FriendsSection friends={userProfile.friends} />
-            )}
-            {activeTab === "following" && (
-              <FriendsSection friends={userProfile.friends} />
-            )}
+          {/* Message and settings buttons */}
+          <div className="flex flex-col gap-4">
+            <Button
+              variant="outline"
+              className="shadow-purple-glow"
+            >
+              <span className="text-xl">💬</span>
+            </Button>
           </div>
         </div>
+        {/* Divider */}
+        <div className="border-b border-slate-700 mb-6" />
+        {/* Stats row */}
+        <div className="flex gap-12 items-center mb-10">
+          <div className="flex flex-col items-center">
+            <span className="text-3xl font-bold text-white">2847</span>
+            <span className="text-base text-slate-400">Followers</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-3xl font-bold text-white">384</span>
+            <span className="text-base text-slate-400">Following</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-3xl font-bold text-white">55</span>
+            <span className="text-base text-slate-400">Total Workouts</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-3xl font-bold text-white">15</span>
+            <span className="text-base text-slate-400">Total Challenges</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-3xl font-bold text-blue-400">457</span>
+            <span className="text-base text-slate-400">Total Gains</span>
+          </div>
+        </div>
+
+        {/* Toggle Tabs for Recent Activity and Achievements */}
+        <div className="flex gap-4 mb-8">
+          <button
+            className={`px-6 py-3 rounded-2xl font-semibold text-lg transition-all duration-300 transform focus:outline-none focus:ring-0
+              ${
+                activeTab === "activity"
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105"
+                  : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/50 dark:hover:to-purple-900/50 hover:text-gray-800 dark:hover:text-white hover:scale-105"
+              }
+            `}
+            onClick={() => setActiveTab("activity")}
+          >
+            Recent Activity
+          </button>
+          <button
+            className={`px-6 py-3 rounded-2xl font-semibold text-lg transition-all duration-300 transform focus:outline-none focus:ring-0
+              ${
+                activeTab === "achievements"
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105"
+                  : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/50 dark:hover:to-purple-900/50 hover:text-gray-800 dark:hover:text-white hover:scale-105"
+              }
+            `}
+            onClick={() => setActiveTab("achievements")}
+          >
+            Achievements
+          </button>
+        </div>
+        {activeTab === "activity" && (
+          <RecentActivitySection activities={userProfile.checkIns} />
+        )}
+        {activeTab === "achievements" && (
+          <AchievementsSection achievements={userProfile.challenges} />
+        )}
       </div>
     </div>
   );

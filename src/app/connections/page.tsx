@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { TabButton } from "@/components/TabButton";
 
-import { Search, Users } from "lucide-react";
+import { Search, Users, UserPlus, UserCheck, UserSearch } from "lucide-react";
 
 import { connectionType, ConnectionCardProps } from "@/types/connections";
 import {
@@ -51,10 +51,11 @@ const Connections = () => {
   return (
     <div className="w-full max-w-6xl mx-auto p-2 sm:p-4 space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-[0_0_16px_4px_rgba(30,41,59,0.6)] dark:shadow-[0_0_24px_6px_rgba(30,41,59,0.9)] p-6 ">
+      <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-header-glow p-6 ">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+              <UserPlus className="inline-block w-6 h-6 mr-2" />
               Connections
             </h1>
           </div>
@@ -67,18 +68,18 @@ const Connections = () => {
             placeholder="Search friends by name, username, or interests..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-12 pr-4 py-3 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         {/* Tabs */}
-        <div className="flex space-x-2 shadow-[0_0_8px_2px_rgba(30,41,59,0.3)] dark:shadow-[0_0_12px_3px_rgba(30,41,59,0.7)] rounded-xl p-1">
+        <div className="flex space-x-2 rounded-xl p-1">
           <TabButton
-            label="New Connections"
+            label="Discover"
             count={newConnections.length}
             isActive={activeTab === connectionType.not_connected}
             onClick={() => setActiveTab(connectionType.not_connected)}
             icon={
-              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <UserSearch className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             }
           />
           <TabButton
@@ -96,14 +97,14 @@ const Connections = () => {
             isActive={activeTab === connectionType.following}
             onClick={() => setActiveTab(connectionType.following)}
             icon={
-              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <UserCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             }
           />
         </div>
       </div>
       {/* Content */}
       {/* Connections List */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-slate-glow">
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
           : displayedConnections.map((connection) => (

@@ -57,7 +57,7 @@ const ChallengesPage = () => {
   return (
     <div className="w-full max-w-full mx-auto p-2 sm:p-4 space-y-4 overflow-x-hidden">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-purple-glow p-3 sm:p-6">
+      <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-header-glow p-3 sm:p-6">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2">

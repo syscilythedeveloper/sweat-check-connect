@@ -40,7 +40,7 @@ const ChallengeCard = ({
       : "challenge_closed";
 
   return (
-    <div className=" flex flex-col h-full bg-accent-foreground rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] shadow-blue-glow">
+    <div className=" flex flex-col h-full bg-accent-foreground rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] shadow-slate-glow">
       {/* Card Header */}
       <div className="flex-1 p-6 pb-4 flex flex-col">
         <div className="flex items-start justify-between mb-3">
