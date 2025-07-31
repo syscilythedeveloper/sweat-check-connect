@@ -1,13 +1,6 @@
 "use client";
 import React from "react";
-import {
-  UsersRound,
-  Home,
-  Inbox,
-  UserRound,
-  Medal,
-  Headphones,
-} from "lucide-react";
+import { UsersRound, Home, UserRound, Medal } from "lucide-react";
 
 import {
   Sidebar,
@@ -43,11 +36,11 @@ const AppSideBar = () => {
       url: `/profile/${user?.username || "defaultUser"}`,
       icon: UserRound,
     },
-    {
-      title: "Messages",
-      url: "/messages",
-      icon: Inbox,
-    },
+    // {
+    //   title: "Messages",
+    //   url: "/messages",
+    //   icon: Inbox,
+    // },
     {
       title: "Challenges",
       url: "/challenges",
@@ -57,11 +50,6 @@ const AppSideBar = () => {
       title: "Connections",
       url: "/connections",
       icon: UsersRound,
-    },
-    {
-      title: "Shared Playlists",
-      url: "/shared-playlists",
-      icon: Headphones,
     },
   ];
   return (
