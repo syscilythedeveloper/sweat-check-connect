@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 //import { useUser } from "@clerk/nextjs";
-import { Plus, Search, Play, CheckCircle } from "lucide-react";
+import { Plus, Search, CheckCircle, BicepsFlexed } from "lucide-react";
 import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
 import ChallengeCard from "@/components/Challenges/ChallengeCard";
 import SkeletonCard from "@/components/Challenges/SkeletonCard";
@@ -100,11 +100,11 @@ const ChallengesPage = () => {
             icon={<Search className="w-4 h-4" />}
           />
           <TabButton
-            label="Current Challenges"
+            label="Active Challenges"
             count={challengesInProgress.length}
             isActive={activeTab === "joined"}
             onClick={() => setActiveTab(ChallengeMode.joined)}
-            icon={<Play className="w-4 h-4" />}
+            icon={<BicepsFlexed className="w-4 h-4" />}
           />
           <TabButton
             label="Completed"

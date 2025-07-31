@@ -9,9 +9,6 @@ export interface ChallengeData {
   creatorId: string;
   tags?: string[];
 }
-export interface Challenges {
-  challenges: ChallengeData[];
-}
 
 export interface ChallengeCardProps {
   id: string;
@@ -19,7 +16,6 @@ export interface ChallengeCardProps {
   description: string;
   duration: number;
   participants: string[];
-
   creator: string;
   creatorAvatar: string;
   tags?: string[];
