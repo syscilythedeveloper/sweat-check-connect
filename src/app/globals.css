@@ -69,7 +69,7 @@
   --radius: 0.625rem;
 
   /* Champion's Arena - Light Mode */
-  --background: #ffffff;
+  --background: #cdddf3;
   --foreground: #1a1a1a;
   --card: #ffffff;
   --card-foreground: #1a1a1a;
@@ -80,7 +80,7 @@
   --secondary: #7c3aed; /* Bold Purple */
   --secondary-shadow: #2b1454;
   --secondary-foreground: #ffffff;
-  --muted: #f8f9fa; /* Warm Gray */
+  --muted: #faf8f8; /* Warm Gray */
   --muted-foreground: #495057; /* Confident Gray */
   --accent: #00bcd4; /* Progress - Emerald Green */
   --accent-foreground: #ffffff;
@@ -100,11 +100,11 @@
   --chart-4: #00c851; /* Progress */
   --chart-5: #ffd700; /* Success */
 
-  --sidebar: #ffffff;
+  --sidebar: var(--background);
   --sidebar-foreground: #1a1a1a;
   --sidebar-primary: #ff4500;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #2973d7;
+  --sidebar-primary-foreground: #d01515;
+  --sidebar-accent: #edf3f5e2;
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #e5e7eb;
   --sidebar-ring: #e83ada;
@@ -147,7 +147,7 @@
   --sidebar-foreground: #ffffff;
   --sidebar-primary: #ff5722;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #9c27b0;
+  --sidebar-accent: #1e293b;
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(100, 80, 169, 0.1);
   --sidebar-ring: #ff5722;

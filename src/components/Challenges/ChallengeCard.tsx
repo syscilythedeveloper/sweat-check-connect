@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
-import { HeartPlus, CheckCircle, Users } from "lucide-react";
+import { HeartPlus, Users } from "lucide-react";
 import { ChallengeCardProps } from "@/types/challenge";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
@@ -22,7 +22,7 @@ const ChallengeCard = ({ challenge }: { challenge: ChallengeCardProps }) => {
     challenge.startDate,
     challenge.duration
   );
-  const [showPlus, setShowPlus] = useState(false);
+
   let status: "not_started" | "in_progress" | "completed";
   if (currentDay <= 0) {
     status = "not_started";
@@ -31,13 +31,6 @@ const ChallengeCard = ({ challenge }: { challenge: ChallengeCardProps }) => {
   } else {
     status = "in_progress";
   }
-  useEffect(() => {
-    if (status === "completed") {
-      setShowPlus(true);
-      const timer = setTimeout(() => setShowPlus(false), 1200); // 1.2s animation
-      return () => clearTimeout(timer);
-    }
-  }, [status]);
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] shadow-blue-glow">
@@ -49,9 +42,6 @@ const ChallengeCard = ({ challenge }: { challenge: ChallengeCardProps }) => {
               <h3 className="font-bold text-lg text-gray-800 dark:text-white">
                 {challenge.title}
               </h3>
-              {challenge.isJoined && (
-                <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 ml-2 flex-shrink-0" />
-              )}
             </div>
 
             {/* Stats Row */}
@@ -66,7 +56,7 @@ const ChallengeCard = ({ challenge }: { challenge: ChallengeCardProps }) => {
               {/* Participants */}
               <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
                 <Users className="w-4 h-4 text-blue-500" />
-                <span>{challenge.participants.toLocaleString()}</span>
+                <span>{challenge.participants.length}</span>
               </div>
             </div>
             <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-500">
@@ -114,16 +104,8 @@ const ChallengeCard = ({ challenge }: { challenge: ChallengeCardProps }) => {
         )}
 
         {status === "completed" && (
-          <div className="my-8 w-full px-4 py-4 rounded-2xl text-center font-extrabold text-lg bg-progress text-green-900 border-2 border-green-500 shadow-green-glow shadow-lg">
+          <div className="my-8 w-full px-4 py-4 rounded-2xl text-center font-extrabold text-lg bg-accent text-green-900 border-2 border-blue-500 shadow-blue-glow shadow-lg">
             🏆 Challenge Complete 🏆
-            <div className="text-sm mt-1 font-medium flex items-center justify-center gap-1">
-              Gains: {gains}
-              {showPlus && (
-                <span className="text-green-500 text-lg animate-bounce font-bold">
-                  +{" "}
-                </span>
-              )}
-            </div>
           </div>
         )}
 
@@ -151,7 +133,7 @@ const ChallengeCard = ({ challenge }: { challenge: ChallengeCardProps }) => {
       {status !== "completed" && (
         <div className="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600">
           <div className="flex items-center justify-between">
-            {challenge.isJoined ? (
+            {status === "in_progress" ? (
               <Button variant="destructive">Leave Challenge</Button>
             ) : (
               <Button variant="outline">Join Challenge</Button>

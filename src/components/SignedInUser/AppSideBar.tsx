@@ -68,15 +68,15 @@ const AppSideBar = () => {
     <>
       <Toaster />
 
-      <Sidebar className="border border-transparent bg-transparent dark:bg-slate-900 rounded-2xl shadow-purple-glow  p-4 space-y-4">
-        <SidebarHeader className="space-y-2">
+      <Sidebar className="border border-transparent  dark:bg-slate-900 rounded-2xl shadow-purple-glow  p-4 space-y-4">
+        <SidebarHeader className="space-y-2 ">
           <ContactCard />
           <QuickStats />
         </SidebarHeader>
         <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
         <SidebarContent>
-          <SidebarGroup className="bg-gray-100 dark:bg-slate-800 shadow-purple-glow border border-transparent rounded-2xl mt-4 mb-2">
+          <SidebarGroup className="bg-sidebar-accent border border-transparent rounded-2xl mt-4 mb-2 shadow-purple-glow">
             <SidebarGroupContent>
               <SidebarMenu>
                 <div className="flex items-center justify-end px-2 ">

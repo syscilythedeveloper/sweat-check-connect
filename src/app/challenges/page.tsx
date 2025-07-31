@@ -5,144 +5,33 @@ import React, { useState } from "react";
 import { Trophy, Plus, Search, Play, CheckCircle } from "lucide-react";
 import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
 import ChallengeCard from "@/components/Challenges/ChallengeCard";
+import {
+  getChallengesInProgress,
+  getNewChallenges,
+  getCompletedChallenges,
+} from "@/utils/challengeFunctions";
+import { ChallengeCardProps } from "@/types/challenge";
 
 const ChallengesPage = () => {
   //const { user } = useUser();
   const [activeTab, setActiveTab] = useState("discover");
-  const [searchQuery, setSearchQuery] = useState("");
+
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  // Mock challenges data
-  const [challenges] = useState([
-    {
-      id: "1",
-      title: "30-Day Running Streak",
-      description:
-        "Run at least 5K every day for 30 consecutive days. Build consistency and endurance!",
-      category: "Cardio",
-      duration: 30,
-      participants: 1247,
-      isJoined: true,
-      progress: 67,
-      currentDay: 20,
-      creator: "RunningClub",
-      creatorAvatar: "/images/defaultUser.png",
-      rewards: ["Marathon Medal", "Endurance Badge", "500 Points"],
-      completionRate: 78,
-      tags: ["running", "endurance", "daily"],
-      startDate: "2025-08-15",
-      endDate: "2025-09-30",
-    },
-    {
-      id: "2",
-      title: "Push-Up Power Challenge",
-      description:
-        "Build up to 100 consecutive push-ups over 6 weeks. Perfect for upper body strength!",
-      category: "Strength",
-
-      duration: 42,
-      participants: 892,
-      isJoined: false,
-      progress: 0,
-      currentDay: 0,
-      creator: "StrengthGuild",
-      creatorAvatar: "/images/defaultUser.png",
-      rewards: ["Strength Master Badge", "Upper Body Trophy", "1000 Points"],
-      completionRate: 65,
-      tags: ["pushups", "strength", "bodyweight"],
-      startDate: "2025-08-01",
-      endDate: "2025-09-26",
-    },
-    {
-      id: "3",
-      title: "Daily Steps Goal",
-      description:
-        "Walk 10,000 steps every day for 3 weeks. Great for building healthy habits!",
-      category: "Lifestyle",
-
-      duration: 21,
-      participants: 2156,
-      isJoined: true,
-      progress: 33,
-      currentDay: 7,
-      creator: "WalkingClub",
-      creatorAvatar: "/images/defaultUser.png",
-      rewards: ["Walker Badge", "Consistency Medal", "300 Points"],
-
-      completionRate: 89,
-      tags: ["walking", "steps", "daily", "habits"],
-      startDate: "2025-07-26",
-      endDate: "2025-08-05",
-    },
-    {
-      id: "4",
-      title: "Yoga & Mindfulness",
-      description:
-        "Practice yoga and meditation daily for inner peace and flexibility over 4 weeks.",
-      category: "Wellness",
-
-      duration: 28,
-      participants: 567,
-      isJoined: false,
-      progress: 0,
-      currentDay: 0,
-      creator: "ZenFitness",
-      creatorAvatar: "/images/defaultUser.png",
-      rewards: ["Mindfulness Badge", "Flexibility Trophy", "400 Points"],
-      isPopular: false,
-      completionRate: 82,
-      tags: ["yoga", "meditation", "flexibility", "mindfulness"],
-      startDate: "2025-08-15",
-      endDate: "2025-09-10",
-    },
-    {
-      id: "5",
-      title: "HIIT Warrior Challenge",
-      description:
-        "Complete intense HIIT workouts 5 times per week for maximum fat burn and conditioning.",
-      category: "Cardio",
-
-      duration: 28,
-      participants: 734,
-      isJoined: true,
-      progress: 50,
-      currentDay: 14,
-      creator: "HIITMasters",
-      creatorAvatar: "/images/defaultUser.png",
-      rewards: ["HIIT Warrior Badge", "Cardio King Trophy", "800 Points"],
-      isPopular: true,
-      completionRate: 72,
-      tags: ["hiit", "cardio", "intense", "fat-burn"],
-      startDate: "2025-01-10",
-      endDate: "2025-02-06",
-    },
-  ]);
-
+  const challengesInProgress = getChallengesInProgress("someUserId");
+  const completedChallenges = getCompletedChallenges("someUserId");
+  const newChallenges = getNewChallenges("someUserId");
   const categories = ["all", "Cardio", "Strength", "Lifestyle", "Wellness"];
 
-  const filteredChallenges = challenges.filter((challenge) => {
-    const matchesSearch =
-      challenge.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      challenge.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      challenge.tags.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-    const matchesCategory =
-      selectedCategory === "all" || challenge.category === selectedCategory;
-
-    if (activeTab === "discover") return matchesSearch && matchesCategory;
-    if (activeTab === "joined")
-      return challenge.isJoined && matchesSearch && matchesCategory;
-    if (activeTab === "completed")
-      return challenge.progress === 100 && matchesSearch && matchesCategory;
-
-    return matchesSearch && matchesCategory;
-  });
-
-  const myJoinedChallenges = challenges.filter((c) => c.isJoined);
-  const myCompletedChallenges = challenges.filter((c) => c.progress === 100);
+  let displayedChallenges: ChallengeCardProps[] = [];
+  if (activeTab === "discover") {
+    displayedChallenges = newChallenges;
+  } else if (activeTab === "joined") {
+    displayedChallenges = challengesInProgress;
+  } else if (activeTab === "completed") {
+    displayedChallenges = completedChallenges;
+  }
 
   return (
     <div className="w-full max-w-full mx-auto p-2 sm:p-4 space-y-4 overflow-x-hidden">
@@ -176,8 +65,7 @@ const ChallengesPage = () => {
             <input
               type="text"
               placeholder="Search challenges by name, description, or tags..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => console.log(e.target.value)}
               className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
             />
           </div>
@@ -203,21 +91,21 @@ const ChallengesPage = () => {
         <div className="flex space-x-2">
           <TabButton
             label="Discover"
-            count={challenges.length}
+            count={newChallenges.length}
             isActive={activeTab === "discover"}
             onClick={() => setActiveTab("discover")}
             icon={<Search className="w-4 h-4" />}
           />
           <TabButton
-            label="My Challenges"
-            count={myJoinedChallenges.length}
+            label="Current Challenges"
+            count={challengesInProgress.length}
             isActive={activeTab === "joined"}
             onClick={() => setActiveTab("joined")}
             icon={<Play className="w-4 h-4" />}
           />
           <TabButton
             label="Completed"
-            count={myCompletedChallenges.length}
+            count={completedChallenges.length}
             isActive={activeTab === "completed"}
             onClick={() => setActiveTab("completed")}
             icon={<CheckCircle className="w-4 h-4" />}
@@ -247,7 +135,7 @@ const ChallengesPage = () => {
 
       {/* Challenges Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 ">
-        {filteredChallenges.map((challenge) => (
+        {displayedChallenges.map((challenge) => (
           <ChallengeCard
             key={challenge.id}
             challenge={challenge}
@@ -256,7 +144,7 @@ const ChallengesPage = () => {
       </div>
 
       {/* Empty State */}
-      {filteredChallenges.length === 0 && (
+      {displayedChallenges.length === 0 && (
         <div className="text-center py-12">
           <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">

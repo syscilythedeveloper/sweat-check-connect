@@ -151,6 +151,7 @@ const CreateChallengeForm = ({
       tags,
       endDate, // calculated here
       creatorId: user.id,
+      participants: [],
     };
 
     createChallenge(challengeData)
