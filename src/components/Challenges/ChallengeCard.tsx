@@ -9,6 +9,7 @@ import {
   calculateDaysUntilStart,
   calculateCurrentDay,
 } from "@/utils/challengeFunctions";
+
 const tagColorClasses = [
   "bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300",
   "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300",

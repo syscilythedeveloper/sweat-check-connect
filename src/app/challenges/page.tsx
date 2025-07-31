@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 //import { useUser } from "@clerk/nextjs";
 import { Plus, Search, Play, CheckCircle } from "lucide-react";
 import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
 import ChallengeCard from "@/components/Challenges/ChallengeCard";
+import SkeletonCard from "@/components/Challenges/SkeletonCard";
 
 import {
   getChallengesInProgress,
@@ -19,13 +20,29 @@ const ChallengesPage = () => {
     ChallengeMode.discover
   );
 
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [challengesInProgress, setChallengesInProgress] = useState<
+    ChallengeCardProps[]
+  >([]);
+  const [completedChallenges, setCompletedChallenges] = useState<
+    ChallengeCardProps[]
+  >([]);
+  const [newChallenges, setNewChallenges] = useState<ChallengeCardProps[]>([]);
 
-  const challengesInProgress = getChallengesInProgress("someUserId");
-  const completedChallenges = getCompletedChallenges("someUserId");
-  const newChallenges = getNewChallenges("someUserId");
-  const categories = ["all", "Cardio", "Strength", "Lifestyle", "Wellness"];
+  useEffect(() => {
+    setIsLoading(true);
+    Promise.all([
+      getChallengesInProgress("someUserId"),
+      getCompletedChallenges("someUserId"),
+      getNewChallenges("someUserId"),
+    ]).then(([inProgress, completed, newChals]) => {
+      setChallengesInProgress(inProgress);
+      setCompletedChallenges(completed);
+      setNewChallenges(newChals);
+      setIsLoading(false);
+    });
+  }, []);
 
   let displayedChallenges: ChallengeCardProps[] = [];
   if (activeTab === ChallengeMode.discover) {
@@ -71,22 +88,6 @@ const ChallengesPage = () => {
               className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
             />
           </div>
-
-          {/* Category Filter */}
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-3 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          >
-            {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-              >
-                {category === "all" ? "All Categories" : category}
-              </option>
-            ))}
-          </select>
         </div>
 
         {/* Tabs */}
@@ -137,13 +138,15 @@ const ChallengesPage = () => {
 
       {/* Challenges Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 ">
-        {displayedChallenges.map((challenge) => (
-          <ChallengeCard
-            key={challenge.id}
-            challenge={challenge}
-            mode={activeTab}
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+          : displayedChallenges.map((challenge) => (
+              <ChallengeCard
+                key={challenge.id}
+                challenge={challenge}
+                mode={activeTab}
+              />
+            ))}
       </div>
 
       {/* Empty State */}
