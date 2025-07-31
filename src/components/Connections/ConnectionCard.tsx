@@ -2,6 +2,7 @@ import { ConnectionCardProps, connectionType } from "@/types/connections";
 import { UserRoundX } from "lucide-react";
 import Image from "next/image";
 import { isFollowedBy } from "@/utils/connectionFunctions";
+import { Button } from "../ui/button";
 
 const ConnectionCard = ({
   connection,
@@ -31,25 +32,47 @@ const ConnectionCard = ({
     </div>
     {connectionStatus === connectionType.following && (
       <div className="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600">
-        <button className="w-full px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl hover:from-red-600 hover:to-pink-600 transition-all flex items-center justify-center gap-2">
+        <Button
+          variant="destructive"
+          className="w-full"
+        >
           <UserRoundX className="w-4 h-4" />
           Unfollow
-        </button>
+        </Button>
       </div>
     )}
     {connectionStatus === connectionType.followed_by && (
       <div className="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600">
         <div className="flex flex-col gap-3">
           {isFollowedBy("someUserId", connection.id) ? (
-            <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all flex items-center justify-center gap-2">
+            <Button
+              variant="secondary"
+              className="w-full"
+            >
               <UserRoundX className="w-4 h-4" />
               Follow Back
-            </button>
+            </Button>
           ) : null}
-          <button className="w-full px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl hover:from-red-600 hover:to-pink-600 transition-all flex items-center justify-center gap-2">
+          <Button
+            variant="destructive"
+            className="w-full"
+          >
             <UserRoundX className="w-4 h-4" />
             Remove Follower
-          </button>
+          </Button>
+        </div>
+      </div>
+    )}
+    {connectionStatus === connectionType.not_connected && (
+      <div className="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600">
+        <div className="flex flex-col gap-3">
+          <Button
+            variant="secondary"
+            className="w-full"
+          >
+            <UserRoundX className="w-4 h-4" />
+            Follow User
+          </Button>
         </div>
       </div>
     )}

@@ -58,6 +58,32 @@ export function getFollowing(userId: string) {
   return following;
 }
 
+export function getNewConnections(userId: string) {
+  //get new connections for the user
+  if (!userId || userId.length === 0) return [];
+  const newConnections = [
+    {
+      id: "8",
+      username: "HIIT Warrior",
+      bio: "Complete 20 high-intensity interval training sessions in 30 days. Boost your fitness and burn fat!",
+      avatar: "/images/defaultUser.png",
+    },
+    {
+      id: "9",
+      username: "Strength Training Enthusiast",
+      bio: "Lift weights at least 3 times a week for 6 weeks. Build muscle and strength!",
+      avatar: "/images/defaultUser.png",
+    },
+    {
+      id: "10",
+      username: "Cycling Champion",
+      bio: "Cycle at least 100 miles in 30 days. Great for cardio and leg strength!",
+      avatar: "/images/defaultUser.png",
+    },
+  ];
+  return newConnections;
+}
+
 export function isFollowedBy(userId: string, connectionId: string) {
   console.log(
     "Checking if userId:",
