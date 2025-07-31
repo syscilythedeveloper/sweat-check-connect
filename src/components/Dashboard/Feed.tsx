@@ -15,7 +15,6 @@ import {
   Clock,
   Play,
   Users,
-  Plus,
 } from "lucide-react";
 
 const Feed = () => {
@@ -109,9 +108,6 @@ const Feed = () => {
           <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
             Your Feed
           </h1>
-          <button className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all">
-            <Plus className="w-5 h-5" />
-          </button>
         </div>
 
         {/* Filter Tabs */}
