@@ -158,11 +158,16 @@ const ChallengeCard = ({
         <div className="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600">
           <div className="flex items-center justify-between">
             {mode === ChallengeMode.discover ? (
-              <div className="flex items-center  justify-between gap-8">
+              <div className="flex items-center justify-between gap-6">
                 <Button variant="outline">Join Challenge</Button>
               </div>
             ) : (
-              <Button variant="destructive">Leave Challenge</Button>
+              <div className="flex items-center gap-6 text-sm">
+                <Button variant="destructive">Leave Challenge</Button>
+                {challengeStatus === "challenge_open" && (
+                  <Button variant="secondary">Share Challenge</Button>
+                )}
+              </div>
             )}
           </div>
         </div>
