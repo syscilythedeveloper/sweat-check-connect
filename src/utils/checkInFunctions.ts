@@ -37,7 +37,7 @@ export function getCheckInsForDiscoverTab() {
       id: "checkin4",
       userId: "user4",
       avatar: "/images/defaultUser.png",
-      videoUrl: "https://www.youtube.com/shorts/3c2d1e4f5b6a",
+      videoUrl: "https://www.youtube.com/shorts/8fQ3BQRyuQ0",
       timestamp: "07/16/2023 14:30:00",
       caption: "Just finished a long run, feeling accomplished!",
     },

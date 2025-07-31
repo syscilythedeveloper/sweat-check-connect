@@ -20,7 +20,7 @@ const Dashboard = () => {
   );
   const [combinedCheckIns, setCombinedCheckIns] = useState<CheckInData[]>([]);
   const [activeTab, setActiveTab] = useState<ChallengeDisplay>(
-    ChallengeDisplay.challenge_based
+    ChallengeDisplay.combined
   );
   const displayedCheckIns =
     activeTab === ChallengeDisplay.challenge_based
