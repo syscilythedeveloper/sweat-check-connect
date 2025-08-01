@@ -44,9 +44,9 @@ const ChallengeCard = ({
       {/* Card Header */}
       <div className="flex-1 p-6 pb-4 flex flex-col">
         <div className="flex items-start justify-between mb-3">
-          <div className="flex-3 w-full">
-            <div className="flex items-center justify-between gap-2 mb-1">
-              <h3 className="font-bold text-lg text-gray-800 dark:text-white">
+          <div className="flex-1">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <h3 className="font-bold text-lg text-gray-800 dark:text-blue-400">
                 {mode === ChallengeMode.completed && (
                   <span className="text-green-500">
                     {challenge.duration}-Day{" "}

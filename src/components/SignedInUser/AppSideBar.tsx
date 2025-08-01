@@ -105,7 +105,7 @@ const AppSideBar = () => {
       </Sidebar>
 
       {/* Mobile Bottom Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 border-t border-slate-800 flex justify-between items-center py-3 px-1 rounded-t-lg shadow-purple-glow sm:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 border-t border-slate-800 flex justify-between items-center py-2 px-1 rounded-t-lg shadow-purple-glow sm:hidden">
         {items.map((item) =>
           item.isDialog ? (
             <CheckInDialog

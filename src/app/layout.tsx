@@ -47,8 +47,7 @@ export default function RootLayout({
               <SignedIn>
                 <SidebarProvider>
                   <AppSidebar />
-                  <main className="flex-1">
-                    {/* Move header inside main and combine with sidebar trigger */}
+                  <main className="pb-24">
                     <header className="flex justify-end items-center p-4 h-8 bg-gradient-to-b from-black/30 to-transparent">
                       <div className="flex items-center gap-4">
                         <UserButton />
