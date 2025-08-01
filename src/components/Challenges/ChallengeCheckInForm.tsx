@@ -1,19 +1,24 @@
-// [to do] - add in toast message for if a user needs to sign out and back in
-//[] add in spinner while check in posts
-
 import React, { useState, useRef } from "react";
 import { Camera, Video, X, BicepsFlexed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
-const CheckInForm = ({ onClose }: { onClose: () => void }) => {
+interface ChallengeCheckInFormProps {
+  challengeId: string;
+  challengeName: string;
+  onClose: () => void;
+}
+
+const ChallengeCheckInForm = ({
+  challengeId,
+  challengeName,
+  onClose,
+}: ChallengeCheckInFormProps) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
-  const router = useRouter();
 
   const [caption, setCaption] = useState("");
-  const [privacy, setPrivacy] = useState("public");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -127,51 +132,19 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const formData = new FormData();
+    formData.append("video", videoFile!);
+    formData.append("caption", caption);
+    console.log("Submitting check-in for challenge:", challengeId);
+    console.log("Challenge Name:", challengeName);
+    console.log("Caption:", caption);
+    // Here you would typically send formData to your server
+    // For example:
+    // await postCheckIn(formData, challengeId);
 
-    try {
-      const formData = new FormData();
-      formData.append("caption", caption);
-      formData.append("privacy", privacy);
-      if (videoFile) {
-        formData.append("media", videoFile);
-        formData.append("mediaType", "video");
-      }
-
-      const response = await fetch("/api/checkins", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        toast.success("Check-in submitted successfully!", {
-          duration: 4000,
-          position: "top-center",
-          style: {
-            background: "#10b981",
-            color: "white",
-          },
-          icon: "✅",
-        });
-
-        setCaption("");
-        setPrivacy("public");
-        handleRemoveVideo();
-        onClose();
-      } else {
-        throw new Error("Failed to submit check-in");
-      }
-      router.push("/dashboard");
-    } catch (error) {
-      console.error(error);
-      toast.error("Error submitting check-in. Please try again.", {
-        duration: 4000,
-        position: "top-center",
-        style: { background: "#ef4444", color: "white" },
-        icon: "❌",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    console.log(formData);
+    setIsSubmitting(false);
+    onClose();
   };
 
   return (
@@ -181,8 +154,8 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
           onSubmit={handleSubmit}
           className="space-y-4 sm:space-y-6"
         >
-          <h5 className="text-2xl text-center sm:text-3xl font-bold text-gray-800 dark:text-white mb-4 sm:mb-6">
-            Solo Check In
+          <h5 className="text-lg text-center font-bold text-gray-800 dark:text-white mb-4 sm:mb-6">
+            {challengeName} Check-In
           </h5>
           {/* Upload Area */}
           <div
@@ -317,4 +290,4 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default CheckInForm;
+export default ChallengeCheckInForm;

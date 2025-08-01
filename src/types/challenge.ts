@@ -23,6 +23,10 @@ export interface ChallengeCardProps {
   endDate: string;
 }
 
+export interface ChallengeCheckInForm {
+  challengeId: string;
+}
+
 export enum ChallengeMode {
   discover = "discover",
   joined = "joined",

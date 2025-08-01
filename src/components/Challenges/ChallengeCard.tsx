@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { HeartPlus, CalendarDays, Users } from "lucide-react";
 import { ChallengeCardProps, ChallengeMode } from "@/types/challenge";
 import { Separator } from "../ui/separator";
@@ -24,11 +25,16 @@ const ChallengeCard = ({
   challenge: ChallengeCardProps;
   mode: ChallengeMode;
 }) => {
+  const router = useRouter();
   const gains = calculateGains(challenge.duration);
   const currentDay = calculateCurrentDay(
     challenge.startDate,
     challenge.duration
   );
+
+  const handleViewDetails = () => {
+    router.push(`/challenges/${challenge.id}`);
+  };
 
   const today = new Date();
   const challengeEnd = new Date(challenge.endDate);
@@ -152,7 +158,7 @@ const ChallengeCard = ({
           <div className="mt-2 flex items-center justify-center">
             <Button
               variant="ghost"
-              onClick={() => alert("View Challenge Details")}
+              onClick={handleViewDetails}
               className="text-xs text-blue-500 hover:text-blue-600 dark:text-blue-100 dark:hover:text-blue-500 hover:underline hover:bg-transparent"
             >
               View Challenge Details

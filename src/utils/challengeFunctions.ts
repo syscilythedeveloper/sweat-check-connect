@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChallengeData } from "@/types/challenge";
 
 //import prisma from "../../prisma/utils/prisma";
@@ -81,7 +82,7 @@ export function getPreviousChallenges(userId: string) {
   if (!userId || userId.length === 0) return [];
   const previousChallenges = [
     {
-      id: "5",
+      id: "3",
       title: "HIIT Warrior Challenge",
       description:
         "Complete 20 high-intensity interval training sessions in 30 days. Boost your fitness and burn fat!",
@@ -94,7 +95,7 @@ export function getPreviousChallenges(userId: string) {
       endDate: "2025-07-25",
     },
     {
-      id: "6",
+      id: "4",
       title: "Strength Training Challenge",
       description:
         "Lift weights at least 3 times a week for 6 weeks. Build muscle and strength!",
@@ -107,14 +108,14 @@ export function getPreviousChallenges(userId: string) {
       endDate: "2025-07-25",
     },
     {
-      id: "7",
+      id: "5",
       title: "Cycling Challenge",
       description:
         "Cycle at least 100 miles in 30 days. Great for cardio and leg strength!",
       duration: 15,
       participants: ["sys7", "sys8", "sys9"],
       creator: "CyclingCrew",
-      creatorAvatar: "/images/defaultUser.png",
+      creatorAvatar: "/images/user1.jpeg",
       tags: ["cycling", "cardio", "outdoors"],
       startDate: "2025-01-01",
       endDate: "2025-01-16",
@@ -129,57 +130,70 @@ export function getNewChallenges(userId: string) {
   //userChallengeData is an array of user challenges
   const discoverChallenges = [
     {
-      id: "2",
+      id: "6",
       title: "Push-Up Power Challenge",
       description:
         "Build up to 100 consecutive push-ups over 6 weeks. Perfect for upper body strength!",
       duration: 42,
       participants: ["premo", "june", "larry"],
-      creator: "StrengthGuild",
-      creatorAvatar: "/images/defaultUser.png",
+      creator: "sys_capone",
+      creatorAvatar: "/images/sys.png",
       tags: ["pushups", "strength", "bodyweight"],
       startDate: "2025-08-15",
       endDate: "2025-09-26",
     },
     {
-      id: "3",
+      id: "7",
       title: "30-Day Meditation Challenge",
       description:
         "Meditate for at least 10 minutes every day for 30 days. Cultivate mindfulness and reduce stress.",
       duration: 30,
       participants: ["elroy", "smokey", "Ezelle"],
-      creator: "MindfulLiving",
-      creatorAvatar: "/images/defaultUser.png",
+      creator: "xoxoKiara",
+      creatorAvatar: "/images/ki.jpeg",
       tags: ["meditation", "mindfulness", "stress relief"],
       startDate: "2025-08-15",
       endDate: "2025-09-30",
     },
     {
-      id: "4",
+      id: "8",
       title: "30-Day Healthy Eating Challenge",
       description:
         "Eat at least 5 servings of fruits and vegetables every day for 30 days. Improve your nutrition and energy levels!",
       duration: 30,
       participants: ["Pearlie", "Damon", "Magic Mike", "Dayday"],
       creator: "HealthyEaters",
-      creatorAvatar: "/images/defaultUser.png",
+      creatorAvatar: "/images/user.png",
       tags: ["nutrition", "healthy eating", "wellness"],
       startDate: "2025-08-15",
       endDate: "2025-09-30",
     },
     {
-      id: "5",
+      id: "9",
       title: "HIIT Warrior Challenge",
       description:
         "Complete 20 high-intensity interval training sessions in 30 days. Boost your fitness and burn fat!",
       duration: 30,
       participants: ["sys1", "sys2", "sys3"],
       creator: "HIITMasters",
-      creatorAvatar: "/images/defaultUser.png",
+      creatorAvatar: "/images/user2.jpg",
       tags: ["HIIT", "fitness", "fat loss"],
       startDate: "2025-08-17",
       endDate: "2025-08-31",
     },
   ];
   return discoverChallenges;
+}
+
+export function checkInToChallenge(
+  challengeId: string,
+  userId: string,
+  checkInInfo: any
+) {
+  if (!challengeId || !userId) return;
+  console.log(
+    `Checking in to challenge ${challengeId} for user ${userId}`,
+    checkInInfo
+  );
+  return checkInInfo;
 }
