@@ -38,7 +38,6 @@ const AppSideBar = () => {
     },
     {
       title: "Check In",
-      url: "/check-in",
       icon: Camera,
       isDialog: true, // This indicates that this item opens a dialog
     },
