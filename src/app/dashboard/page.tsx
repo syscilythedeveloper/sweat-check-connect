@@ -44,53 +44,56 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-2 sm:p-4 space-y-6">
+    <div className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-purple-glow p-3 sm:p-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              📰 Your News Feed
+      <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <div className="flex items-center justify-center w-full">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-blue-400 flex  gap-2">
+              Sweat Checks
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
-              See what your friends are up to and stay motivated!
-            </p>
           </div>
         </div>
         {/* Search and Tabs */}
-        <div className="flex flex-col md:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
+
+        <div className="flex flex-col md:flex-row gap-2 sm:gap-4 mb-3 sm:mb-6">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
             <input
               type="text"
-              placeholder="Search friends by name, username, or interests..."
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              placeholder="Search challenges..."
+              onChange={(e) => console.log(e.target.value)}
+              className="w-full pl-9 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
             />
           </div>
         </div>
         {/* Tabs */}
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-1 sm:gap-3 text-[6px] font-bold sm:text-lg items-center justify-center">
           <TabButton
-            label="All Check-Ins"
+            label="All"
             count={combinedCheckIns.length}
             isActive={activeTab === ChallengeDisplay.combined}
             onClick={() => setActiveTab(ChallengeDisplay.combined)}
-            icon={<BicepsFlexed className="w-4 h-4" />}
+            icon={
+              <BicepsFlexed className="w-2 h-2 text-blue-600 dark:text-blue-400" />
+            }
           />
           <TabButton
-            label="Challenge"
+            label="Challenges"
             count={challengeBasedCheckIns.length}
             isActive={activeTab === ChallengeDisplay.challenge_based}
             onClick={() => setActiveTab(ChallengeDisplay.challenge_based)}
-            icon={<Users className="w-4 h-4" />}
+            icon={
+              <Users className="w-2 h-2 text-blue-600 dark:text-blue-400" />
+            }
           />
           <TabButton
-            label="Independent"
+            label="Solo"
             count={independentCheckIns.length}
             isActive={activeTab === ChallengeDisplay.independent}
             onClick={() => setActiveTab(ChallengeDisplay.independent)}
-            icon={<User className="w-4 h-4" />}
+            icon={<User className="w-2 h-2 text-blue-600 dark:text-blue-400" />}
           />
         </div>
       </div>

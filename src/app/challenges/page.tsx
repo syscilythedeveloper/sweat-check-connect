@@ -76,7 +76,6 @@ const ChallengesPage = () => {
           </div>
         </div>
 
-        {/* Search and Filters */}
         <div className="flex flex-col md:flex-row gap-2 sm:gap-4 mb-3 sm:mb-6">
           {/* Search */}
           <div className="relative flex-1">
@@ -91,7 +90,7 @@ const ChallengesPage = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex flex-wrap gap-1 sm:gap-3 text-[8px] sm:text-lg items-center justify-center">
+        <div className="flex flex-wrap gap-1 sm:gap-3 text-[6px] font-bold sm:text-lg items-center justify-center">
           <TabButton
             label="New"
             count={newChallenges.length}

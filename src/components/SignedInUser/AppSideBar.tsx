@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { UsersRound, Home, UserRound, Medal, Camera } from "lucide-react";
+import { UsersRound, Home, Medal, Camera, UserRound } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -19,10 +20,9 @@ import ContactCard from "@/components/SignedInUser/ContactCard";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/SignedInUser/mode-toggle";
 import QuickStats from "./QuickStats";
-import { useUser } from "@clerk/nextjs";
 
 const AppSideBar = () => {
-  const { user } = useUser();
+  const pathname = usePathname();
 
   // Menu items.
   const items = [
@@ -33,7 +33,7 @@ const AppSideBar = () => {
     },
     {
       title: "Profile",
-      url: `/profile/${user?.username || "defaultUser"}`,
+      url: "/profile",
       icon: UserRound,
     },
     {
@@ -82,7 +82,14 @@ const AppSideBar = () => {
                       !item.isDialog && ( // Exclude dialog items from the sidebar menu
                         <SidebarMenuItem key={item.title}>
                           <SidebarMenuButton asChild>
-                            <a href={item.url}>
+                            <a
+                              href={item.url}
+                              className={`${
+                                pathname === item.url
+                                  ? "bg-gradient-to-r from-purple-500 to-blue-500 border-2 border-purple-800 rounded-lg shadow-purple-glow"
+                                  : ""
+                              } flex items-center gap-2 px-2 py-1`}
+                            >
                               <item.icon />
                               <span className="text-lg font-small text-gray-900 dark:text-white">
                                 {item.title}
@@ -111,7 +118,7 @@ const AppSideBar = () => {
             <CheckInDialog
               key={item.title}
               trigger={
-                <button className="bg-gradient-to-r from-purple-500 to-blue-500 border-2  border-purple-800 flex flex-col items-center text-white hover:text-blue-400 transition px-2 py-2 shadow-purple-glow rounded-3xl">
+                <button className=" flex flex-col items-center text-white hover:text-blue-400 transition px-2 py-2 rounded-3xl">
                   {item.icon &&
                     React.createElement(item.icon, {
                       className: "w-3.5 h-3.5 mb-0.5",
@@ -124,7 +131,12 @@ const AppSideBar = () => {
             <a
               key={item.title}
               href={item.url}
-              className="flex flex-col items-center text-white hover:text-blue-400 transition px-0.5"
+              className={`flex flex-col items-center text-white hover:text-blue-400 transition px-2 py-2 rounded-3xl
+                ${
+                  pathname === item.url
+                    ? "bg-gradient-to-r from-purple-500 to-blue-500 border-2 border-purple-800"
+                    : ""
+                }`}
             >
               {item.icon &&
                 React.createElement(item.icon, {
