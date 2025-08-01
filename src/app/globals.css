@@ -5,7 +5,7 @@
 
 @layer utilities {
   .shadow-purple-glow {
-    box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 10px 3px rgba(182, 123, 238, 0.4);
   }
   .shadow-red-glow {
     box-shadow: 0 0 10px 2px rgba(255, 69, 0, 0.4);

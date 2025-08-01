@@ -78,18 +78,21 @@ const AppSideBar = () => {
                 </div>
                 <Separator className=" bg-secondary" />
                 <div className="space-y-3">
-                  {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <a href={item.url}>
-                          <item.icon />
-                          <span className="text-lg font-small text-gray-900 dark:text-white">
-                            {item.title}
-                          </span>
-                        </a>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
+                  {items.map(
+                    (item) =>
+                      !item.isDialog && ( // Exclude dialog items from the sidebar menu
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton asChild>
+                            <a href={item.url}>
+                              <item.icon />
+                              <span className="text-lg font-small text-gray-900 dark:text-white">
+                                {item.title}
+                              </span>
+                            </a>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      )
+                  )}
                 </div>
               </SidebarMenu>
             </SidebarGroupContent>
