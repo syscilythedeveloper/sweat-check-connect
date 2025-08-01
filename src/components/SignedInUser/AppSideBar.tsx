@@ -95,6 +95,32 @@ const AppSideBar = () => {
           />
         </SidebarContent>
       </Sidebar>
+
+      {/* Mobile Bottom Bar */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 border-t border-slate-800 flex justify-between items-center py-0.5 px-1 rounded-t-lg shadow-purple-glow sm:hidden">
+        {items.map((item) => (
+          <a
+            key={item.title}
+            href={item.url}
+            className="flex flex-col items-center text-white hover:text-blue-400 transition px-0.5"
+          >
+            {item.icon &&
+              React.createElement(item.icon, {
+                className: "w-3.5 h-3.5 mb-0.5",
+              })}
+            <span className="text-[9px]">{item.title}</span>
+          </a>
+        ))}
+        <div className="flex flex-col items-center">
+          <CheckInDialog
+            trigger={
+              <Button className="rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg px-1.5 py-0.5 text-[9px]">
+                Check In
+              </Button>
+            }
+          />
+        </div>
+      </nav>
     </>
   );
 };

@@ -2,7 +2,7 @@ import { type Metadata } from "next";
 import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/SignedInUser/AppSideBar";
 import { ThemeProvider } from "@/components/SignedInUser/theme-provider";
 
@@ -49,8 +49,7 @@ export default function RootLayout({
                   <AppSidebar />
                   <main className="flex-1">
                     {/* Move header inside main and combine with sidebar trigger */}
-                    <header className="flex justify-between items-center p-4 h-8 bg-gradient-to-b from-black/30 to-transparent">
-                      <SidebarTrigger />
+                    <header className="flex justify-end items-center p-4 h-8 bg-gradient-to-b from-black/30 to-transparent">
                       <div className="flex items-center gap-4">
                         <UserButton />
                       </div>
