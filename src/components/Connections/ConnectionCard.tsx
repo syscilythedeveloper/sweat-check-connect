@@ -5,6 +5,12 @@ import { Button } from "../ui/button";
 
 function HoverUnfollowButton() {
   const [hovered, setHovered] = useState(false);
+
+  const handleUnfollow = () => {
+    alert("User Unfollowed");
+    // Add your unfollow logic here
+  };
+
   return (
     <Button
       variant={hovered ? "destructive" : "secondary"}
@@ -15,6 +21,7 @@ function HoverUnfollowButton() {
       }`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={handleUnfollow}
     >
       {hovered ? "Unfollow" : "Following"}
     </Button>
@@ -58,6 +65,10 @@ const ConnectionCard = ({
           <Button
             variant="secondary"
             className="rounded-full border border-transparent hover:border-blue-600 px-5 py-2 font-bold text-gray-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 shadow-blue-glow"
+            onClick={() => {
+              alert("Now following...");
+              // Add your follow logic here
+            }}
           >
             Follow
           </Button>
