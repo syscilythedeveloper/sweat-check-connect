@@ -43,7 +43,7 @@ const CheckInCard = ({
         alt={`${userId}'s avatar`}
         className="w-10 h-10 rounded-full object-cover"
       />
-      <div className="text-sm text-gray-800 dark:text-white font-semibold">
+      <div className="text-xs text-gray-800 dark:text-white font-semibold">
         {userId}
       </div>
       {challengeName && (
@@ -66,7 +66,7 @@ const CheckInCard = ({
       <video
         src={videoUrl}
         controls
-        className="w-full max-h-[400px] aspect-video"
+        className="w-full max-h-[400px] aspect-video border-2 border-gray-200 dark:border-slate-700 rounded-lg"
       />
     )}
 
