@@ -11,7 +11,7 @@ import { TabButton } from "@/components/TabButton";
 import {
   getChallengesInProgress,
   getNewChallenges,
-  getCompletedChallenges,
+  getPreviousChallenges,
 } from "@/utils/challengeFunctions";
 import { ChallengeCardProps, ChallengeMode } from "@/types/challenge";
 
@@ -26,7 +26,7 @@ const ChallengesPage = () => {
   const [challengesInProgress, setChallengesInProgress] = useState<
     ChallengeCardProps[]
   >([]);
-  const [completedChallenges, setCompletedChallenges] = useState<
+  const [previousChallenges, setPreviousChallenges] = useState<
     ChallengeCardProps[]
   >([]);
   const [newChallenges, setNewChallenges] = useState<ChallengeCardProps[]>([]);
@@ -35,11 +35,11 @@ const ChallengesPage = () => {
     setIsLoading(true);
     Promise.all([
       getChallengesInProgress("someUserId"),
-      getCompletedChallenges("someUserId"),
+      getPreviousChallenges("someUserId"),
       getNewChallenges("someUserId"),
-    ]).then(([inProgress, completed, newChals]) => {
+    ]).then(([inProgress, previous, newChals]) => {
       setChallengesInProgress(inProgress);
-      setCompletedChallenges(completed);
+      setPreviousChallenges(previous);
       setNewChallenges(newChals);
       setIsLoading(false);
     });
@@ -50,8 +50,8 @@ const ChallengesPage = () => {
     displayedChallenges = newChallenges;
   } else if (activeTab === ChallengeMode.joined) {
     displayedChallenges = challengesInProgress;
-  } else if (activeTab === ChallengeMode.completed) {
-    displayedChallenges = completedChallenges;
+  } else if (activeTab === ChallengeMode.past) {
+    displayedChallenges = previousChallenges;
   }
 
   return (
@@ -106,10 +106,10 @@ const ChallengesPage = () => {
             icon={<BicepsFlexed className="w-2 h-2" />}
           />
           <TabButton
-            label="Completed"
-            count={completedChallenges.length}
-            isActive={activeTab === "completed"}
-            onClick={() => setActiveTab(ChallengeMode.completed)}
+            label="Past"
+            count={previousChallenges.length}
+            isActive={activeTab === "past"}
+            onClick={() => setActiveTab(ChallengeMode.past)}
             icon={<CheckCircle className="w-2 h-2" />}
           />
         </div>

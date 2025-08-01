@@ -105,7 +105,7 @@ const Connections = () => {
       </div>
       {/* Content */}
       {/* Connections List */}
-      <div className="flex flex-col gap-4 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-slate-glow">
+      <div className="flex flex-col gap-4 bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-slate-glow mt-3">
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
           : displayedConnections.map((connection) => (

@@ -76,10 +76,10 @@ export function getChallengesInProgress(userId: string) {
   return joinedChallenges;
 }
 
-export function getCompletedChallenges(userId: string) {
+export function getPreviousChallenges(userId: string) {
   //retrieve challenges where the user is a participant and has completed it
   if (!userId || userId.length === 0) return [];
-  const completedChallenges = [
+  const previousChallenges = [
     {
       id: "5",
       title: "HIIT Warrior Challenge",
@@ -120,7 +120,7 @@ export function getCompletedChallenges(userId: string) {
       endDate: "2025-01-16",
     },
   ];
-  return completedChallenges;
+  return previousChallenges;
 }
 
 export function getNewChallenges(userId: string) {
@@ -138,7 +138,7 @@ export function getNewChallenges(userId: string) {
       creator: "StrengthGuild",
       creatorAvatar: "/images/defaultUser.png",
       tags: ["pushups", "strength", "bodyweight"],
-      startDate: "2025-08-01",
+      startDate: "2025-08-15",
       endDate: "2025-09-26",
     },
     {
@@ -177,7 +177,7 @@ export function getNewChallenges(userId: string) {
       creator: "HIITMasters",
       creatorAvatar: "/images/defaultUser.png",
       tags: ["HIIT", "fitness", "fat loss"],
-      startDate: "2025-08-01",
+      startDate: "2025-08-17",
       endDate: "2025-08-31",
     },
   ];

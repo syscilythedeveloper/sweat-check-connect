@@ -26,5 +26,5 @@ export interface ChallengeCardProps {
 export enum ChallengeMode {
   discover = "discover",
   joined = "joined",
-  completed = "completed",
+  past = "past",
 }
