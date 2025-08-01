@@ -59,19 +59,18 @@ const ChallengesPage = () => {
       {/* Header */}
       <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-6">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white flex items-center justify-center gap-2">
+          <div className="flex items-center justify-between w-full">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white flex  gap-2">
               🏆 Challenges
             </h1>
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
+            >
+              <Plus className="w-5 h-5 " />
+              Create
+            </button>
           </div>
-
-          <button
-            onClick={() => setShowCreateForm(true)}
-            className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
-          >
-            <Plus className="w-5 h-5 " />
-            Create Challenge
-          </button>
         </div>
 
         {/* Search and Filters */}
@@ -89,27 +88,27 @@ const ChallengesPage = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex flex-wrap gap-2 sm:gap-3">
+        <div className="flex flex-wrap gap-1 sm:gap-3 text-[8px] sm:text-lg items-center justify-center">
           <TabButton
-            label="Discover"
+            label="New"
             count={newChallenges.length}
             isActive={activeTab === "discover"}
             onClick={() => setActiveTab(ChallengeMode.discover)}
-            icon={<Search className="w-4 h-4" />}
+            icon={<Search className="w-2 h-2" />}
           />
           <TabButton
-            label="Current"
+            label="Active"
             count={challengesInProgress.length}
             isActive={activeTab === "joined"}
             onClick={() => setActiveTab(ChallengeMode.joined)}
-            icon={<BicepsFlexed className="w-4 h-4" />}
+            icon={<BicepsFlexed className="w-2 h-2" />}
           />
           <TabButton
             label="Completed"
             count={completedChallenges.length}
             isActive={activeTab === "completed"}
             onClick={() => setActiveTab(ChallengeMode.completed)}
-            icon={<CheckCircle className="w-4 h-4" />}
+            icon={<CheckCircle className="w-2 h-2" />}
           />
         </div>
       </div>

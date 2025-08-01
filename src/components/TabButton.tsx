@@ -22,7 +22,7 @@ export const TabButton = ({
     {icon}
     <span>{label}</span>
     <span
-      className={`text-xs px-2 py-1 rounded-full ${
+      className={`text-[7px] px-2 py-1 rounded-full ${
         isActive
           ? "bg-white/20"
           : "bg-gray-200 dark:bg-slate-600 text-gray-600 dark:text-gray-400"
