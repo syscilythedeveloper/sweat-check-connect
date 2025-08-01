@@ -11,6 +11,8 @@ import CheckInCard from "@/components/CheckIn/CheckInCard";
 import SkeletonCard from "@/components/Challenges/SkeletonCard";
 
 const Dashboard = () => {
+  // Add loading state for initial render
+  const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [challengeBasedCheckIns, setChallengeBasedCheckIns] = useState<
     CheckInData[]
@@ -22,6 +24,12 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState<ChallengeDisplay>(
     ChallengeDisplay.combined
   );
+
+  // Prevent hydration issues by waiting for mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const displayedCheckIns =
     activeTab === ChallengeDisplay.challenge_based
       ? challengeBasedCheckIns
@@ -42,6 +50,9 @@ const Dashboard = () => {
       setIsLoading(false);
     });
   }, []);
+
+  // Don't render anything until client-side mount is complete
+  if (!mounted) return null;
 
   return (
     <div className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4">

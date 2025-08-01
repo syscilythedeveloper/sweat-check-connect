@@ -16,6 +16,7 @@ import {
 import { ChallengeCardProps, ChallengeMode } from "@/types/challenge";
 
 const ChallengesPage = () => {
+  const [mounted, setMounted] = useState(false);
   //const { user } = useUser();
   const [activeTab, setActiveTab] = useState<ChallengeMode>(
     ChallengeMode.discover
@@ -32,18 +33,24 @@ const ChallengesPage = () => {
   const [newChallenges, setNewChallenges] = useState<ChallengeCardProps[]>([]);
 
   useEffect(() => {
-    setIsLoading(true);
-    Promise.all([
-      getChallengesInProgress("someUserId"),
-      getPreviousChallenges("someUserId"),
-      getNewChallenges("someUserId"),
-    ]).then(([inProgress, previous, newChals]) => {
-      setChallengesInProgress(inProgress);
-      setPreviousChallenges(previous);
-      setNewChallenges(newChals);
-      setIsLoading(false);
-    });
+    setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      setIsLoading(true);
+      Promise.all([
+        getChallengesInProgress("someUserId"),
+        getPreviousChallenges("someUserId"),
+        getNewChallenges("someUserId"),
+      ]).then(([inProgress, previous, newChals]) => {
+        setChallengesInProgress(inProgress);
+        setPreviousChallenges(previous);
+        setNewChallenges(newChals);
+        setIsLoading(false);
+      });
+    }
+  }, [mounted]);
 
   let displayedChallenges: ChallengeCardProps[] = [];
   if (activeTab === ChallengeMode.discover) {
@@ -54,11 +61,12 @@ const ChallengesPage = () => {
     displayedChallenges = previousChallenges;
   }
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
-    <div
-      className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4"
-      suppressHydrationWarning
-    >
+    <div className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4">
       {/* Header */}
       <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-6">
