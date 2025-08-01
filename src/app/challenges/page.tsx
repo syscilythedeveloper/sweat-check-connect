@@ -55,7 +55,10 @@ const ChallengesPage = () => {
   }
 
   return (
-    <div className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4">
+    <div
+      className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4"
+      suppressHydrationWarning
+    >
       {/* Header */}
       <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-6">
