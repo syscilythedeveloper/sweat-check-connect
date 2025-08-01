@@ -57,15 +57,12 @@ const ChallengesPage = () => {
   return (
     <div className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-header-glow p-2 sm:p-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+      <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 sm:gap-3 mb-4 sm:mb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white flex items-center justify-center gap-2">
               🏆 Challenges
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
-              Push your limits and achieve your goals
-            </p>
           </div>
 
           <button
@@ -92,7 +89,7 @@ const ChallengesPage = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           <TabButton
             label="Discover"
             count={newChallenges.length}
@@ -101,7 +98,7 @@ const ChallengesPage = () => {
             icon={<Search className="w-4 h-4" />}
           />
           <TabButton
-            label="Active Challenges"
+            label="Current"
             count={challengesInProgress.length}
             isActive={activeTab === "joined"}
             onClick={() => setActiveTab(ChallengeMode.joined)}

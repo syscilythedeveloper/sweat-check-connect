@@ -79,8 +79,8 @@ const ChallengeCard = ({
               </div>
             )}
 
-            <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-500">
-              <span className="text-gray-500">Created By:</span>
+            <div className="flex items-center justify-center gap-1 text-xs text-gray-500 dark:text-gray-500">
+              <span className="text-gray-500 ">Created By:</span>
 
               <Image
                 width={20}
@@ -155,21 +155,19 @@ const ChallengeCard = ({
 
       {/* Card Footer */}
       {mode !== "completed" && (
-        <div className="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600">
-          <div className="flex items-center justify-between">
-            {mode === ChallengeMode.discover ? (
-              <div className="flex items-center justify-between gap-6">
-                <Button variant="outline">Join Challenge</Button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-6 text-sm">
-                <Button variant="destructive">Leave Challenge</Button>
-                {challengeStatus === "challenge_open" && (
-                  <Button variant="secondary">Share Challenge</Button>
-                )}
-              </div>
-            )}
-          </div>
+        <div className="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600 flex justify-center items-center">
+          {mode === ChallengeMode.discover ? (
+            <div className="flex items-center gap-6">
+              <Button variant="outline">Join Challenge</Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-6 text-sm">
+              <Button variant="destructive">Leave Challenge</Button>
+              {challengeStatus === "challenge_open" && (
+                <Button variant="secondary">Share Challenge</Button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
