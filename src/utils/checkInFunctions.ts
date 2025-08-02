@@ -35,11 +35,11 @@ export function getCheckInsForDiscoverTab() {
     },
     {
       id: "checkin4",
-      userId: "RunningRanger",
-      avatar: "/images/user1.jpeg",
-      videoUrl: "/videos/workoutvid.mov",
+      userId: "vmack",
+      avatar: "/images/victoria.png",
+      videoUrl: "/videos/victoria.mov",
       timestamp: "12 hours ago",
-      caption: "Just finished a long run, feeling accomplished!",
+      caption: "Upper body day!",
     },
   ];
 

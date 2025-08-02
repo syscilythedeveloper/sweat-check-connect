@@ -134,7 +134,7 @@ export function getNewChallenges(userId: string) {
       title: "Push-Up Power Challenge",
       description:
         "Build up to 100 consecutive push-ups over 6 weeks. Perfect for upper body strength!",
-      duration: 42,
+      duration: 14,
       participants: ["premo", "june", "larry"],
       creator: "sys_capone",
       creatorAvatar: "/images/sys.png",

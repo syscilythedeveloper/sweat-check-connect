@@ -61,6 +61,10 @@ const ChallengesPage = () => {
     displayedChallenges = previousChallenges;
   }
 
+  if (isLoading) {
+    return <div className="p-6">Loading...</div>;
+  }
+
   if (!mounted) {
     return null;
   }
