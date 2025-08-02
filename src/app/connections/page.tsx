@@ -84,7 +84,7 @@ const Connections = () => {
             }
           />
           <TabButton
-            label="Following"
+            label="Followers"
             count={followers.length}
             isActive={activeTab === connectionType.followed_by}
             onClick={() => setActiveTab(connectionType.followed_by)}
@@ -93,7 +93,7 @@ const Connections = () => {
             }
           />
           <TabButton
-            label="Followers"
+            label="Following"
             count={following.length}
             isActive={activeTab === connectionType.following}
             onClick={() => setActiveTab(connectionType.following)}
