@@ -13,26 +13,36 @@ import ChallengeCheckInForm from "@/components/Challenges/ChallengeCheckInForm";
 
 export default function ChallengeDetails() {
   const params = useParams();
+  const [mounted, setMounted] = useState(false);
   const [challenge, setChallenge] = useState<ChallengeCardProps | null>(null);
   const [loading, setLoading] = useState(true);
   const [showCheckInForm, setShowCheckInForm] = useState(false);
 
   useEffect(() => {
-    const fetchChallenge = async () => {
-      // For now, we'll search through all our challenge lists to find the matching challenge
-      const allChallenges = [
-        ...(await getChallengesInProgress("dummy-user-id")),
-        ...(await getPreviousChallenges("dummy-user-id")),
-        ...(await getNewChallenges("dummy-user-id")),
-      ];
+    setMounted(true);
+  }, []);
 
-      const found = allChallenges.find((c) => c.id === params.id);
-      setChallenge(found || null);
-      setLoading(false);
-    };
+  useEffect(() => {
+    if (mounted) {
+      const fetchChallenge = async () => {
+        const allChallenges = [
+          ...(await getChallengesInProgress("dummy-user-id")),
+          ...(await getPreviousChallenges("dummy-user-id")),
+          ...(await getNewChallenges("dummy-user-id")),
+        ];
 
-    fetchChallenge();
-  }, [params.id]);
+        const found = allChallenges.find((c) => c.id === params.id);
+        setChallenge(found || null);
+        setLoading(false);
+      };
+
+      fetchChallenge();
+    }
+  }, [params.id, mounted]);
+
+  if (!mounted) {
+    return null;
+  }
 
   if (loading) {
     return <div className="p-6">Loading...</div>;
