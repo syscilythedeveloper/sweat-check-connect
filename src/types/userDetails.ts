@@ -15,3 +15,20 @@ export interface UserDetails {
     totalGains: number;
   };
 }
+
+export enum DashboardDisplay {
+  check_ins = "check_ins",
+  leaderboard = "leaderboard",
+  challenge_discovery = "challenge_discovery",
+}
+
+export type RecentCheckIns = {
+  id: string;
+  title: string;
+  date: string;
+  number: number;
+};
+export type LeaderboardData = {
+  username: string;
+  daysActive: number;
+};

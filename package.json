@@ -2,6 +2,9 @@
   "name": "sweat-check-connect",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",

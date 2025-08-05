@@ -1,28 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useEffect } from "react";
 import { TabButton } from "@/components/TabButton";
-import {
-  getCheckInsForChallengeTab,
-  getCheckInsForDiscoverTab,
-} from "@/utils/checkInFunctions";
-import { BicepsFlexed, User, Users } from "lucide-react";
-import { CheckInData, ChallengeDisplay } from "@/types/checkIns";
-import CheckInCard from "@/components/CheckIn/CheckInCard";
+import { BicepsFlexed, Search, Users } from "lucide-react";
 import SkeletonCard from "@/components/Challenges/SkeletonCard";
+import { getNewChallenges } from "@/utils/challengeFunctions";
+import { ChallengeCardProps } from "@/types/challenge";
+import { DashboardDisplay, LeaderboardData } from "@/types/userDetails";
+import ChallengeCard from "@/components/Challenges/ChallengeCard";
+import {
+  getRecentCheckIns,
+  getLeaderboardData,
+} from "@/utils/userDetailFunctions";
+import { RecentCheckIns } from "@/types/userDetails";
+import PreviousCheckIns from "@/components/Dashboard/PreviousCheckIns";
+import Leaderboard from "@/components/Dashboard/Leaderboard";
 
 const Dashboard = () => {
   // Add loading state for initial render
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [challengeBasedCheckIns, setChallengeBasedCheckIns] = useState<
-    CheckInData[]
-  >([]);
-  const [independentCheckIns, setIndependentCheckIns] = useState<CheckInData[]>(
-    []
-  );
-  const [combinedCheckIns, setCombinedCheckIns] = useState<CheckInData[]>([]);
-  const [activeTab, setActiveTab] = useState<ChallengeDisplay>(
-    ChallengeDisplay.combined
+  const [newChallenges, setNewChallenges] = useState<ChallengeCardProps[]>([]);
+  const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckIns[]>([]);
+  const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
+
+  const [activeTab, setActiveTab] = useState<any>(
+    DashboardDisplay.challenge_discovery
   );
 
   // Prevent hydration issues by waiting for mount
@@ -30,26 +33,23 @@ const Dashboard = () => {
     setMounted(true);
   }, []);
 
-  const displayedCheckIns =
-    activeTab === ChallengeDisplay.challenge_based
-      ? challengeBasedCheckIns
-      : activeTab === ChallengeDisplay.independent
-      ? independentCheckIns
-      : combinedCheckIns;
-
   useEffect(() => {
-    setIsLoading(true);
+    if (mounted) {
+      setIsLoading(true);
 
-    Promise.all([
-      getCheckInsForChallengeTab(),
-      getCheckInsForDiscoverTab(),
-    ]).then(([checkInsForChallenge, checkInsForDiscover]) => {
-      setChallengeBasedCheckIns(checkInsForChallenge);
-      setIndependentCheckIns(checkInsForDiscover);
-      setCombinedCheckIns([...checkInsForChallenge, ...checkInsForDiscover]);
-      setIsLoading(false);
-    });
-  }, []);
+      Promise.all([
+        getNewChallenges("someUserId"),
+        getRecentCheckIns("someUserId"),
+        getLeaderboardData(),
+      ]).then(([newChallenges, recentCheckins, leaderboardData]) => {
+        setNewChallenges(newChallenges);
+        setRecentCheckIns(recentCheckins);
+        setLeaderboardData(leaderboardData);
+
+        setIsLoading(false);
+      });
+    }
+  }, [mounted]);
 
   // Don't render anything until client-side mount is complete
   if (!mounted) return null;
@@ -70,41 +70,72 @@ const Dashboard = () => {
         {/* Tabs */}
         <div className="flex flex-wrap gap-1 sm:gap-3 text-[6px] font-bold sm:text-lg items-center justify-center">
           <TabButton
-            label="All"
-            count={combinedCheckIns.length}
-            isActive={activeTab === ChallengeDisplay.combined}
-            onClick={() => setActiveTab(ChallengeDisplay.combined)}
+            label="Discover"
+            count={newChallenges.length}
+            isActive={activeTab === DashboardDisplay.challenge_discovery}
+            onClick={() => setActiveTab(DashboardDisplay.challenge_discovery)}
+            icon={
+              <Search className="w-2 h-2 text-blue-600 dark:text-blue-400" />
+            }
+          />
+          <TabButton
+            label="My Checkins"
+            count={leaderboard.length}
+            isActive={activeTab === DashboardDisplay.check_ins}
+            onClick={() => setActiveTab(DashboardDisplay.check_ins)}
             icon={
               <BicepsFlexed className="w-2 h-2 text-blue-600 dark:text-blue-400" />
             }
           />
           <TabButton
-            label="Challenges"
-            count={challengeBasedCheckIns.length}
-            isActive={activeTab === ChallengeDisplay.challenge_based}
-            onClick={() => setActiveTab(ChallengeDisplay.challenge_based)}
+            label="Leaderboard"
+            count={4}
+            isActive={activeTab === DashboardDisplay.leaderboard}
+            onClick={() => setActiveTab(DashboardDisplay.leaderboard)}
             icon={
               <Users className="w-2 h-2 text-blue-600 dark:text-blue-400" />
             }
           />
-          <TabButton
-            label="Solo"
-            count={independentCheckIns.length}
-            isActive={activeTab === ChallengeDisplay.independent}
-            onClick={() => setActiveTab(ChallengeDisplay.independent)}
-            icon={<User className="w-2 h-2 text-blue-600 dark:text-blue-400" />}
-          />
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+
+      <div
+        className={`rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-slate-800/60 ${
+          activeTab === DashboardDisplay.challenge_discovery
+            ? "gap-4 sm:gap-6"
+            : "gap-1 sm:gap-2"
+        }`}
+      >
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-          : displayedCheckIns.map((checkIn) => (
-              <CheckInCard
-                key={checkIn.id}
-                {...checkIn}
+          : activeTab === DashboardDisplay.challenge_discovery
+          ? newChallenges.map((challenge) => (
+              <ChallengeCard
+                key={challenge.id}
+                challenge={challenge}
+                mode={activeTab}
               />
-            ))}
+            ))
+          : activeTab === DashboardDisplay.check_ins
+          ? recentCheckIns
+              .slice()
+              .reverse()
+              .map((checkIn) => (
+                <PreviousCheckIns
+                  key={checkIn.id}
+                  {...checkIn}
+                />
+              ))
+          : activeTab === DashboardDisplay.leaderboard
+          ? leaderboard.map((leader: LeaderboardData, index: number) => (
+              <Leaderboard
+                key={index}
+                username={leader.username}
+                daysActive={leader.daysActive}
+                rank={index + 1}
+              />
+            ))
+          : null}
       </div>
     </div>
   );

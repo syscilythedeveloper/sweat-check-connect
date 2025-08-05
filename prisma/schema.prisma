@@ -1,54 +1,121 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                     String       @id @default(cuid())
-  email                  String       @unique
-  username              String       @unique
-  name                   String?
-  avatar                 String?
-  bio                    String?
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
-  checkIns               CheckIn[]
-  comments               Comment[]
-  followers Follows[] @relation("following") // users who follow this user
-  following Follows[] @relation("follower") // users this user follows
-  likes                  Like[]
-  receivedMessages       Message[]    @relation("ReceivedMessages")
-  sentMessages           Message[]    @relation("SentMessages")
-  receivedNotifications   Notification[] @relation("userNotifications") // notifications received by a user
-  sentNotifications       Notification[] @relation("notificationSender") // notifications triggered by a user
-
-    createdChallenges      Challenge[]  @relation("CreatedChallenges")
-  challengeParticipations ChallengeParticipant[]
+generator client {
+  provider = "prisma-client-js"
 }
 
+model User {
+  id             String   @id @default(cuid())                              
+  username       String   @unique                      
+  email          String   @unique
+  avatar      String?
+  bio            String?
+  name            String?
+
+  isPrivate      Boolean  @default(false)
+  membershipType MembershipType @default(STANDARD) 
+
+  followers      UserFollow[] @relation("followers")
+  following      UserFollow[] @relation("following") 
+  daysActive     Int      @default(0) 
+  currentActiveStreak  Int      @default(0)
+  longestActiveStreak  Int      @default(0)
+
+
+  checkIns       CheckIn[]
+  challenges     UserChallenge[]   // Participating challenges (via join table)
+  sentMessages   DirectMessage[] @relation("sentMessages")
+  receivedMessages DirectMessage[] @relation("receivedMessages")
+  sentChallengeMessages ChallengeMessage[] @relation("SentChallengeMessages")
+  challengeMessageReactions ChallengeMessageReaction[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  notifications  Notification[] @relation("UserNotifications")
+  sentNotifications Notification[] @relation("SentNotifications")
+  
+
+  createdChallenges Challenge[] @relation("CreatedChallenges") 
+ 
+  checkInComments CheckInComment[]
+  checkInCommentReactions CheckInCommentReaction[]
+  checkInReactions CheckInReaction[]
+
+  @@index([username])
+}
+
+enum MembershipType {
+  STANDARD
+  PRO
+  PREMIUM
+}
+
+model UserChallenge {
+  id                String   @id @default(cuid())
+  userId            String
+  challengeId       String
+  checkInsCompleted Int      @default(0)
+  isCompleted       Boolean  @default(false)
+  joinedAt          DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge Challenge @relation(fields: [challengeId], references: [id])
+  @@unique([userId, challengeId])
+  @@index([challengeId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  senderId  String?                      
+  type      NotificationType
+  targetType  String?    
+  targetId    String?    
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user User @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  sender    User?    @relation("SentNotifications", fields: [senderId], references: [id], onDelete: SetNull)
+  expiresAt DateTime?
+  
+ 
+}
+
+enum NotificationType {
+  REACTION         
+  COMMENT             
+  MESSAGE
+  FOLLOW_REQUEST           
+  CHALLENGE_JOINED        
+  CHALLENGE_COMPLETED      
+  INVITE                   
+  CHALLENGE_UPDATED  
+}
+
+
 model CheckIn {
-  id           String    @id @default(cuid())
-  userId       String
-  caption      String
-  challengeId  String? 
-  videoUrl     String
-  fileName     String
-  fileSize     Int
-  mimeType     String
-  duration     Float?
-  thumbnailUrl String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  privacy      Privacy   @default(public)
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-   challenge    Challenge? @relation(fields: [challengeId], references: [id], onDelete: SetNull)
-  comments     Comment[]
-  likes        Like[]
-  notifications Notification[]
+  id            String   @id @default(cuid())
+  userId        String
+  challengeId   String?                          
+
+  caption       String?
+  videoUrl      String
+  thumbnailUrl  String?
+  fileSize      Int                              
+  mimeType      String
+  duration      Float?                           
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge     Challenge? @relation(fields: [challengeId], references: [id])
+  reactions     CheckInReaction[]
+  comments      CheckInComment[]
+ 
 }
 
 model Challenge {
@@ -56,118 +123,162 @@ model Challenge {
   title           String
   description     String
   startDate       DateTime
-  endDate         DateTime
-  maxParticipants Int
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  
-  // Relations
-  creatorId       String
-  creator         User      @relation("CreatedChallenges", fields: [creatorId], references: [id], onDelete: Cascade)
-  
-  // Participants (many-to-many relationship)
-  participants    ChallengeParticipant[]
-  
-  // Check-ins associated with this challenge
-  checkIns        CheckIn[]
+  duration        Int       
+  frequencyType   FrequencyType @default(DAILY) // enum: DAILY or WEEKLY
+  checkInsPerWeek Int? // only relevant if frequencyType = WEEKLY
+  requiredCheckIns  Int
+  maxParticipants Int?      
+  isPrivate       Boolean   @default(false)
+  tags            String[] // PostgreSQL supports string arrays
+  createdById     String?
+  createdBy       User? @relation("CreatedChallenges", fields: [createdById], references: [id], onDelete: SetNull)
+  participants    UserChallenge[]  
+  checkIns        CheckIn[]        
+  chatMessages    ChallengeMessage[]        
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  totalCheckIns   Int
+  status           ChallengeStatus @default(UPCOMING)
+
+  @@index([createdById])
+  @@index([status])
+  @@index([startDate])
+
 }
 
-model ChallengeParticipant {
-  id          String    @id @default(cuid())
-  userId      String
+enum FrequencyType {
+  DAILY
+  WEEKLY
+}
+
+model ChallengeMessage {
+  id          String   @id @default(cuid())
   challengeId String
-  joinedAt    DateTime  @default(now())
-  
-  // Relations
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  sender      User      @relation("SentChallengeMessages",fields: [userId], references: [id], onDelete: Cascade)
+  reactions   ChallengeMessageReaction[]
+
+    @@index([challengeId])
+
+
+}
+
+model DirectMessage {
+  id           String   @id @default(cuid())
+  senderId     String
+  recipientId  String
+  content      String
+  messageRead   Boolean @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sender       User @relation("sentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient    User @relation("receivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
+  reactions    DirectMessageReaction[]
+  @@index([senderId, recipientId])
+
   
-  @@unique([userId, challengeId]) // Prevent duplicate participation
-  @@index([challengeId]) // For faster queries when getting challenge participants
-}
-
-
-model Comment {
-  id        String   @id @default(cuid())
-  content   String
-  userId    String
-  checkInId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  checkIn   CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  notifications Notification[]
-}
-
-model Like {
-  id        String   @id @default(cuid())
-  userId    String
-  checkInId String
-  createdAt DateTime @default(now())
-  checkIn   CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, checkInId])
-}
-
-
-model Follows{
-  followerId String
-  followingId String
-  createdAt DateTime @default(now())
-
-  // Relations
-  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
-  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
-
-  @@index([followerId,followingId]) // composite index for faster queries
-  @@id([followerId, followingId]) // composite primary key prevents duplicate follows
 }
 
 
 
-model Message {
+model ChallengeMessageReaction {
+  id            String   @id @default(cuid())
+  userId        String
+  challengeMessageId String
+  type          ReactionType
+  createdAt     DateTime @default(now())
+
+  challengeMessage ChallengeMessage @relation(fields: [challengeMessageId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+  @@unique([userId, challengeMessageId, type])
+}
+model DirectMessageReaction {
+  id            String   @id @default(cuid())
+  userId        String
+  directMessageId String
+  type          ReactionType
+  createdAt     DateTime @default(now())
+
+  directMessage  DirectMessage     @relation(fields: [directMessageId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, directMessageId, type])
+}
+
+enum ReactionType {
+  CLAP
+  FIRE
+  STRONG
+  LOVE
+}
+model CheckInReaction {
   id         String   @id @default(cuid())
-  senderId   String
-  receiverId String
+  userId     String
+  checkInId  String
+  type       ReactionType
+  createdAt  DateTime @default(now())
+  checkIn    CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, checkInId, type]) 
+}
+
+
+
+model CheckInComment {
+  id         String   @id @default(cuid())
+  userId     String
+  checkInId  String
   content    String
-  read       Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  notifications Notification[] 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  checkIn    CheckIn  @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  reactions  CheckInCommentReaction[]
 }
 
-model Notification {
-  id        String   @id @default(cuid())
-  receiverId    String                  
-  senderId String                  
-  type      NotificationType        
-  read      Boolean  @default(false)
-  checkinId String?
-  commentId String?
-  createdAt DateTime @default(now())
-  messageId String?
-  // Relations
-  receiver   User     @relation("userNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
-  notificationSender   User     @relation("notificationSender", fields: [senderId], references: [id], onDelete: Cascade)
-  checkin   CheckIn? @relation(fields: [checkinId], references: [id], onDelete: Cascade)
-  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  message   Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+model CheckInCommentReaction {
+  id         String   @id @default(cuid())
+  userId     String
+  commentId  String
+  type       ReactionType
+  createdAt  DateTime @default(now())
 
-  @@index([receiverId, createdAt])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment    CheckInComment    @relation(fields: [commentId], references: [id] , onDelete: Cascade)
+
+  @@unique([userId, commentId, type])
 }
 
-enum Privacy {
-  public
-  followersOnly
+model UserFollow {
+  id           String   @id @default(cuid())
+  followerId   String
+  followingId  String
+  status       FollowStatus @default(PENDING)
+  createdAt    DateTime @default(now())
+
+  follower     User @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
+  following    User @relation("followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
 }
 
+enum FollowStatus {
+    PENDING
+    ACCEPTED
+    BLOCKED
 
+}
 
-enum NotificationType {
-  LIKE     
-  COMMENT 
-  FOLLOW   
+enum ChallengeStatus {
+  UPCOMING
+  ACTIVE
+  COMPLETED
 }

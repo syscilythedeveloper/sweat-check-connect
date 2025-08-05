@@ -4,3 +4,8 @@ export interface User {
   avatar: string;
   bio?: string;
 }
+export enum MembershipType {
+  STANDARD = "STANDARD",
+  PREMIUM = "PREMIUM",
+  PRO = "PRO",
+}
