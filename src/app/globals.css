@@ -17,8 +17,8 @@
     box-shadow: 0 0 10px 2px rgba(0, 201, 81, 0.4);
   }
   .shadow-slate-glow {
-    box-shadow: 0 0 2px 1px rgba(30, 41, 59, 0.7),
-      0 0 5px 2px rgba(100, 116, 139, 0.5);
+    box-shadow: 0 0 1px 1px rgba(30, 41, 59, 0.7),
+      0 0 5px 1px rgba(100, 116, 139, 0.5);
   }
   .shadow-header-glow {
     box-shadow: 0 0 10px 2px rgba(219, 214, 231, 0.1),

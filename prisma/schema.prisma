@@ -45,6 +45,7 @@ model User {
   checkInCommentReactions CheckInCommentReaction[]
   checkInReactions CheckInReaction[]
 
+  @@index([daysActive])
   @@index([username])
 }
 

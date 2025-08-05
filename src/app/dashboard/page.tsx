@@ -8,15 +8,14 @@ import { getNewChallenges } from "@/utils/challengeFunctions";
 import { ChallengeCardProps } from "@/types/challenge";
 import { DashboardDisplay, LeaderboardData } from "@/types/userDetails";
 import ChallengeCard from "@/components/Challenges/ChallengeCard";
-import {
-  getRecentCheckIns,
-  getLeaderboardData,
-} from "@/utils/userDetailFunctions";
+
 import { RecentCheckIns } from "@/types/userDetails";
 import PreviousCheckIns from "@/components/Dashboard/PreviousCheckIns";
 import Leaderboard from "@/components/Dashboard/Leaderboard";
+import { useUser } from "@clerk/nextjs";
 
 const Dashboard = () => {
+  const { user } = useUser();
   // Add loading state for initial render
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,19 +36,45 @@ const Dashboard = () => {
     if (mounted) {
       setIsLoading(true);
 
-      Promise.all([
-        getNewChallenges("someUserId"),
-        getRecentCheckIns("someUserId"),
-        getLeaderboardData(),
-      ]).then(([newChallenges, recentCheckins, leaderboardData]) => {
+      Promise.all([getNewChallenges("someUserId")]).then(([newChallenges]) => {
         setNewChallenges(newChallenges);
-        setRecentCheckIns(recentCheckins);
-        setLeaderboardData(leaderboardData);
+        // setRecentCheckIns(recentCheckins);
 
         setIsLoading(false);
       });
     }
-  }, [mounted]);
+  }, [mounted, user]);
+
+  // In your dashboard component
+  useEffect(() => {
+    if (mounted) {
+      const fetchDashboardData = async () => {
+        setIsLoading(true);
+
+        try {
+          const response = await fetch(`/api/dashboard?userId=${user}`);
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch dashboard data");
+          }
+          const data = await response.json();
+          console.log("Fetched dashboard data:", data);
+          setLeaderboardData(data.leaderboard);
+          console.log("leaderboard data:", data.leaderboard);
+          // setRecentCheckIns(data.recentCheckins);
+          console.log("recent check in data:", data.recentCheckins);
+          setRecentCheckIns(data.recentCheckins);
+        } catch (error) {
+          console.error("Error fetching dashboard data:", error);
+          // Handle error state here
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchDashboardData();
+    }
+  }, [mounted, user]);
 
   // Don't render anything until client-side mount is complete
   if (!mounted) return null;
@@ -80,7 +105,7 @@ const Dashboard = () => {
           />
           <TabButton
             label="My Checkins"
-            count={leaderboard.length}
+            count={4}
             isActive={activeTab === DashboardDisplay.check_ins}
             onClick={() => setActiveTab(DashboardDisplay.check_ins)}
             icon={
@@ -99,44 +124,61 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div
-        className={`rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-slate-800/60 ${
-          activeTab === DashboardDisplay.challenge_discovery
-            ? "gap-4 sm:gap-6"
-            : "gap-1 sm:gap-2"
-        }`}
-      >
-        {isLoading
-          ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-          : activeTab === DashboardDisplay.challenge_discovery
-          ? newChallenges.map((challenge) => (
-              <ChallengeCard
-                key={challenge.id}
-                challenge={challenge}
-                mode={activeTab}
-              />
-            ))
-          : activeTab === DashboardDisplay.check_ins
-          ? recentCheckIns
-              .slice()
-              .reverse()
-              .map((checkIn) => (
-                <PreviousCheckIns
-                  key={checkIn.id}
-                  {...checkIn}
+      {/* Content Area */}
+      {activeTab === DashboardDisplay.check_ins ? (
+        // Scrollable Check-ins Layout
+        <div className="bg-blue-50/50 dark:bg-slate-800/60 rounded-xl p-4 shadow-slate-glow">
+          <div className="h-96 overflow-y-auto space-y-2 pr-2">
+            {isLoading
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <SkeletonCard key={i} />
+                ))
+              : recentCheckIns
+                  .slice()
+                  .reverse()
+                  .map((checkIn, index: number) => (
+                    <PreviousCheckIns
+                      key={index}
+                      {...checkIn}
+                      number={recentCheckIns.length - index}
+                    />
+                  ))}
+          </div>
+        </div>
+      ) : (
+        // Grid Layout for Challenges and Leaderboard
+        <div
+          className={`rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-slate-800/60 ${
+            activeTab === DashboardDisplay.challenge_discovery
+              ? "gap-4 sm:gap-6"
+              : "gap-1 sm:gap-2"
+          }`}
+        >
+          {isLoading
+            ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+            : activeTab === DashboardDisplay.challenge_discovery
+            ? newChallenges.map((challenge) => (
+                <ChallengeCard
+                  key={challenge.id}
+                  challenge={challenge}
+                  mode={activeTab}
                 />
               ))
-          : activeTab === DashboardDisplay.leaderboard
-          ? leaderboard.map((leader: LeaderboardData, index: number) => (
-              <Leaderboard
-                key={index}
-                username={leader.username}
-                daysActive={leader.daysActive}
-                rank={index + 1}
-              />
-            ))
-          : null}
-      </div>
+            : activeTab === DashboardDisplay.leaderboard
+            ? leaderboard.map((leader: LeaderboardData, index: number) => (
+                <Leaderboard
+                  key={index}
+                  username={leader.username}
+                  daysActive={leader.daysActive}
+                  avatar={leader.avatar}
+                  currentActiveStreak={leader.currentActiveStreak}
+                  longestActiveStreak={leader.longestActiveStreak}
+                  rank={index + 1}
+                />
+              ))
+            : null}
+        </div>
+      )}
     </div>
   );
 };

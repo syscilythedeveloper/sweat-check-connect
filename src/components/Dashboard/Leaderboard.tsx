@@ -1,70 +1,141 @@
-import { Medal, Flame } from "lucide-react";
+import { Flame, TrendingUp, Trophy } from "lucide-react";
+import Image from "next/image";
 
 interface LeaderboardProps {
   username: string;
   daysActive: number;
   rank: number;
+  avatar: string;
+  currentActiveStreak: number;
+  longestActiveStreak: number;
 }
 
-const rankColors = [
-  "from-yellow-400 to-yellow-700", // 1st
-  "from-gray-400 to-gray-700", // 2nd
-  "from-orange-400 to-orange-700", // 3rd
-  "from-blue-400 to-blue-700", // everyone else
-];
+const getRankStyle = (rank: number) => {
+  switch (rank) {
+    case 1:
+      return {
+        bg: "bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600",
+        border: "border-yellow-400",
+        accent: "text-yellow-600",
+        shadow: "shadow-yellow-200",
+      };
+    case 2:
+      return {
+        bg: "bg-gradient-to-r from-slate-300 via-slate-400 to-slate-500",
+        border: "border-slate-400",
+        accent: "text-slate-600",
+        shadow: "shadow-slate-200",
+      };
+    case 3:
+      return {
+        bg: "bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600",
+        border: "border-orange-400",
+        accent: "text-orange-600",
+        shadow: "shadow-orange-200",
+      };
+    default:
+      return {
+        bg: "bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600",
+        border: "border-blue-400",
+        accent: "text-blue-600",
+        shadow: "shadow-blue-200",
+      };
+  }
+};
 
-const getRankColor = (rank: number) => rankColors[rank - 1] || rankColors[3];
+const Leaderboard = ({
+  username,
+  daysActive,
+  rank,
+  avatar,
+  currentActiveStreak,
+  longestActiveStreak,
+}: LeaderboardProps) => {
+  const style = getRankStyle(rank);
 
-const Leaderboard = ({ username, daysActive, rank }: LeaderboardProps) => (
-  <div className="relative bg-white dark:bg-slate-800/90 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow w-full max-w-md mx-auto border border-gray-100 dark:border-slate-700">
-    {/* Side stripe for rank */}
+  return (
     <div
-      className={`absolute left-0 top-0 h-full w-2 bg-gradient-to-b ${getRankColor(
-        rank
-      )}`}
-    />
-
-    <div className="p-5 pl-7 flex items-center gap-4">
-      {/* Ranking Badge */}
-      <div className="flex-shrink-0">
+      className={`relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden ${style.shadow} dark:shadow-none border ${style.border} dark:border-slate-600 hover:scale-[1.02] transition-all duration-200`}
+    >
+      {/* Header with rank and user info */}
+      <div className="flex items-center p-4 pb-2">
+        {/* Rank Badge */}
         <div
-          className={`w-14 h-14 rounded-full flex items-center justify-center shadow-md bg-gradient-to-br ${getRankColor(
-            rank
-          )}`}
+          className={`w-12 h-12 rounded-full ${style.bg} flex items-center justify-center mr-4 shadow-lg`}
         >
-          <span className="text-2xl font-extrabold text-white drop-shadow-lg">
-            #{rank}
-          </span>
+          <span className="text-lg font-black text-white">#{rank}</span>
+        </div>
+
+        {/* Avatar and Username */}
+        <div className="flex items-center flex-1">
+          <Image
+            src={avatar || "/images/defaultUser.png"}
+            alt={username}
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-600 mr-3"
+          />
+          <div>
+            <h3 className="font-bold text-gray-900 dark:text-white text-base truncate">
+              {username}
+            </h3>
+            <div className="flex items-center">
+              {rank <= 3 && (
+                <Trophy className={`w-4 h-4 mr-1 ${style.accent}`} />
+              )}
+              <span className={`text-xs font-semibold ${style.accent}`}>
+                {rank <= 3 ? "Top Performer" : "Rising Star"}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* User & stats */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-bold text-gray-800 dark:text-white truncate">
-            {username}
-          </h3>
-          {rank <= 3 && (
-            <Medal
-              className={`w-5 h-5 ${
-                rank === 1
-                  ? "text-yellow-400"
-                  : rank === 2
-                  ? "text-gray-400"
-                  : "text-orange-400"
-              }`}
-            />
-          )}
-        </div>
-        <div className="flex gap-3 mt-2">
-          <span className="flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400">
-            <Flame className="w-4 h-4 mr-1" />
-            {daysActive} check-ins
-          </span>
+      {/* Stats Grid */}
+      <div className="px-4 pb-4">
+        <div className="grid grid-cols-3 gap-3">
+          {/* Total Days Active */}
+          <div className="bg-gray-50 dark:bg-slate-700 rounded-xl p-3 text-center">
+            <div className="text-2xl font-black text-gray-900 dark:text-white">
+              {daysActive}
+            </div>
+            <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-1">
+              Total Days
+            </div>
+          </div>
+
+          {/* Current Streak */}
+          <div className="bg-gray-50 dark:bg-slate-700 rounded-xl p-3 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Flame className="w-4 h-4 text-orange-500 mr-1" />
+              <span className="text-2xl font-black text-gray-900 dark:text-white">
+                {currentActiveStreak}
+              </span>
+            </div>
+            <div className="text-xs font-medium text-gray-600 dark:text-gray-400">
+              Current
+            </div>
+          </div>
+
+          {/* Longest Streak */}
+          <div className="bg-gray-50 dark:bg-slate-700 rounded-xl p-3 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
+              <span className="text-2xl font-black text-gray-900 dark:text-white">
+                {longestActiveStreak}
+              </span>
+            </div>
+            <div className="text-xs font-medium text-gray-600 dark:text-gray-400">
+              Best
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Bottom accent bar */}
+      <div className={`h-1 ${style.bg}`} />
     </div>
-  </div>
-);
+  );
+};
 
 export default Leaderboard;

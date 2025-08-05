@@ -10,22 +10,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    // Find all users that the signed-in user does NOT follow and is not themselves
-    const followedIds = await prisma.follows.findMany({
-      where: { followerId: signedInUserId },
-      select: { followingId: true },
-    });
-    const followedIdList = followedIds.map((f) => f.followingId);
-
-    const users = await prisma.user.findMany({
-      where: {
-        id: {
-          notIn: [...followedIdList, signedInUserId],
-        },
-      },
-    });
-
-    return NextResponse.json(users);
+    return;
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.json(
@@ -56,12 +41,6 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Create follow relationship
-    await prisma.follows.create({
-      data: {
-        followerId,
-        followingId: userToFollow.id,
-      },
-    });
 
     return NextResponse.json(
       { message: `Now following ${username}` },

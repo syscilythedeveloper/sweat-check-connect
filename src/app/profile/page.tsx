@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { MapPin, Calendar } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { getUserProfile } from "@/utils/userDetailFunctions";
+import { getUserProfile } from "@/utils/DashboardFunctions";
 import { UserDetails } from "@/types/userDetails";
 //import { useUser } from "@clerk/nextjs";
 

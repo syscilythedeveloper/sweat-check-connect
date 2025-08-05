@@ -24,11 +24,14 @@ export enum DashboardDisplay {
 
 export type RecentCheckIns = {
   id: string;
-  title: string;
-  date: string;
-  number: number;
+  caption: string;
+  createdAt: string;
 };
 export type LeaderboardData = {
   username: string;
   daysActive: number;
+  rank: number;
+  avatar: string;
+  currentActiveStreak: number;
+  longestActiveStreak: number;
 };
