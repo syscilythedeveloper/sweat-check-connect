@@ -19,6 +19,7 @@ async function main() {
         currentActiveStreak: 3,
         longestActiveStreak: 3,
         daysActive: 4,
+        isPrivate: false,
       },
     }),
 
@@ -34,6 +35,7 @@ async function main() {
         currentActiveStreak: 1,
         longestActiveStreak: 1,
         daysActive: 1,
+        isPrivate: false,
       },
     }),
 
@@ -49,6 +51,7 @@ async function main() {
         currentActiveStreak: 1,
         longestActiveStreak: 5,
         daysActive: 1,
+        isPrivate: false,
       },
     }),
 
@@ -64,6 +67,7 @@ async function main() {
         currentActiveStreak: 1,
         longestActiveStreak: 2,
         daysActive: 4,
+        isPrivate: false,
       },
     }),
 
@@ -79,6 +83,7 @@ async function main() {
         currentActiveStreak: 0,
         longestActiveStreak: 3,
         daysActive: 3,
+        isPrivate: false,
       },
     }),
     prisma.user.create({
@@ -93,6 +98,7 @@ async function main() {
         currentActiveStreak: 5,
         longestActiveStreak: 5,
         daysActive: 6,
+        isPrivate: false,
       },
     }),
     prisma.user.create({
@@ -107,40 +113,37 @@ async function main() {
         currentActiveStreak: 2,
         longestActiveStreak: 2,
         daysActive: 3,
+        isPrivate: false,
       },
     }),
   ]);
 
   console.log(`✅ Created ${users.length} users`);
-
-  // Create some follow relationships
-  const follows = await Promise.all([
-    prisma.userFollow.create({
-      data: {
-        followerId: users[0].id, // sys_capone follows kiara
-        followingId: users[1].id,
-        status: "ACCEPTED",
+  //create check-ins for victoria
+  const checkIns = await prisma.checkIn.createMany({
+    data: [
+      {
+        userId: users[4].id,
+        caption: "Lat Pull Downs",
+        createdAt: new Date("2025-12-03T10:00:00Z"),
+        videoUrl:
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/victoria.mov",
+        fileSize: 300,
+        mimeType: "video/mp4",
       },
-    }),
-    prisma.userFollow.create({
-      data: {
-        followerId: users[1].id, // kiara follows sys_capone
-        followingId: users[0].id,
-        status: "ACCEPTED",
+      {
+        userId: users[5].id,
+        caption: "Upper body workout complete! 💪🏿",
+        createdAt: new Date("2025-12-04T08:30:00Z"),
+        videoUrl:
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/daniel_upper.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
       },
-    }),
-    prisma.userFollow.create({
-      data: {
-        followerId: users[2].id, // deebo follows smokey
-        followingId: users[3].id,
-        status: "ACCEPTED",
-      },
-    }),
-  ]);
+    ],
+  });
 
-  console.log(`✅ Created ${follows.length} follow relationships`);
-
-  console.log("🎉 Seed completed successfully!");
+  console.log(`✅ Created ${checkIns.count} check-ins`);
 }
 
 main()

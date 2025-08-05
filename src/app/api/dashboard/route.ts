@@ -70,7 +70,11 @@ async function getRecentCheckins(userId: string) {
     },
     include: {
       user: {
-        select: { username: true },
+        select: {
+          username: true,
+          avatar: true,
+          name: true,
+        },
       },
     },
     orderBy: {
