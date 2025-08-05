@@ -85,7 +85,6 @@ const Dashboard = () => {
         <div className="flex flex-wrap gap-1 sm:gap-3 text-[6px] font-bold sm:text-lg items-center justify-center">
           <TabButton
             label="Find Challenges"
-            count={0}
             isActive={activeTab === DashboardDisplay.challenge_discovery}
             onClick={() => setActiveTab(DashboardDisplay.challenge_discovery)}
             icon={
@@ -94,7 +93,6 @@ const Dashboard = () => {
           />
           <TabButton
             label="Sweat Checks"
-            count={4}
             isActive={activeTab === DashboardDisplay.check_ins}
             onClick={() => setActiveTab(DashboardDisplay.check_ins)}
             icon={
@@ -103,7 +101,6 @@ const Dashboard = () => {
           />
           <TabButton
             label="Leaderboard"
-            count={4}
             isActive={activeTab === DashboardDisplay.leaderboard}
             onClick={() => setActiveTab(DashboardDisplay.leaderboard)}
             icon={
