@@ -140,6 +140,24 @@ async function main() {
         fileSize: 250,
         mimeType: "video/mp4",
       },
+      {
+        userId: users[5].id,
+        caption: "Dead Lift 🦵🏿",
+        createdAt: new Date("2025-12-04T08:30:00Z"),
+        videoUrl:
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/daniel_deadlift1.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[5].id,
+        caption: "Dead Lift 🦵🏿",
+        createdAt: new Date("2025-12-04T08:30:00Z"),
+        videoUrl:
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/daniel_legpress.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
     ],
   });
 

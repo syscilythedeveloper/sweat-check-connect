@@ -129,8 +129,8 @@ const Dashboard = () => {
         </div>
       ) : activeTab === DashboardDisplay.check_ins ? (
         // Scrollable Check-ins Layout
-        <div className="bg-blue-50/50 dark:bg-slate-800/60 rounded-xl p-4 shadow-slate-glow flex flex-col">
-          <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+        <div className="bg-blue-50/50 dark:bg-slate-800/60 rounded-xl p-4 shadow-slate-glow flex flex-col h-96`">
+          <div className="flex-1 overflow-y-auto h-full space-y-2 pr-2">
             {isLoading
               ? Array.from({ length: 6 }).map((_, i) => (
                   <SkeletonCard key={i} />
