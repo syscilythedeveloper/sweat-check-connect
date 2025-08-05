@@ -13,7 +13,7 @@ async function main() {
         email: "kiara@example.com",
         name: "Kiara McCalvin",
         avatar:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzMwcW1KN3praTJCUW84bnZwaHo3NXZlQnZRWSJ9",
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/ki.jpeg",
         bio: "Coach Ki",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 3,
@@ -29,7 +29,7 @@ async function main() {
         email: "enijah@example.com",
         name: "Enijah Smith",
         avatar:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzMwcW9sU3poSURkM3k0aHlBdTQxclpROXF1YSJ9",
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/enijah.png",
         bio: "🌻",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 1,
@@ -45,7 +45,7 @@ async function main() {
         email: "gabby@example.com",
         name: "Gabby Morris",
         avatar:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzMwcW9yc0xYSER6Z2ZOSWVHNTRnOEN1NGUzUyJ9",
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/gabby.png",
         bio: "Pilates Instructor",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 1,
@@ -61,7 +61,7 @@ async function main() {
         email: "william@example.com",
         name: "William Orgertrice",
         avatar:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzMwcW94VlgwU1REUnFIdERqVzJQYmJOdUZlViJ9",
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/william.png",
         bio: "Tech Entrepreneur",
         membershipType: MembershipType.PREMIUM,
         currentActiveStreak: 1,
@@ -77,7 +77,7 @@ async function main() {
         email: "victoria@example.com",
         name: "Young Warden",
         avatar:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzMwcXA1TWIzTndQdWxOanNQU2o4ajA0bGlhNyJ9",
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/victoria.png",
         bio: "HU alumna",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 0,
@@ -92,7 +92,7 @@ async function main() {
         email: "daniel@example.com",
         name: "Daniel",
         avatar:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzMwcW9lVXh2aUp4TmJUQXlPemF6YTVrekVmTSJ9",
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/daniel.png",
         bio: "Drums and gym",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 5,
@@ -107,7 +107,7 @@ async function main() {
         email: "aneesah@example.com",
         name: "Aneesah",
         avatar:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzMwcW9WaG1YS2NncDJvUEZHeFB5VGlpazlhWCJ9",
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/aneesah.png",
         bio: "Living life on my own terms",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 2,
