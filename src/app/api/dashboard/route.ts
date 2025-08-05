@@ -15,8 +15,9 @@ export async function GET(request: NextRequest) {
 
     const leaderboard = await getLeaderboardData();
     const recentCheckins = await getRecentCheckins(signedInUserId);
+    const newChallenges = await getNewChallenges(signedInUserId);
 
-    return NextResponse.json({ leaderboard, recentCheckins });
+    return NextResponse.json({ leaderboard, recentCheckins, newChallenges });
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.json(
@@ -52,26 +53,58 @@ async function getLeaderboardData() {
 }
 
 async function getRecentCheckins(userId: string) {
-  console.log("Fetching recent check-ins for user:", userId);
-
-  // First, let's verify the user exists
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true, username: true },
-  });
-  console.log("User found:", user);
-
   const checkins = await prisma.checkIn.findMany({
     where: { userId },
-    // orderBy: { createdAt: "desc" },
+
     include: {
       user: {
         select: { username: true },
       },
     },
   });
-  console.log("Check-ins found:", checkins.length);
-  console.log("Check-ins data:", checkins);
 
   return checkins;
+}
+async function getNewChallenges(userId: string) {
+  console.log("Fetching new challenges for user:", userId);
+
+  // Get challenges where the user is NOT the creator AND not already participating
+  const challenges = await prisma.challenge.findMany({
+    where: {
+      AND: [
+        {
+          createdById: {
+            not: userId, // Exclude challenges created by this user
+          },
+        },
+        {
+          participants: {
+            none: {
+              userId: userId, // Exclude challenges user is already participating in
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      createdBy: {
+        select: {
+          username: true,
+          name: true,
+          avatar: true,
+        },
+      },
+      _count: {
+        select: {
+          participants: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc", // Show newest challenges first
+    },
+  });
+
+  console.log("Found challenges:", challenges.length);
+  return challenges;
 }

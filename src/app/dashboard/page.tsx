@@ -4,14 +4,13 @@ import React, { useState, useEffect } from "react";
 import { TabButton } from "@/components/TabButton";
 import { BicepsFlexed, Search, Users } from "lucide-react";
 import SkeletonCard from "@/components/Challenges/SkeletonCard";
-import { getNewChallenges } from "@/utils/challengeFunctions";
-import { ChallengeCardProps } from "@/types/challenge";
+import { NewChallenge } from "@/types/challenge";
 import { DashboardDisplay, LeaderboardData } from "@/types/userDetails";
-import ChallengeCard from "@/components/Challenges/ChallengeCard";
 
 import { RecentCheckIns } from "@/types/userDetails";
 import PreviousCheckIns from "@/components/Dashboard/PreviousCheckIns";
 import Leaderboard from "@/components/Dashboard/Leaderboard";
+import NewChallengeCard from "@/components/Challenges/NewChallengeCard";
 import { useUser } from "@clerk/nextjs";
 
 const Dashboard = () => {
@@ -19,7 +18,7 @@ const Dashboard = () => {
   // Add loading state for initial render
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [newChallenges, setNewChallenges] = useState<ChallengeCardProps[]>([]);
+  const [newChallenges, setNewChallenges] = useState<NewChallenge[]>([]);
   const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckIns[]>([]);
   const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
 
@@ -31,19 +30,6 @@ const Dashboard = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (mounted) {
-      setIsLoading(true);
-
-      Promise.all([getNewChallenges("someUserId")]).then(([newChallenges]) => {
-        setNewChallenges(newChallenges);
-        // setRecentCheckIns(recentCheckins);
-
-        setIsLoading(false);
-      });
-    }
-  }, [mounted, user]);
 
   // In your dashboard component
   useEffect(() => {
@@ -64,6 +50,8 @@ const Dashboard = () => {
           // setRecentCheckIns(data.recentCheckins);
           console.log("recent check in data:", data.recentCheckins);
           setRecentCheckIns(data.recentCheckins);
+          console.log(data.newChallenges);
+          setNewChallenges(data.newChallenges);
         } catch (error) {
           console.error("Error fetching dashboard data:", error);
           // Handle error state here
@@ -95,8 +83,8 @@ const Dashboard = () => {
         {/* Tabs */}
         <div className="flex flex-wrap gap-1 sm:gap-3 text-[6px] font-bold sm:text-lg items-center justify-center">
           <TabButton
-            label="Discover"
-            count={newChallenges.length}
+            label="Find Challenges"
+            count={0}
             isActive={activeTab === DashboardDisplay.challenge_discovery}
             onClick={() => setActiveTab(DashboardDisplay.challenge_discovery)}
             icon={
@@ -104,7 +92,7 @@ const Dashboard = () => {
             }
           />
           <TabButton
-            label="My Checkins"
+            label="My Sweat Checks"
             count={4}
             isActive={activeTab === DashboardDisplay.check_ins}
             onClick={() => setActiveTab(DashboardDisplay.check_ins)}
@@ -125,7 +113,23 @@ const Dashboard = () => {
       </div>
 
       {/* Content Area */}
-      {activeTab === DashboardDisplay.check_ins ? (
+      {activeTab === DashboardDisplay.challenge_discovery ? (
+        // Challenge Discovery with Search
+        <div className="bg-blue-50/50 dark:bg-slate-800/60 rounded-xl p-4 shadow-slate-glow">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {isLoading
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <SkeletonCard key={i} />
+                ))
+              : newChallenges.map((challenge) => (
+                  <NewChallengeCard
+                    key={challenge.id}
+                    {...challenge}
+                  />
+                ))}
+          </div>
+        </div>
+      ) : activeTab === DashboardDisplay.check_ins ? (
         // Scrollable Check-ins Layout
         <div className="bg-blue-50/50 dark:bg-slate-800/60 rounded-xl p-4 shadow-slate-glow">
           <div className="h-96 overflow-y-auto space-y-2 pr-2">
@@ -146,26 +150,11 @@ const Dashboard = () => {
           </div>
         </div>
       ) : (
-        // Grid Layout for Challenges and Leaderboard
-        <div
-          className={`rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-slate-800/60 ${
-            activeTab === DashboardDisplay.challenge_discovery
-              ? "gap-4 sm:gap-6"
-              : "gap-1 sm:gap-2"
-          }`}
-        >
+        // Leaderboard Layout
+        <div className="rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-slate-800/60 gap-1 sm:gap-2">
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-            : activeTab === DashboardDisplay.challenge_discovery
-            ? newChallenges.map((challenge) => (
-                <ChallengeCard
-                  key={challenge.id}
-                  challenge={challenge}
-                  mode={activeTab}
-                />
-              ))
-            : activeTab === DashboardDisplay.leaderboard
-            ? leaderboard.map((leader: LeaderboardData, index: number) => (
+            : leaderboard.map((leader: LeaderboardData, index: number) => (
                 <Leaderboard
                   key={index}
                   username={leader.username}
@@ -175,8 +164,7 @@ const Dashboard = () => {
                   longestActiveStreak={leader.longestActiveStreak}
                   rank={index + 1}
                 />
-              ))
-            : null}
+              ))}
         </div>
       )}
     </div>

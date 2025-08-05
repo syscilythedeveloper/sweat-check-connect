@@ -92,10 +92,9 @@ const ChallengeCard = ({
                 width={20}
                 height={20}
                 src={challenge.creatorAvatar}
-                alt={challenge.creator}
+                alt={"yay"}
                 className="w-3 h-3 rounded-full"
               />
-              <span>{challenge.creator}</span>
             </div>
 
             <Separator className="my-3 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />

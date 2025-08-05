@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ChallengeData {
   title: string;
   description: string;
@@ -32,3 +33,22 @@ export enum ChallengeMode {
   joined = "joined",
   past = "past",
 }
+export interface NewChallenge {
+  id: string;
+  title: string;
+  description: string;
+  startDate: string;
+  duration: number;
+  frequencyType: FrequencyType;
+  checkInsPerWeek?: number;
+  maxParticipants?: number;
+  requiredCheckIns: number;
+  isPrivate: boolean;
+  tags: string[];
+  createdBy: any;
+  participants: string[];
+  createdAt: string;
+  updatedAt: string;
+  totalCheckins: number;
+}
+type FrequencyType = "DAILY" | "WEEKLY";
