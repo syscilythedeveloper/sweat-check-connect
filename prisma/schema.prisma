@@ -116,6 +116,9 @@ model CheckIn {
   challenge     Challenge? @relation(fields: [challengeId], references: [id])
   reactions     CheckInReaction[]
   comments      CheckInComment[]
+
+   @@index([userId])
+  @@index([createdAt])
  
 }
 

@@ -7,9 +7,8 @@ import SkeletonCard from "@/components/Challenges/SkeletonCard";
 import { NewChallenge } from "@/types/challenge";
 import { DashboardDisplay, LeaderboardData } from "@/types/userDetails";
 
-import { RecentCheckIns } from "@/types/userDetails";
-import PreviousCheckIns from "@/components/Dashboard/PreviousCheckIns";
 import Leaderboard from "@/components/Dashboard/Leaderboard";
+import DashboardCheckIn from "@/components/Dashboard/DashboardCheckIn";
 import NewChallengeCard from "@/components/Challenges/NewChallengeCard";
 import { useUser } from "@clerk/nextjs";
 
@@ -19,7 +18,7 @@ const Dashboard = () => {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [newChallenges, setNewChallenges] = useState<NewChallenge[]>([]);
-  const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckIns[]>([]);
+  const [recentCheckIns, setRecentCheckIns] = useState<any[]>([]);
   const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
 
   const [activeTab, setActiveTab] = useState<any>(
@@ -45,13 +44,15 @@ const Dashboard = () => {
           }
           const data = await response.json();
           console.log("Fetched dashboard data:", data);
+
           setLeaderboardData(data.leaderboard);
-          console.log("leaderboard data:", data.leaderboard);
-          // setRecentCheckIns(data.recentCheckins);
+          console.log("Fetched leaderboard data:", data.leaderboard);
+
+          setRecentCheckIns(data.recentCheckins); // Note: 'recentCheckins' not 'recentCheckIns'
           console.log("recent check in data:", data.recentCheckins);
-          setRecentCheckIns(data.recentCheckins);
-          console.log(data.newChallenges);
+
           setNewChallenges(data.newChallenges);
+          console.log("Fetched new challenges:", data.newChallenges);
         } catch (error) {
           console.error("Error fetching dashboard data:", error);
           // Handle error state here
@@ -92,7 +93,7 @@ const Dashboard = () => {
             }
           />
           <TabButton
-            label="My Sweat Checks"
+            label="Sweat Checks"
             count={4}
             isActive={activeTab === DashboardDisplay.check_ins}
             onClick={() => setActiveTab(DashboardDisplay.check_ins)}
@@ -137,16 +138,12 @@ const Dashboard = () => {
               ? Array.from({ length: 6 }).map((_, i) => (
                   <SkeletonCard key={i} />
                 ))
-              : recentCheckIns
-                  .slice()
-                  .reverse()
-                  .map((checkIn, index: number) => (
-                    <PreviousCheckIns
-                      key={index}
-                      {...checkIn}
-                      number={recentCheckIns.length - index}
-                    />
-                  ))}
+              : recentCheckIns.map((checkIn, index: number) => (
+                  <DashboardCheckIn
+                    key={index}
+                    {...checkIn}
+                  />
+                ))}
           </div>
         </div>
       ) : (

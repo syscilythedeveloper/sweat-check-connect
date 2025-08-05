@@ -31,3 +31,11 @@ export enum ChallengeDisplay {
   independent = "independent",
   combined = "combined",
 }
+export interface DashboardCheckInCard {
+  id: string;
+  userid: string;
+  caption: string;
+  videoUrl: string;
+  createdAt: string;
+  username: string;
+}
