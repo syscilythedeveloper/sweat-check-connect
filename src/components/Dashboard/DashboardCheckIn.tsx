@@ -46,7 +46,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
           <span className="font-bold text-lg">@{user.username}</span>
         </div>
         {caption && (
-          <div className="max-w-xs break-words text-base font-medium">
+          <div className="max-w-xs break-words text-base font-medium bottom-16">
             {caption}
           </div>
         )}
