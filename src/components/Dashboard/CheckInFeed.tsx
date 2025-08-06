@@ -9,14 +9,12 @@ interface CheckInFeedProps {
 
 const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSwipeActive, setIsSwipeActive] = useState(false);
+
   const safeIndex = Math.max(0, Math.min(currentIndex, checkIns.length - 1));
   const scrollingRef = useRef(false);
 
   // Swipe handlers
   const handlers = useSwipeable({
-    onSwipeStart: () => setIsSwipeActive(true),
-    onSwiped: () => setIsSwipeActive(false),
     onSwipedUp: () =>
       setCurrentIndex((i) => Math.min(i + 1, checkIns.length - 1)),
     onSwipedDown: () => setCurrentIndex((i) => Math.max(i - 1, 0)),
@@ -67,7 +65,7 @@ const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
       className="w-full h-full relative bg-black"
       style={{
         WebkitOverflowScrolling: "touch",
-        touchAction: isSwipeActive ? "none" : "auto",
+        touchAction: "none",
       }}
     >
       {checkIns.length > 0 && (
