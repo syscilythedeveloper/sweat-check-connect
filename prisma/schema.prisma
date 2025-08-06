@@ -116,7 +116,7 @@ model CheckIn {
   challenge     Challenge? @relation(fields: [challengeId], references: [id])
   reactions     CheckInReaction[]
   comments      CheckInComment[]
-  likes         Int       @default(0) 
+
 
   @@index([userId])
   @@index([createdAt])

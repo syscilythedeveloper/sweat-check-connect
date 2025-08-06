@@ -1,3 +1,4 @@
+//To do: Display reactions (likes, comments, etc.) below the video
 import React from "react";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -18,10 +19,9 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
   const { caption, videoUrl, thumbnailUrl, createdAt, user } = checkIn;
 
   return (
-    <div className="relative w-full h-full bg-black">
-      {/* Video (fills parent) */}
+    <div className="relative w-full h-full bg-background overflow-hidden items-center justify-center rounded-2xl">
       <video
-        className="absolute inset-0 w-full h-full object-cover"
+        className="w-full h-full object-cover"
         controls
         poster={thumbnailUrl}
         playsInline
@@ -33,8 +33,8 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
         Your browser does not support the video tag.
       </video>
 
-      {/* Overlay: User info, Caption (bottom left) */}
-      <div className="absolute bottom-8 left-4 z-10 text-white">
+      {/* Overlay sits ON TOP of the video */}
+      <div className="absolute bottom-5 left-4 z-10 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Image
             src={user.avatar}
@@ -46,7 +46,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
           <span className="font-bold text-lg">@{user.username}</span>
         </div>
         {caption && (
-          <div className="max-w-xs break-words text-base font-medium bottom-16">
+          <div className="max-w-xs break-words text-base font-medium">
             {caption}
           </div>
         )}
@@ -57,5 +57,4 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
     </div>
   );
 };
-
 export default DashboardCheckIn;

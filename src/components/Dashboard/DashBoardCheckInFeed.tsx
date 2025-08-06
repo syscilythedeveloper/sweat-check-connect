@@ -61,7 +61,7 @@ const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
   return (
     <div
       {...handlers}
-      className="fixed inset-0 z-10 bg-black overflow-hidden pb-12"
+      className="w-full h-full relative bg-black overflow-hidden"
       style={{ WebkitOverflowScrolling: "touch" }}
     >
       {checkIns.length > 0 && (
