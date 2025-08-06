@@ -25,6 +25,7 @@ model User {
   longestActiveStreak  Int      @default(0)
 
 
+
   checkIns       CheckIn[]
   challenges     UserChallenge[]   // Participating challenges (via join table)
   sentMessages   DirectMessage[] @relation("sentMessages")

@@ -71,7 +71,7 @@ async function getRecentCheckins(userId: string) {
     orderBy: {
       createdAt: "desc",
     },
-    take: 5, // Limit to 5 global check-ins
+    // Limit to 5 global check-ins
   });
 
   return globalCheckins;

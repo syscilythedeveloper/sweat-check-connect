@@ -1,15 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useEffect } from "react";
-import SkeletonCard from "@/components/Challenges/SkeletonCard";
+
 import { NewChallenge } from "@/types/challenge";
-import { DashboardDisplay, LeaderboardData } from "@/types/userDetails";
+import {
+  DashboardDisplay,
+  LeaderboardData,
+  RecentCheckInData,
+} from "@/types/userDetails";
 
 import LeaderboardList from "@/components/Dashboard/LeaderboardFeed";
 
 import DashboardCheckInFeed from "@/components/Dashboard/CheckInFeed";
-import NewChallengeCard from "@/components/Dashboard/NewChallengeCard";
+
 import { useUser } from "@clerk/nextjs";
+import ChallengeFeed from "@/components/Dashboard/ChallengeFeed";
 
 const Dashboard = () => {
   const { user } = useUser();
@@ -17,12 +21,12 @@ const Dashboard = () => {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [newChallenges, setNewChallenges] = useState<NewChallenge[]>([]);
-  const [recentCheckIns, setRecentCheckIns] = useState<any[]>([]);
+  const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckInData[]>([]);
   const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
 
   // Clamp index to available check-ins
 
-  const [activeTab, setActiveTab] = useState<any>(
+  const [activeTab, setActiveTab] = useState<DashboardDisplay>(
     DashboardDisplay.challenge_discovery
   );
 
@@ -49,7 +53,7 @@ const Dashboard = () => {
           setLeaderboardData(data.leaderboard);
           console.log("Fetched leaderboard data:", data.leaderboard);
 
-          setRecentCheckIns(data.recentCheckins); // Note: 'recentCheckins' not 'recentCheckIns'
+          setRecentCheckIns(data.recentCheckins);
           console.log("recent check in data:", data.recentCheckins);
 
           setNewChallenges(data.newChallenges);
@@ -70,16 +74,13 @@ const Dashboard = () => {
   if (!mounted) return null;
 
   return (
-    <div
-      className="w-full max-w-full mx-auto flex flex-col min-h-screen h-16"
-      style={{ minHeight: "100vh" }}
-    >
+    <div className="w-full h-screen flex flex-col overflow-hidden">
       {/* Header */}
-      <div className=" bg-white dark:bg-slate-800 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
+      <div className=" bg-white dark:bg-slate-800/10  p-2 sm:p-6">
         {/* TikTok-Style Header & Tabs */}
         <div className="w-full max-w-full mx-auto text h-16 ">
           {/* TikTok-style Tabs */}
-          <div className="flex justify-center items-center border-b border-slate-200 dark:border-slate-700">
+          <div className="flex justify-center items-center ">
             {[
               {
                 label: "Find Challenges",
@@ -111,19 +112,11 @@ const Dashboard = () => {
       <div className="flex-1 relative overflow-hidden">
         {activeTab === DashboardDisplay.challenge_discovery ? (
           // Challenge Discovery with Search
-          <div className="bg-blue-50/50 dark:bg-slate-800/60 rounded-xl p-4 shadow-slate-glow overflow-y-auto h-full">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {isLoading
-                ? Array.from({ length: 6 }).map((_, i) => (
-                    <SkeletonCard key={i} />
-                  ))
-                : newChallenges.map((challenge) => (
-                    <NewChallengeCard
-                      key={challenge.id}
-                      {...challenge}
-                    />
-                  ))}
-            </div>
+          <div className="bg-blue-50/50 dark:bg-slate-800/10  rounded-xl p-4 shadow-slate-glow h-full">
+            <ChallengeFeed
+              challenges={newChallenges}
+              isLoading={isLoading}
+            />
           </div>
         ) : activeTab === DashboardDisplay.check_ins &&
           recentCheckIns.length > 0 ? (
@@ -134,7 +127,7 @@ const Dashboard = () => {
           </div>
         ) : (
           // Leaderboard Layout
-          <div className="rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-slate-800/60 gap-1 sm:gap-2 overflow-y-auto h-full">
+          <div className="rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-slate-800/60 gap-1 sm:gap-2 h-full">
             <LeaderboardList
               leaderboard={leaderboard}
               isLoading={isLoading}

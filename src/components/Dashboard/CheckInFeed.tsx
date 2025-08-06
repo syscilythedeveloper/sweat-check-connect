@@ -9,11 +9,14 @@ interface CheckInFeedProps {
 
 const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isSwipeActive, setIsSwipeActive] = useState(false);
   const safeIndex = Math.max(0, Math.min(currentIndex, checkIns.length - 1));
   const scrollingRef = useRef(false);
 
   // Swipe handlers
   const handlers = useSwipeable({
+    onSwipeStart: () => setIsSwipeActive(true),
+    onSwiped: () => setIsSwipeActive(false),
     onSwipedUp: () =>
       setCurrentIndex((i) => Math.min(i + 1, checkIns.length - 1)),
     onSwipedDown: () => setCurrentIndex((i) => Math.max(i - 1, 0)),
@@ -35,7 +38,7 @@ const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
 
       setTimeout(() => {
         scrollingRef.current = false;
-      }, 350); // debounce, adjust for taste
+      }, 350);
     };
 
     window.addEventListener("wheel", onWheel, { passive: false });
@@ -61,8 +64,11 @@ const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
   return (
     <div
       {...handlers}
-      className="w-full h-full relative bg-black "
-      style={{ WebkitOverflowScrolling: "touch" }}
+      className="w-full h-full relative bg-black"
+      style={{
+        WebkitOverflowScrolling: "touch",
+        touchAction: isSwipeActive ? "none" : "auto",
+      }}
     >
       {checkIns.length > 0 && (
         <DashboardCheckIn
@@ -70,18 +76,6 @@ const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
           {...checkIns[safeIndex]}
         />
       )}
-
-      {/* Dots for position */}
-      <div className="absolute right-4 top-1/2 flex flex-col gap-1 z-20">
-        {checkIns.map((_, i) => (
-          <span
-            key={i}
-            className={`block w-2 h-2 rounded-full ${
-              i === safeIndex ? "bg-blue-400" : "bg-gray-600"
-            }`}
-          />
-        ))}
-      </div>
     </div>
   );
 };

@@ -55,7 +55,7 @@ const Leaderboard = ({
 
   return (
     <div
-      className={`relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden ${style.shadow} dark:shadow-none border ${style.border} dark:border-slate-600 hover:scale-[1.02] transition-all duration-200`}
+      className={`relative bg-white dark:bg-slate-800/10  overflow-hidden ${style.shadow} dark:shadow-none border ${style.border} dark:border-transparent hover:scale-[1.02]`}
     >
       {/* Header with rank and user info */}
       <div className="flex items-center p-4 pb-2">
@@ -73,7 +73,7 @@ const Leaderboard = ({
             alt={username}
             width={40}
             height={40}
-            className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-600 mr-3"
+            className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-600/10 mr-3"
           />
           <div>
             <h3 className="font-bold text-gray-900 dark:text-white text-base truncate">
@@ -95,7 +95,7 @@ const Leaderboard = ({
       <div className="px-4 pb-4">
         <div className="grid grid-cols-3 gap-3">
           {/* Total Days Active */}
-          <div className="bg-gray-50 dark:bg-slate-700 rounded-xl p-3 text-center">
+          <div className="bg-gray-50  dark:bg-slate-700/10 rounded-xl p-3 text-center">
             <div className="text-2xl font-black text-gray-900 dark:text-white">
               {daysActive}
             </div>
@@ -105,7 +105,7 @@ const Leaderboard = ({
           </div>
 
           {/* Current Streak */}
-          <div className="bg-gray-50 dark:bg-slate-700 rounded-xl p-3 text-center">
+          <div className="bg-gray-50 dark:bg-slate-700/10 rounded-xl p-3 text-center">
             <div className="flex items-center justify-center mb-1">
               <Flame className="w-4 h-4 text-orange-500 mr-1" />
               <span className="text-2xl font-black text-gray-900 dark:text-white">
@@ -118,7 +118,7 @@ const Leaderboard = ({
           </div>
 
           {/* Longest Streak */}
-          <div className="bg-gray-50 dark:bg-slate-700 rounded-xl p-3 text-center">
+          <div className="bg-gray-50 dark:bg-slate-700/10 rounded-xl p-3 text-center">
             <div className="flex items-center justify-center mb-1">
               <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
               <span className="text-2xl font-black text-gray-900 dark:text-white">

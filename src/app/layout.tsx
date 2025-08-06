@@ -47,13 +47,13 @@ export default function RootLayout({
               <SignedIn>
                 <SidebarProvider>
                   <AppSidebar />
-                  <main className="pb-20 sm:pb-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                  <main className="pb-20 sm:pb-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
                     <header className="flex justify-end items-center p-4 h-8 bg-gradient-to-b from-black/30 to-transparent">
                       <div className="flex items-center gap-4">
                         <UserButton />
                       </div>
                     </header>
-                    <div className="max-w-full mx-auto">{children}</div>
+                    <div className="max-w-full mx-auto ">{children}</div>
                   </main>
                 </SidebarProvider>
               </SignedIn>

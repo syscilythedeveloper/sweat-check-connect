@@ -35,3 +35,14 @@ export type LeaderboardData = {
   currentActiveStreak: number;
   longestActiveStreak: number;
 };
+
+export type RecentCheckInData = {
+  caption: string;
+  createdAt: string;
+  thumnailUrl?: string;
+  videoUrl: string;
+  user: {
+    username: string;
+    avatar: string;
+  };
+};
