@@ -18,55 +18,42 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
   const { caption, videoUrl, thumbnailUrl, createdAt, user } = checkIn;
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden">
-      {/* Header with user info and date */}
-      <div className="p-4 border-b border-gray-100 dark:border-slate-700">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Image
-              src={user.avatar}
-              alt={user.username}
-              width={40}
-              height={40}
-              className="rounded-full w-8 h-8"
-            />
-            <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white text-sm">
-                @{user.username}
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {format(new Date(createdAt), "MMM d, yyyy 'at' h:mm a")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="relative w-full h-full bg-black">
+      {/* Video (fills parent) */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        controls
+        poster={thumbnailUrl}
+        playsInline
+      >
+        <source
+          src={videoUrl}
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
 
-      {/* Video Content */}
-      <div className="relative aspect-video bg-gray-100 dark:bg-slate-700">
-        <video
-          className="w-full h-full object-cover"
-          controls
-          preload="metadata"
-          poster={thumbnailUrl}
-          playsInline
-        >
-          <source
-            src={videoUrl}
-            type="video/mp4"
+      {/* Overlay: User info, Caption (bottom left) */}
+      <div className="absolute bottom-8 left-4 z-10 text-white">
+        <div className="flex items-center gap-2 mb-1">
+          <Image
+            src={user.avatar}
+            alt={user.username}
+            width={32}
+            height={32}
+            className="w-10 h-10 rounded-full border border-white"
           />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-
-      {/* Caption (if exists) */}
-      {caption && (
-        <div className="p-4">
-          <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
-            {caption}
-          </p>
+          <span className="font-bold text-lg">@{user.username}</span>
         </div>
-      )}
+        {caption && (
+          <div className="max-w-xs break-words text-base font-medium">
+            {caption}
+          </div>
+        )}
+        <p className="text-xs mt-1 opacity-70">
+          {format(new Date(createdAt), "MMM d, yyyy h:mm a")}
+        </p>
+      </div>
     </div>
   );
 };

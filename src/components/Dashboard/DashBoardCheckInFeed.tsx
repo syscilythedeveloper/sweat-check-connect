@@ -1,0 +1,89 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useRef, useEffect } from "react";
+import { useSwipeable } from "react-swipeable";
+import DashboardCheckIn from "./DashboardCheckIn";
+
+interface CheckInFeedProps {
+  checkIns: any[];
+}
+
+const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const safeIndex = Math.max(0, Math.min(currentIndex, checkIns.length - 1));
+  const scrollingRef = useRef(false);
+
+  // Swipe handlers
+  const handlers = useSwipeable({
+    onSwipedUp: () =>
+      setCurrentIndex((i) => Math.min(i + 1, checkIns.length - 1)),
+    onSwipedDown: () => setCurrentIndex((i) => Math.max(i - 1, 0)),
+    trackTouch: true,
+    preventScrollOnSwipe: true,
+  });
+
+  // Mouse wheel handler
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      if (scrollingRef.current) return;
+      scrollingRef.current = true;
+
+      if (e.deltaY > 0) {
+        setCurrentIndex((i) => Math.min(i + 1, checkIns.length - 1));
+      } else if (e.deltaY < 0) {
+        setCurrentIndex((i) => Math.max(i - 1, 0));
+      }
+
+      setTimeout(() => {
+        scrollingRef.current = false;
+      }, 350); // debounce, adjust for taste
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+    };
+  }, [checkIns.length]);
+
+  // Arrow key navigation (optional but feels great)
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown") {
+        setCurrentIndex((i) => Math.min(i + 1, checkIns.length - 1));
+      } else if (e.key === "ArrowUp") {
+        setCurrentIndex((i) => Math.max(i - 1, 0));
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [checkIns.length]);
+
+  return (
+    <div
+      {...handlers}
+      className="fixed inset-0 z-10 bg-black overflow-hidden"
+      style={{ WebkitOverflowScrolling: "touch" }}
+    >
+      {checkIns.length > 0 && (
+        <DashboardCheckIn
+          key={checkIns[safeIndex].id}
+          {...checkIns[safeIndex]}
+        />
+      )}
+
+      {/* Dots for position */}
+      <div className="absolute right-4 top-1/2 flex flex-col gap-1 z-20">
+        {checkIns.map((_, i) => (
+          <span
+            key={i}
+            className={`block w-2 h-2 rounded-full ${
+              i === safeIndex ? "bg-blue-400" : "bg-gray-600"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default DashboardCheckInFeed;

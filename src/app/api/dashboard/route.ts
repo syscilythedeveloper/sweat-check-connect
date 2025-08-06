@@ -53,15 +53,6 @@ async function getLeaderboardData() {
 }
 
 async function getRecentCheckins(userId: string) {
-  // const checkins = await prisma.checkIn.findMany({
-  //   where: { userId },
-
-  //   include: {
-  //     user: {
-  //       select: { username: true },
-  //     },
-  //   },
-  // });
   const globalCheckins = await prisma.checkIn.findMany({
     where: {
       userId: {
@@ -82,7 +73,6 @@ async function getRecentCheckins(userId: string) {
     },
     take: 5, // Limit to 5 global check-ins
   });
-  console.log("Showing global check-ins:", globalCheckins);
 
   return globalCheckins;
 }
