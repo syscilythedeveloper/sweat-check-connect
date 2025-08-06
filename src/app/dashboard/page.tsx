@@ -5,10 +5,10 @@ import SkeletonCard from "@/components/Challenges/SkeletonCard";
 import { NewChallenge } from "@/types/challenge";
 import { DashboardDisplay, LeaderboardData } from "@/types/userDetails";
 
-import LeaderboardList from "@/components/Dashboard/LeaderboardList";
+import LeaderboardList from "@/components/Dashboard/LeaderboardFeed";
 
-import DashboardCheckInFeed from "@/components/Dashboard/DashBoardCheckInFeed";
-import NewChallengeCard from "@/components/Challenges/NewChallengeCard";
+import DashboardCheckInFeed from "@/components/Dashboard/CheckInFeed";
+import NewChallengeCard from "@/components/Dashboard/NewChallengeCard";
 import { useUser } from "@clerk/nextjs";
 
 const Dashboard = () => {
@@ -75,7 +75,7 @@ const Dashboard = () => {
       style={{ minHeight: "100vh" }}
     >
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-white dark:bg-slate-800 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
+      <div className=" bg-white dark:bg-slate-800 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
         {/* TikTok-Style Header & Tabs */}
         <div className="w-full max-w-full mx-auto text h-16 ">
           {/* TikTok-style Tabs */}
@@ -108,7 +108,7 @@ const Dashboard = () => {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 relative overflow-hidden flex flex-col">
+      <div className="flex-1 relative overflow-hidden">
         {activeTab === DashboardDisplay.challenge_discovery ? (
           // Challenge Discovery with Search
           <div className="bg-blue-50/50 dark:bg-slate-800/60 rounded-xl p-4 shadow-slate-glow overflow-y-auto h-full">
@@ -129,7 +129,7 @@ const Dashboard = () => {
           recentCheckIns.length > 0 ? (
           // Scrollable Check-ins Layout
 
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 overflow-hidden">
             <DashboardCheckInFeed checkIns={recentCheckIns} />
           </div>
         ) : (

@@ -1,7 +1,8 @@
 //To do: Display reactions (likes, comments, etc.) below the video
-import React from "react";
+import React, { useRef, useState } from "react";
 import { format } from "date-fns";
 import Image from "next/image";
+import { Volume2, VolumeX } from "lucide-react";
 
 interface CheckInData {
   id: string;
@@ -17,14 +18,35 @@ interface CheckInData {
 
 const DashboardCheckIn = (checkIn: CheckInData) => {
   const { caption, videoUrl, thumbnailUrl, createdAt, user } = checkIn;
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   return (
-    <div className="relative w-full h-full bg-background overflow-hidden items-center justify-center rounded-2xl">
+    <div className="relative w-full h-[65vh] bg-background overflow-hidden items-center justify-center rounded-2xl">
+      <button
+        onClick={toggleMute}
+        className="absolute top-4 right-4 z-10 bg-black/50 rounded-full p-2 text-white hover:bg-black/70 transition-colors"
+      >
+        {isMuted ? (
+          <VolumeX className="w-5 h-5" />
+        ) : (
+          <Volume2 className="w-5 h-5" />
+        )}
+      </button>
       <video
         className="w-full h-full object-cover"
-        controls
+        autoPlay
+        muted={isMuted}
         poster={thumbnailUrl}
         playsInline
+        loop
+        ref={videoRef}
       >
         <source
           src={videoUrl}

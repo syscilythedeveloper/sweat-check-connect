@@ -125,7 +125,7 @@ async function main() {
       {
         userId: users[4].id,
         caption: "Lat Pull Downs",
-        createdAt: new Date("2025-12-03T10:00:00Z"),
+        createdAt: new Date("2025-08-03T10:00:00Z"),
         videoUrl:
           "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/victoria.mov",
         fileSize: 300,
@@ -143,7 +143,7 @@ async function main() {
       {
         userId: users[5].id,
         caption: "Dead Lift 🦵🏿",
-        createdAt: new Date("2025-12-04T08:30:00Z"),
+        createdAt: new Date("2025-07-29T08:30:00Z"),
         videoUrl:
           "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/daniel_deadlift1.mov",
         fileSize: 250,
@@ -152,9 +152,27 @@ async function main() {
       {
         userId: users[5].id,
         caption: "Dead Lift 🦵🏿",
-        createdAt: new Date("2025-12-04T08:30:00Z"),
+        createdAt: new Date("2025-07-29T08:30:00Z"),
         videoUrl:
           "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/daniel_legpress.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[0].id,
+        caption: "Bulgarian Split Squat 🦵🏿",
+        createdAt: new Date("2025-07-28T08:30:00Z"),
+        videoUrl:
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/ki_bgs.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[0].id,
+        caption: "Cardio Check In🦵🏿",
+        createdAt: new Date("2025-07-28T08:30:00Z"),
+        videoUrl:
+          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/ki_cardio.mov",
         fileSize: 250,
         mimeType: "video/mp4",
       },
@@ -162,6 +180,28 @@ async function main() {
   });
 
   console.log(`✅ Created ${checkIns.count} check-ins`);
+
+  //create challenges
+  const challenges = await prisma.challenge.createMany({
+    data: [
+      {
+        title: "30-Day Fitness Challenge",
+        description:
+          "Join us for a 30-day fitness challenge to kickstart your health journey! 🏋️‍♀️",
+        createdById: users[0].id,
+        startDate: new Date("2025-12-01"),
+        tags: ["fitness", "health", "challenge"],
+        duration: 30,
+        requiredCheckIns: 10,
+        maxParticipants: 100,
+        isPrivate: false,
+        updatedAt: new Date(),
+        totalCheckIns: 0,
+      },
+    ],
+  });
+
+  console.log(`✅ Created ${challenges.count} challenges`);
 }
 
 main()
