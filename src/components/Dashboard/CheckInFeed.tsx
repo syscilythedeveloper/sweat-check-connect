@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
-import DashboardCheckIn from "./DashboardCheckIn";
+import DashboardCheckIn from "./CheckIns";
 
 interface CheckInFeedProps {
   checkIns: any[];
@@ -62,7 +62,7 @@ const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
   return (
     <div
       {...handlers}
-      className="w-full h-full relative bg-black"
+      className="w-full h-full relative bg-background dark:bg-slate-800/60 rounded-xl overflow-hidden"
       style={{
         WebkitOverflowScrolling: "touch",
         touchAction: "none",

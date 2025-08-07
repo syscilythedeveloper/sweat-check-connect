@@ -28,10 +28,10 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
   };
 
   return (
-    <div className="relative w-full h-[85vh] bg-background overflow-hidden items-center justify-center rounded-2xl">
+    <div className="relative w-full h-full bg-background overflow-y-clip items-center justify-center rounded-2xl">
       <button
         onClick={toggleMute}
-        className="absolute top-4 right-4 z-10 bg-black/50 rounded-full p-2 text-white hover:bg-black/70 transition-colors"
+        className="absolute top-1 right-4 z-10 bg-black/50 rounded-full p-2 text-white hover:bg-black/70 transition-colors"
       >
         {isMuted ? (
           <VolumeX className="w-5 h-5" />
@@ -40,7 +40,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
         )}
       </button>
       <video
-        className="w-full h-full object-contain bg-black"
+        className="w-full h-full object-contain"
         autoPlay
         muted={isMuted}
         poster={thumbnailUrl}
@@ -56,7 +56,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
       </video>
 
       {/* Overlay sits ON TOP of the video */}
-      <div className="absolute w-full top-2/3 z-20 text-white bg-black/50 p-2 rounded-lg">
+      <div className="absolute w-full top-3/5 z-20 text-white bg-black/50 p-2 rounded-lg">
         <div className="flex items-center gap-2 mb-1p-2 rounded-lg">
           <Image
             src={user.avatar}

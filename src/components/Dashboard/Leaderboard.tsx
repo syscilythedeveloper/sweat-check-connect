@@ -55,7 +55,7 @@ const Leaderboard = ({
 
   return (
     <div
-      className={`relative bg-white dark:bg-slate-800/10  overflow-hidden ${style.shadow} dark:shadow-none border ${style.border} dark:border-transparent hover:scale-[1.02]`}
+      className={`relative bg-white dark:bg-background ${style.shadow} dark:shadow-none border ${style.border} dark:border-transparent hover:scale-[1.02]`}
     >
       {/* Header with rank and user info */}
       <div className="flex items-center p-4 pb-2">

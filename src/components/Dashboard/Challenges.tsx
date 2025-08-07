@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
 
-import { CalendarDays, Users } from "lucide-react";
+import { BadgeCheck, Users } from "lucide-react";
 import { NewChallenge } from "@/types/challenge";
-import { Separator } from "../ui/separator";
+
 import { Button } from "../ui/button";
 import { calculateDaysUntilStart } from "@/utils/challengeFunctions";
 
@@ -28,30 +28,32 @@ const ChallengeCard = (challenge: NewChallenge) => {
   const daysUntilStart = calculateDaysUntilStart(startDate);
 
   return (
-    <div className="flex flex-col h-full bg-accent-foreground rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] shadow-slate-glow">
+    <div className="flex flex-col h-full bg-accent-foreground dark:bg-background transition-all duration-300 transform hover:scale-[1.02] shadow-slate-glow rounded-2xl">
       {/* Card Header */}
       <div className="flex-1 p-6 pb-4 flex flex-col">
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <h3 className="font-bold text-gray-800 dark:text-blue-400 text-sm">
-                {title}
+              <h3
+                className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm"
+                style={{ lineHeight: 1.1 }}
+              >
+                {" "}
+                {duration} Day - {title}
               </h3>
             </div>
 
             {/* Stats Row */}
             <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300 mb-2">
-              <div className="flex items-center gap-1">
-                <span className="flex items-center">
-                  <CalendarDays className="w-5 h-5 mr-1 text-gray-500 drop-shadow" />
-                  {duration} Days
-                </span>
+              <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
+                <BadgeCheck className="w-4 h-4 text-blue-500" />
+                <span>Required: {requiredCheckIns}</span>
               </div>
 
               {/* Participants */}
               <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
                 <Users className="w-4 h-4 text-blue-500" />
-                <span>{maxParticipants || 0}</span>
+                <span>Max: {maxParticipants || 0}</span>
               </div>
             </div>
 
@@ -70,11 +72,8 @@ const ChallengeCard = (challenge: NewChallenge) => {
             <p className="text-[10px] text-gray-600 dark:text-gray-300 line-clamp-2">
               Challenge Rules: {description}
             </p>
-            <p className="text-[10px] text-gray-600 dark:text-gray-300 line-clamp-2">
-              Required Check-Ins:{" "}
-              <span className="text-blue-500">{requiredCheckIns || 0}</span>
-            </p>
-            <Separator className="my-3 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
+
+            <div className="w-full h-0.5 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 animate-pulse mt-1" />
           </div>
         </div>
 

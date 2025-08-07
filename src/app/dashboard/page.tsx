@@ -10,7 +10,7 @@ import {
 
 import LeaderboardList from "@/components/Dashboard/LeaderboardFeed";
 
-import DashboardCheckInFeed from "@/components/Dashboard/CheckInFeed";
+import CheckInFeed from "@/components/Dashboard/CheckInFeed";
 
 import { useUser } from "@clerk/nextjs";
 import ChallengeFeed from "@/components/Dashboard/ChallengeFeed";
@@ -74,7 +74,7 @@ const Dashboard = () => {
   if (!mounted) return null;
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden">
+    <div className="w-full h-screen flex flex-col ">
       {/* Header */}
       <div className=" bg-white dark:bg-slate-800/10  p-2 sm:p-6">
         {/* TikTok-Style Header & Tabs */}
@@ -109,10 +109,10 @@ const Dashboard = () => {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 relative overflow-hidden">
+      <div className="flex-1 relative">
         {activeTab === DashboardDisplay.challenge_discovery ? (
           // Challenge Discovery with Search
-          <div className="bg-blue-50/50 dark:bg-slate-800/10  rounded-xl p-4 shadow-slate-glow h-full">
+          <div className="h-full overflow-y-auto">
             <ChallengeFeed
               challenges={newChallenges}
               isLoading={isLoading}
@@ -122,16 +122,18 @@ const Dashboard = () => {
           recentCheckIns.length > 0 ? (
           // Scrollable Check-ins Layout
 
-          <div className="flex-1 overflow-hidden">
-            <DashboardCheckInFeed checkIns={recentCheckIns} />
+          <div className="h-full overflow-hidden">
+            <CheckInFeed checkIns={recentCheckIns} />
           </div>
         ) : (
           // Leaderboard Layout
-          <div className="rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-slate-800/60 gap-1 sm:gap-2 h-full">
-            <LeaderboardList
-              leaderboard={leaderboard}
-              isLoading={isLoading}
-            />
+          <div className="h-full overflow-y-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-background gap-4 rounded-xl p-4 min-h-full overflow-y-auto">
+              <LeaderboardList
+                leaderboard={leaderboard}
+                isLoading={isLoading}
+              />
+            </div>
           </div>
         )}
       </div>
