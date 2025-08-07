@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
-import { BadgeCheck, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { NewChallenge } from "@/types/challenge";
+
+import { GiOnTarget } from "react-icons/gi";
+import { joinChallenge } from "@/utils/DashboardFunctions";
+import { useUser } from "@clerk/nextjs";
 
 import { Button } from "../ui/button";
 import { calculateDaysUntilStart } from "@/utils/challengeFunctions";
@@ -26,6 +31,40 @@ const ChallengeCard = (challenge: NewChallenge) => {
   } = challenge;
 
   const daysUntilStart = calculateDaysUntilStart(startDate);
+  const { user } = useUser();
+  const [isJoining, setIsJoining] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
+
+  if (!user) {
+    return (
+      <div className="text-center p-4">
+        Please log in to view challenge details.
+      </div>
+    );
+  }
+
+  const handleJoinChallenge = () => {
+    setIsJoining(true);
+
+    joinChallenge(challenge.id)
+      .then(() => {
+        toast.success(`Successfully joined "${title}"!`, {
+          duration: 3000,
+          position: "top-center",
+        });
+        setHasJoined(true);
+      })
+      .catch((error) => {
+        console.error("Error joining challenge:", error);
+        toast.error("Failed to join challenge. Please try again.", {
+          duration: 3000,
+          position: "top-center",
+        });
+      })
+      .finally(() => {
+        setIsJoining(false);
+      });
+  };
 
   return (
     <div className="flex flex-col h-full bg-accent-foreground dark:bg-background transition-all duration-300 transform hover:scale-[1.02] shadow-slate-glow rounded-2xl">
@@ -41,21 +80,13 @@ const ChallengeCard = (challenge: NewChallenge) => {
                 {" "}
                 {duration} Day - {title}
               </h3>
+
+              <p className="text-[10px] text-gray-600 dark:text-gray-300 line-clamp-2">
+                {description}
+              </p>
             </div>
 
             {/* Stats Row */}
-            <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300 mb-2">
-              <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
-                <BadgeCheck className="w-4 h-4 text-blue-500" />
-                <span>Required: {requiredCheckIns}</span>
-              </div>
-
-              {/* Participants */}
-              <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
-                <Users className="w-4 h-4 text-blue-500" />
-                <span>Max: {maxParticipants || 0}</span>
-              </div>
-            </div>
 
             <div className="flex items-center justify-center gap-1 text-xs text-gray-500 dark:text-gray-500">
               <span className="text-gray-500 text-[10px]">Created By:</span>
@@ -69,11 +100,19 @@ const ChallengeCard = (challenge: NewChallenge) => {
               <span>{createdBy?.name || createdBy?.username}</span>
             </div>
 
-            <p className="text-[10px] text-gray-600 dark:text-gray-300 line-clamp-2">
-              Challenge Rules: {description}
-            </p>
-
             <div className="w-full h-0.5 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 animate-pulse mt-1" />
+          </div>
+        </div>
+        <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300 mb-2">
+          <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
+            <GiOnTarget className="w-4 h-4 text-blue-500" />
+            <span>Goal: {requiredCheckIns} SweatChecks</span>
+          </div>
+
+          {/* Participants */}
+          <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
+            <Users className="w-4 h-4 text-blue-500" />
+            <span>Max: {maxParticipants || 0}</span>
           </div>
         </div>
 
@@ -107,9 +146,14 @@ const ChallengeCard = (challenge: NewChallenge) => {
         <div className="flex items-center gap-6">
           <Button
             variant="outline"
-            onClick={() => alert(`Join Challenge: ${title}`)}
+            onClick={handleJoinChallenge}
+            disabled={isJoining || hasJoined}
           >
-            Join Challenge
+            {isJoining
+              ? "Joining..."
+              : hasJoined
+              ? "Joined!"
+              : "Join Challenge"}
           </Button>
         </div>
       </div>

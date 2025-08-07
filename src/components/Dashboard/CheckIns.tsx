@@ -56,7 +56,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
       </video>
 
       {/* Overlay sits ON TOP of the video */}
-      <div className="absolute w-full top-3/5 z-20 text-white bg-black/50 p-2 rounded-lg">
+      <div className="absolute w-full top-8/12 z-20 text-white bg-black/50 p-2 rounded-lg">
         <div className="flex items-center gap-2 mb-1p-2 rounded-lg">
           <Image
             src={user.avatar}

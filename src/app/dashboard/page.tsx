@@ -14,17 +14,15 @@ import CheckInFeed from "@/components/Dashboard/CheckInFeed";
 
 import { useUser } from "@clerk/nextjs";
 import ChallengeFeed from "@/components/Dashboard/ChallengeFeed";
+import { fetchDashboardData } from "@/utils/DashboardFunctions";
 
 const Dashboard = () => {
   const { user } = useUser();
-  // Add loading state for initial render
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [newChallenges, setNewChallenges] = useState<NewChallenge[]>([]);
   const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckInData[]>([]);
   const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
-
-  // Clamp index to available check-ins
 
   const [activeTab, setActiveTab] = useState<DashboardDisplay>(
     DashboardDisplay.challenge_discovery
@@ -35,19 +33,13 @@ const Dashboard = () => {
     setMounted(true);
   }, []);
 
-  // In your dashboard component
+  // Promise-based dashboard data fetching
   useEffect(() => {
-    if (mounted) {
-      const fetchDashboardData = async () => {
-        setIsLoading(true);
+    if (mounted && user?.id) {
+      setIsLoading(true);
 
-        try {
-          const response = await fetch(`/api/dashboard?userId=${user}`);
-
-          if (!response.ok) {
-            throw new Error("Failed to fetch dashboard data");
-          }
-          const data = await response.json();
+      fetchDashboardData(user.id)
+        .then((data) => {
           console.log("Fetched dashboard data:", data);
 
           setLeaderboardData(data.leaderboard);
@@ -58,23 +50,36 @@ const Dashboard = () => {
 
           setNewChallenges(data.newChallenges);
           console.log("Fetched new challenges:", data.newChallenges);
-        } catch (error) {
+        })
+        .catch((error) => {
           console.error("Error fetching dashboard data:", error);
-          // Handle error state here
-        } finally {
+        })
+        .finally(() => {
           setIsLoading(false);
-        }
-      };
-
-      fetchDashboardData();
+        });
     }
-  }, [mounted, user]);
+  }, [mounted, user?.id]);
+
+  useEffect(() => {
+    const shouldLock =
+      activeTab === DashboardDisplay.challenge_discovery ||
+      activeTab === DashboardDisplay.leaderboard;
+
+    if (shouldLock) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [activeTab]);
+  // reroute to login if user is not authenticated
 
   // Don't render anything until client-side mount is complete
   if (!mounted) return null;
 
   return (
-    <div className="w-full h-screen flex flex-col ">
+    <div className="flex flex-col h-screen">
       {/* Header */}
       <div className=" bg-white dark:bg-slate-800/10  p-2 sm:p-6">
         {/* TikTok-Style Header & Tabs */}
@@ -109,10 +114,10 @@ const Dashboard = () => {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 relative">
+      <div className="flex-1 min-h-0 relative overflow-hidden">
         {activeTab === DashboardDisplay.challenge_discovery ? (
           // Challenge Discovery with Search
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-y-auto ">
             <ChallengeFeed
               challenges={newChallenges}
               isLoading={isLoading}
@@ -122,7 +127,7 @@ const Dashboard = () => {
           recentCheckIns.length > 0 ? (
           // Scrollable Check-ins Layout
 
-          <div className="h-full overflow-hidden">
+          <div className="h-full overflow-y-auto pb-20">
             <CheckInFeed checkIns={recentCheckIns} />
           </div>
         ) : (

@@ -9,7 +9,7 @@ interface LeaderboardListProps {
 }
 
 const LeaderboardList = ({ leaderboard, isLoading }: LeaderboardListProps) => (
-  <div className="h-full w-full  bg-blue-50/50 dark:bg-background   overflow-y-auto">
+  <div className="h-full w-full  bg-blue-50/50 dark:bg-background pb-30">
     <div className="flex flex-col gap-1 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-4">
       {isLoading
         ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)

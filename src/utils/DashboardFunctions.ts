@@ -1,30 +1,24 @@
-export function getRecentCheckIns(user: string) {
-  console.log("user is: ", user);
-  const checkInData = [
-    {
-      id: "1",
-      title: "Standing Ab Marches",
-      date: "July 29, 2025",
-      number: 1,
+export const fetchDashboardData = async (userId: string) => {
+  const response = await fetch(`/api/dashboard?userId=${userId}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch dashboard data");
+  }
+
+  return response.json();
+};
+
+export const joinChallenge = async (challengeId: string) => {
+  const response = await fetch(`/api/challenges/join`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    { id: "2", title: "Crunches", date: "August 1, 2015", number: 2 },
-    {
-      id: "3",
-      title: "Planks",
-      date: "August 3, 2025",
-      number: 3,
-    },
-  ];
+    body: JSON.stringify({ challengeId }),
+  });
 
-  return checkInData;
-}
-
-export function getLeaderboardData() {
-  const leaderboardData = [
-    { id: "1", username: "Syscily", daysActive: 15 },
-    { id: "2", username: "Kiara", daysActive: 12 },
-    { id: "3", username: "Daniel", daysActive: 10 },
-  ];
-
-  return leaderboardData;
-}
+  if (!response.ok) {
+    throw new Error("Failed to join challenge");
+  }
+  return response.json();
+};
