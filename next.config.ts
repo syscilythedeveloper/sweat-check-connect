@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
       "img.clerk.com",
       "images.clerk.dev",
       "qqahaz9rntmohbfm.public.blob.vercel-storage.com",
+      "res.cloudinary.com",
     ],
   },
 };

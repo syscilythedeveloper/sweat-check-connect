@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-import { NewChallenge } from "@/types/challenge";
 import {
   DashboardDisplay,
   LeaderboardData,
@@ -13,14 +12,14 @@ import LeaderboardList from "@/components/Dashboard/LeaderboardFeed";
 import CheckInFeed from "@/components/Dashboard/CheckInFeed";
 
 import { useUser } from "@clerk/nextjs";
-import ChallengeFeed from "@/components/Dashboard/ChallengeFeed";
+
 import { fetchDashboardData } from "@/utils/DashboardFunctions";
 
 const Dashboard = () => {
   const { user } = useUser();
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [newChallenges, setNewChallenges] = useState<NewChallenge[]>([]);
+
   const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckInData[]>([]);
   const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
 
@@ -38,18 +37,15 @@ const Dashboard = () => {
     if (mounted && user?.id) {
       setIsLoading(true);
 
-      fetchDashboardData(user.id)
+      fetchDashboardData()
         .then((data) => {
           console.log("Fetched dashboard data:", data);
 
           setLeaderboardData(data.leaderboard);
-          console.log("Fetched leaderboard data:", data.leaderboard);
 
           setRecentCheckIns(data.recentCheckins);
-          console.log("recent check in data:", data.recentCheckins);
 
-          setNewChallenges(data.newChallenges);
-          console.log("Fetched new challenges:", data.newChallenges);
+          //replace later with checkins from people the user
         })
         .catch((error) => {
           console.error("Error fetching dashboard data:", error);
@@ -116,12 +112,8 @@ const Dashboard = () => {
       {/* Content Area */}
       <div className="flex-1 min-h-0 relative overflow-hidden">
         {activeTab === DashboardDisplay.challenge_discovery ? (
-          // Challenge Discovery with Search
           <div className="h-full overflow-y-auto ">
-            <ChallengeFeed
-              challenges={newChallenges}
-              isLoading={isLoading}
-            />
+            <p> Display follower check ins </p>
           </div>
         ) : activeTab === DashboardDisplay.check_ins &&
           recentCheckIns.length > 0 ? (

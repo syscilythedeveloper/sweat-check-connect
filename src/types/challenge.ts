@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 export interface ChallengeData {
   title: string;
   description: string;
@@ -9,6 +10,13 @@ export interface ChallengeData {
   participants: string[];
   creatorId: string;
   tags?: string[];
+  frequencyType: "DAILY" | "WEEKLY";
+}
+
+export enum ChallengeType {
+  DISCOVER = "discover",
+  JOINED = "joined",
+  PAST = "past",
 }
 
 export interface ChallengeCardProps {
@@ -28,18 +36,13 @@ export interface ChallengeCheckInForm {
   challengeId: string;
 }
 
-export enum ChallengeMode {
-  discover = "discover",
-  joined = "joined",
-  past = "past",
-}
-export interface NewChallenge {
+export interface Challenge {
   id: string;
   title: string;
   description: string;
   startDate: string;
   duration: number;
-  frequencyType: FrequencyType;
+  frequencyType: ChallengeFrequencyType;
   checkInsPerWeek?: number;
   maxParticipants?: number;
   requiredCheckIns: number;
@@ -51,4 +54,4 @@ export interface NewChallenge {
   updatedAt: string;
   totalCheckins: number;
 }
-type FrequencyType = "DAILY" | "WEEKLY";
+export type ChallengeFrequencyType = "DAILY" | "WEEKLY";

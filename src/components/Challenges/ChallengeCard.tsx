@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { HeartPlus, CalendarDays, Users } from "lucide-react";
-import { ChallengeCardProps, ChallengeMode } from "@/types/challenge";
-import { Separator } from "../ui/separator";
+import { Users } from "lucide-react";
+import { ChallengeType, Challenge } from "@/types/challenge";
 import { Button } from "../ui/button";
+import { Progress } from "../ui/progress";
+
+import toast from "react-hot-toast";
 import {
-  calculateGains,
+  joinChallenge,
+  leaveChallenge,
   calculateDaysUntilStart,
   calculateCurrentDay,
 } from "@/utils/challengeFunctions";
+import { GiOnTarget } from "react-icons/gi";
 
 const tagColorClasses = [
   "bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300",
@@ -20,131 +24,181 @@ const tagColorClasses = [
 // Challenge Card Component
 const ChallengeCard = ({
   challenge,
-  mode,
+  challengeType,
+  onChallengeJoined,
 }: {
-  challenge: ChallengeCardProps;
-  mode: ChallengeMode;
+  challenge: Challenge;
+  challengeType: ChallengeType;
+  onChallengeJoined?: (challenge: Challenge) => void;
 }) => {
+  const {
+    title,
+    description,
+    duration,
+    requiredCheckIns,
+    maxParticipants,
+    createdBy,
+    startDate,
+    tags,
+  } = challenge;
   const router = useRouter();
-  const gains = calculateGains(challenge.duration);
-  const currentDay = calculateCurrentDay(
-    challenge.startDate,
-    challenge.duration
-  );
+  const startDateObj = new Date(startDate);
+
+  const currentDay = calculateCurrentDay(startDateObj, duration);
+
+  const daysUntilStart = calculateDaysUntilStart(startDateObj);
+  const [isJoining, setIsJoining] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [hasLeft, setHasLeft] = useState(false);
 
   const handleViewDetails = () => {
     router.push(`/challenges/${challenge.id}`);
   };
+  const handleJoinChallenge = () => {
+    setIsJoining(true);
 
-  const today = new Date();
-  const challengeEnd = new Date(challenge.endDate);
-  const challengeStatus =
-    today < new Date(challenge.startDate)
-      ? "challenge_open"
-      : today > challengeEnd
-      ? "completed"
-      : "challenge_closed";
+    joinChallenge(challenge.id)
+      .then(() => {
+        toast.success(`Successfully joined "${title}"!`, {
+          duration: 3000,
+          position: "top-center",
+        });
+        setHasJoined(true);
+        onChallengeJoined?.(challenge);
+      })
+      .catch((error) => {
+        console.error("Error joining challenge:", error);
+        toast.error("Failed to join challenge. Please try again.", {
+          duration: 3000,
+          position: "top-center",
+        });
+      })
+      .finally(() => {
+        setIsJoining(false);
+      });
+  };
+  const handleLeaveChallenge = () => {
+    setIsLeaving(true);
+    leaveChallenge(challenge.id)
+      .then(() => {
+        toast.success(`Successfully left "${title}"!`, {
+          duration: 3000,
+          position: "top-center",
+        });
+        setHasLeft(true);
+      })
+      .catch((error) => {
+        console.error("Error leaving challenge:", error);
+        toast.error("Failed to leave challenge. Please try again.", {
+          duration: 3000,
+          position: "top-center",
+        });
+      })
+      .finally(() => {
+        setIsLeaving(false);
+      });
+  };
 
   return (
-    <div className=" flex flex-col h-full bg-accent-foreground rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] shadow-slate-glow">
-      {/* Card Header */}
-      <div className="flex-1 p-6 pb-4 flex flex-col">
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex-1">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <h3 className="font-bold text-gray-800 dark:text-blue-400 text-sm">
-                {mode === ChallengeMode.past && (
-                  <span className="text-green-500">
-                    {challenge.duration}-Day{" "}
-                  </span>
-                )}
-                {challenge.title}
-              </h3>
-            </div>
+    <>
+      <div className="flex flex-col h-full bg-accent-foreground dark:bg-background transition-all duration-300 transform hover:scale-[1.02] shadow-slate-glow rounded-2xl">
+        {/* Card Header */}
+        <div className="flex-1 p-6 pb-4 flex flex-col">
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex-1">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <h3
+                  className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm"
+                  style={{ lineHeight: 1.1 }}
+                >
+                  {" "}
+                  {duration} Day - {title}
+                </h3>
 
-            {/* Stats Row */}
-            {mode !== ChallengeMode.past && (
-              <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300 mb-2">
-                <div className="flex items-center gap-1">
-                  <span className="flex items-center">
-                    <CalendarDays className="w-5 h-5 mr-1 text-gray-500 drop-shadow" />
-                    {challenge.duration} Days
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="flex items-center">
-                    <HeartPlus className="w-5 h-5 mr-1 text-green-500 drop-shadow" />
-                    {gains} Gains
-                  </span>
-                </div>
-                {/* Participants */}
-                <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
-                  <Users className="w-4 h-4 text-blue-500" />
-                  <span>{challenge.participants.length}</span>
-                </div>
+                <p className="text-[10px] text-gray-600 dark:text-gray-300 line-clamp-2">
+                  {description}
+                </p>
               </div>
-            )}
 
-            <div className="flex items-center justify-center gap-1 text-xs text-gray-500 dark:text-gray-500">
-              <span className="text-gray-500 text-[10px] ">Created By:</span>
+              {/* Stats Row */}
 
-              <Image
-                width={20}
-                height={20}
-                src={challenge.creatorAvatar}
-                alt={"yay"}
-                className="w-3 h-3 rounded-full"
-              />
+              <div className="flex items-center justify-center gap-1 text-xs text-gray-500 dark:text-gray-500">
+                <span className="text-gray-500 text-[10px]">Created By:</span>
+                <Image
+                  width={20}
+                  height={20}
+                  src={createdBy?.avatar || "/images/defaultUser.png"}
+                  alt={createdBy?.name || createdBy?.username || "Creator"}
+                  className="w-3 h-3 rounded-full"
+                />
+                <span>{createdBy?.name || createdBy?.username}</span>
+              </div>
+
+              <div className="w-full h-0.5 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 animate-pulse mt-1" />
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300 mb-2">
+            <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
+              <GiOnTarget className="w-4 h-4 text-blue-500" />
+              <span>Goal: {requiredCheckIns} SweatChecks</span>
             </div>
 
-            <Separator className="my-3 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
-            <p className="text-[10px] text-gray-600 dark:text-gray-300 line-clamp-2">
-              {challenge.description}
-            </p>
+            {/* Participants */}
+            <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
+              <Users className="w-4 h-4 text-blue-500" />
+              <span>Max: {maxParticipants || 0}</span>
+            </div>
           </div>
-        </div>
 
-        {challengeStatus === "challenge_open" && (
+          {/* Challenge Status */}
           <div className="my-6 flex items-center gap-2 justify-center">
-            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-            <div className="text-xs text-gray-600 dark:text-gray-400">
-              Starts in {calculateDaysUntilStart(challenge.startDate)} days
-            </div>
-          </div>
-        )}
+            {challengeType !== ChallengeType.PAST && (
+              <>
+                {startDateObj > new Date() ? (
+                  <>
+                    <div
+                      className={
+                        "h-2 w-2 rounded-full animate-pulse bg-yellow-500"
+                      }
+                    />
 
-        {challengeStatus === "challenge_closed" && (
-          <div className="my-4">
-            <div className="flex justify-between text-[10px] text-gray-600 dark:text-gray-400 mb-2">
-              <span>Progress</span>
-              <span>
-                {currentDay}/{challenge.duration} days
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-green-900 to-green-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(currentDay / challenge.duration) * 100}%` }}
-              />
-            </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      Starts in {daysUntilStart} days
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-col items-center gap-2 w-full">
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        Day {currentDay} of {duration}
+                      </div>
+                      <Progress
+                        value={(currentDay / duration) * 100}
+                        className="h-3 bg-gray-200 dark:bg-gray-700"
+                      />
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+            {challengeType === ChallengeType.PAST && (
+              <>
+                <div className="h-2 w-2 rounded-full bg-gray-500" />
+                <div className="text-xs text-gray-600 dark:text-gray-400">
+                  Challenge Completed
+                </div>
+              </>
+            )}
           </div>
-        )}
 
-        {mode === ChallengeMode.past && (
-          <div className="my-8 w-full px-4 py-4 rounded-2xl text-center font-extrabold bg-completed text-green-900 border-2 border-green-500/50 shadow-green-glow shadow-lg text-sm">
-            Gains Earned: {gains}
-          </div>
-        )}
-
-        {/* Tags */}
-        {mode !== ChallengeMode.past &&
-          challenge.tags &&
-          challenge.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2  text-[10px] text-gray-900 dark:text-gray-300 justify-center">
-              {challenge.tags.slice(0, 3).map((tag, idx) => (
+          {/* Tags */}
+          {tags && tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 text-[10px] text-gray-900 dark:text-gray-300 justify-center">
+              {tags.slice(0, 3).map((tag, idx) => (
                 <span
                   key={tag}
-                  className={`px-3 py-1 rounded-full  ${
+                  className={`px-3 py-1 rounded-full ${
                     tagColorClasses[idx % tagColorClasses.length]
                   }`}
                 >
@@ -153,45 +207,53 @@ const ChallengeCard = ({
               ))}
             </div>
           )}
-        {mode !== ChallengeMode.past && (
-          <div className="mt-2 flex items-center justify-center">
-            <Button
-              variant="ghost"
-              onClick={handleViewDetails}
-              className="text-xs text-blue-500 hover:text-blue-600 dark:text-blue-100 dark:hover:text-blue-500 hover:underline hover:bg-transparent"
-            >
-              View Challenge Details
-            </Button>
-          </div>
-        )}
-      </div>
+        </div>
 
-      {/* Card Footer */}
-      {mode !== "past" && (
+        {/* Card Footer - Discover Mode */}
         <div className="px-6 py-2 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600 flex justify-center items-center">
-          {mode === ChallengeMode.discover ? (
-            <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6">
+            {challengeType === ChallengeType.DISCOVER && (
               <Button
                 variant="outline"
-                onClick={() => alert("Join Challenge")}
+                onClick={handleJoinChallenge}
+                disabled={isJoining || hasJoined}
               >
-                Join Challenge
+                {isJoining
+                  ? "Joining..."
+                  : hasJoined
+                  ? "Joined!"
+                  : "Join Challenge"}
               </Button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-6 text-sm">
-              <Button
-                variant="destructive"
-                onClick={() => alert("Leave Challenge")}
-              >
-                Leave Challenge
-              </Button>
-            </div>
-          )}
+            )}{" "}
+            {challengeType === ChallengeType.JOINED && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={handleLeaveChallenge}
+                  disabled={isLeaving || hasLeft}
+                >
+                  {isLeaving
+                    ? "Leaving..."
+                    : hasLeft
+                    ? "Left!"
+                    : "Leave Challenge"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={handleViewDetails}
+                  className="text-xs text-blue-500 hover:text-blue-600 dark:text-blue-100 dark:hover:text-blue-500 hover:underline hover:bg-transparent"
+                >
+                  View Challenge Details
+                </Button>
+              </>
+            )}
+            {challengeType === ChallengeType.PAST && (
+              <p> Challenge Completed On</p>
+            )}
+          </div>
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
-
 export default ChallengeCard;

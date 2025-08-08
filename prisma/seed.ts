@@ -13,7 +13,7 @@ async function main() {
         email: "kiara@example.com",
         name: "Kiara McCalvin",
         avatar:
-          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/ki.jpeg",
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604075/kiara_eoarvx.png",
         bio: "Coach Ki",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 3,
@@ -29,7 +29,7 @@ async function main() {
         email: "enijah@example.com",
         name: "Enijah Smith",
         avatar:
-          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/enijah.png",
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604111/enijah_sfdym5.png",
         bio: "🌻",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 1,
@@ -45,7 +45,7 @@ async function main() {
         email: "gabby@example.com",
         name: "Gabby Morris",
         avatar:
-          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/gabby.png",
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604052/gabby_gqqlp3.png",
         bio: "Pilates Instructor",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 1,
@@ -61,7 +61,7 @@ async function main() {
         email: "william@example.com",
         name: "William Orgertrice",
         avatar:
-          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/william.png",
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604052/will_aberc7.png",
         bio: "Tech Entrepreneur",
         membershipType: MembershipType.PREMIUM,
         currentActiveStreak: 1,
@@ -77,7 +77,7 @@ async function main() {
         email: "victoria@example.com",
         name: "Young Warden",
         avatar:
-          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/victoria.png",
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603858/victoria_oehw6x.png",
         bio: "HU alumna",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 0,
@@ -92,7 +92,7 @@ async function main() {
         email: "daniel@example.com",
         name: "Daniel",
         avatar:
-          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/daniel.png",
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603477/daniel_huwkmx.png",
         bio: "Drums and gym",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 5,
@@ -107,7 +107,7 @@ async function main() {
         email: "aneesah@example.com",
         name: "Aneesah",
         avatar:
-          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/aneesah.png",
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603476/aneesah_vlagrt.png",
         bio: "Living life on my own terms",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 2,
@@ -122,12 +122,28 @@ async function main() {
         email: "amanda@example.com",
         name: "Amanda",
         avatar:
-          "https://qqahaz9rntmohbfm.public.blob.vercel-storage.com/Screenshot%202025-08-06%20at%203.20.51%E2%80%AFPM.png",
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603476/amanda_fuyzbl.png",
         bio: "Living life on my own terms",
         membershipType: MembershipType.STANDARD,
         currentActiveStreak: 2,
         longestActiveStreak: 2,
         daysActive: 3,
+        isPrivate: false,
+      },
+    }),
+
+    prisma.user.create({
+      data: {
+        username: "ashlye",
+        email: "ashlye@example.com",
+        name: "Ashlye",
+        avatar:
+          "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603250/ashlye_u14tip.jpg",
+        bio: "🌻",
+        membershipType: MembershipType.STANDARD,
+        currentActiveStreak: 1,
+        longestActiveStreak: 1,
+        daysActive: 1,
         isPrivate: false,
       },
     }),
@@ -299,6 +315,24 @@ async function main() {
         fileSize: 250,
         mimeType: "video/mp4",
       },
+      {
+        userId: users[8].id,
+        caption: "🏋🏽Bent ova rowssssssss",
+        createdAt: new Date("2025-08-05T08:30:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754604429/ashlye_upper_gsnulo.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[8].id,
+        caption: "RDLs for the win ",
+        createdAt: new Date("2025-08-03T08:30:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754604429/ashley_lower_mppepx.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
     ],
   });
 
@@ -342,6 +376,19 @@ async function main() {
         duration: 7,
         requiredCheckIns: 7,
         maxParticipants: 25,
+        isPrivate: false,
+        updatedAt: new Date(),
+        totalCheckIns: 0,
+      },
+      {
+        title: "Marathon Prep",
+        description: "3 miles 4 times a week for a month",
+        createdById: users[8].id,
+        startDate: new Date("2025-08-15"),
+        tags: ["strength", "cardio", "yoga"],
+        duration: 30,
+        requiredCheckIns: 16,
+        maxParticipants: 10,
         isPrivate: false,
         updatedAt: new Date(),
         totalCheckIns: 0,

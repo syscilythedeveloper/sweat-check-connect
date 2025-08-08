@@ -1,9 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChallengeData } from "@/types/challenge";
 
-//import prisma from "../../prisma/utils/prisma";
+export const fetchChallengeData = async () => {
+  const response = await fetch(`/api/challenges`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch challenge data");
+  }
+
+  return response.json();
+};
 
 export function createChallenge(data: ChallengeData) {
+  console.log("Creating challenge with data:", data);
   return fetch(`/api/challenges/`, {
     method: "POST",
     headers: {
@@ -12,21 +21,35 @@ export function createChallenge(data: ChallengeData) {
     body: JSON.stringify(data),
   });
 }
+export const joinChallenge = async (challengeId: string) => {
+  const response = await fetch(`/api/challenges/join`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ challengeId }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to join challenge");
+  }
+  return response.json();
+};
+export const leaveChallenge = async (challengeId: string) => {
+  console.log(`Leaving challenge ${challengeId}`);
+  return "Challenge left successfully";
+};
 
 export function calculateGains(duration: number) {
   return 10 * duration + duration;
 }
 
-export function calculateDaysUntilStart(startDate: string) {
-  const start = new Date(startDate);
+export function calculateDaysUntilStart(startDate: Date) {
   const today = new Date();
-  const diffTime = start.getTime() - today.getTime();
+  const diffTime = startDate.getTime() - today.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
-export function calculateCurrentDay(
-  startDate: string,
-  duration: number
-): number {
+export function calculateCurrentDay(startDate: Date, duration: number): number {
   const start = new Date(startDate);
   const today = new Date();
   // Zero out the time for accurate day difference

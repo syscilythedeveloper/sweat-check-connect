@@ -29,41 +29,62 @@ import { useUser } from "@clerk/nextjs";
 import { ChevronDownIcon } from "lucide-react";
 import { X } from "lucide-react";
 
-const formSchema = z.object({
-  title: z.string().min(3, {
-    message: "Challenge title must be at least 3 characters.",
-  }),
-  description: z.string().min(10, {
-    message: "Description must be at least 10 characters.",
-  }),
-  startDate: z
-    .string()
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/, "Please enter date in MM/DD/YYYY format")
-    .refine((date) => {
-      const [month, day, year] = date.split("/").map(Number);
-      const dateObj = new Date(year, month - 1, day);
-      return dateObj.getMonth() === month - 1 && dateObj.getDate() === day;
-    }, "Please enter a valid date"),
-  duration: z
-
-    .number()
-    .min(1, {
-      message: "Duration must be at least 1 day.",
-    })
-    .max(31, {
-      message: "Duration cannot exceed 31 days.",
+const formSchema = z
+  .object({
+    title: z.string().min(3, {
+      message: "Challenge title must be at least 3 characters.",
     }),
-
-  maxParticipants: z
-    .number()
-    .min(2, {
-      message: "Maximum participants must be at least 2.",
-    })
-    .max(10, {
-      message: "Maximum participants cannot exceed 10.",
+    description: z.string().min(10, {
+      message: "Description must be at least 10 characters.",
     }),
-  tags: z.array(z.enum(["cardio", "weight", "glute"])).optional(),
-});
+    startDate: z
+      .string()
+      .regex(/^\d{2}\/\d{2}\/\d{4}$/, "Please enter date in MM/DD/YYYY format")
+      .refine((date) => {
+        const [month, day, year] = date.split("/").map(Number);
+        const dateObj = new Date(year, month - 1, day);
+        return dateObj.getMonth() === month - 1 && dateObj.getDate() === day;
+      }, "Please enter a valid date"),
+    duration: z
+
+      .number()
+      .min(1, {
+        message: "Duration must be at least 1 day.",
+      })
+      .max(31, {
+        message: "Duration cannot exceed 31 days.",
+      }),
+
+    maxParticipants: z
+      .number()
+      .min(2, {
+        message: "Maximum participants must be at least 2.",
+      })
+      .max(20, {
+        message: "Maximum participants cannot exceed 20.",
+      }),
+    tags: z.array(z.enum(["cardio", "weight", "glute"])).optional(),
+    frequencyType: z.enum(["DAILY", "WEEKLY"]),
+    checkInsPerWeek: z.number().optional(),
+  })
+  .refine(
+    (data) => {
+      // Only require checkInsPerWeek if frequencyType is "WEEKLY"
+      if (data.frequencyType === "WEEKLY") {
+        return (
+          data.checkInsPerWeek !== undefined &&
+          data.checkInsPerWeek >= 1 &&
+          data.checkInsPerWeek <= 7
+        );
+      }
+      return true; // No validation needed for DAILY
+    },
+    {
+      message:
+        "Must specify 1-7 check-ins per week when using custom frequency.",
+      path: ["checkInsPerWeek"], // Shows error on the correct field
+    }
+  );
 
 const calculateEndDate = (startDate: string, duration: number): string => {
   if (!startDate || !duration) return "";
@@ -103,6 +124,8 @@ const CreateChallengeForm = ({
       startDate: "",
       duration: 7,
       maxParticipants: 0,
+      frequencyType: "DAILY",
+      checkInsPerWeek: undefined,
     },
   });
 
@@ -190,7 +213,7 @@ const CreateChallengeForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6"
+            className="space-y-6 bg-white dark:bg-blue-800/15 shadow-lg p-6"
           >
             <FormField
               control={form.control}
@@ -202,7 +225,7 @@ const CreateChallengeForm = ({
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white rounded-2xl p-6 focus:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
+                      className=" bg-white dark:bg-slate-800/15 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white p-6"
                       placeholder="e.g. 30-Day Plank Challenge"
                       {...field}
                     />
@@ -222,7 +245,7 @@ const CreateChallengeForm = ({
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      className="resize-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white rounded-2xl p-6 focus:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
+                      className="resize-none  bg-white dark:bg-slate-800/15 border-gray-300  dark:border-slate-800 text-gray-800 dark:text-white p-6 "
                       placeholder="Describe the challenge goals, rules, etc."
                       rows={4}
                       {...field}
@@ -249,14 +272,14 @@ const CreateChallengeForm = ({
 
                   return (
                     <FormItem>
-                      <FormLabel className="text-gray-700 dark:text-gray-200">
+                      <FormLabel className="text-gray-700 dark:text-gray-200 ">
                         Start Date
                       </FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
-                            className="w-full justify-between font-normal"
+                            className="w-full justify-between font-normal bg-white dark:bg-slate-800/30  border-gray-300  dark:border-slate-800 text-gray-800 dark:text-white p-6"
                             type="button"
                           >
                             {field.value ? field.value : "Select date"}
@@ -271,8 +294,6 @@ const CreateChallengeForm = ({
                             mode="single"
                             selected={valueAsDate}
                             captionLayout="dropdown"
-                            fromYear={new Date().getFullYear()}
-                            toYear={new Date().getFullYear() + 1}
                             onSelect={(date) => {
                               if (date) {
                                 // Format as MM/DD/YYYY
@@ -290,9 +311,15 @@ const CreateChallengeForm = ({
                             }}
                             disabled={(date) => {
                               const today = new Date();
-                              const max = new Date();
-                              max.setDate(today.getDate() + 365);
-                              return date < today || date > max;
+                              today.setHours(0, 0, 0, 0); // Reset time to start of day
+
+                              const tomorrow = new Date(today);
+                              tomorrow.setDate(today.getDate() + 1); // At least 1 day away
+
+                              const maxDate = new Date(today);
+                              maxDate.setDate(today.getDate() + 14); // At max 2 weeks away
+
+                              return date < tomorrow || date > maxDate;
                             }}
                           />
                         </PopoverContent>
@@ -316,7 +343,7 @@ const CreateChallengeForm = ({
                           type="number"
                           min={1}
                           max={31}
-                          className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white rounded-2xl p-6 focus:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
+                          className=" bg-white dark:bg-slate-800/30 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white rounded-2xl p-6 "
                           placeholder="e.g. 7"
                           {...field}
                           onChange={(e) => {
@@ -341,8 +368,8 @@ const CreateChallengeForm = ({
                         <Input
                           type="number"
                           min={2}
-                          max={10}
-                          className="focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-800 dark:text-white rounded-2xl p-6 focus:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
+                          max={20}
+                          className=" bg-white  border-gray-300 dark:bg-slate-800/30 dark:border-slate-800 text-gray-800 dark:text-white  p-6 "
                           placeholder="e.g. 10"
                           {...field}
                           onChange={(e) => {
@@ -361,12 +388,72 @@ const CreateChallengeForm = ({
                   Duration cannot exceed 31 days.
                 </div>
               )}
-              {Number(form.watch("maxParticipants")) > 10 && (
+              {Number(form.watch("maxParticipants")) > 20 && (
                 <div className="text-red-500 text-sm mt-1">
-                  Max participants cannot exceed 10.
+                  Max participants cannot exceed 20.
                 </div>
               )}
             </div>
+            <FormField
+              control={form.control}
+              name="frequencyType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 dark:text-gray-200">
+                    Frequency
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex flex-col gap-3">
+                      {/* Daily Option */}
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          value="DAILY"
+                          checked={field.value === "DAILY"}
+                          onChange={() => {
+                            field.onChange("DAILY");
+                            form.setValue("checkInsPerWeek", undefined);
+                          }}
+                          className="w-4 h-4 accent-pink-500"
+                        />
+                        <span className="text-gray-800 dark:text-gray-200 font-medium">
+                          Daily
+                        </span>
+                      </label>
+
+                      {/* Custom Option (with inline input always visible) */}
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          value="WEEKLY"
+                          checked={field.value === "WEEKLY"}
+                          onChange={() => field.onChange("WEEKLY")}
+                          className="w-4 h-4 accent-violet-500"
+                        />
+                        <span className="text-gray-800 dark:text-gray-200 font-medium">
+                          Custom:
+                        </span>
+
+                        <Input
+                          type="number"
+                          min={1}
+                          max={7}
+                          placeholder="Days"
+                          className="w-20 bg-white dark:bg-slate-800/30 
+                         border-gray-300 dark:border-slate-800 
+                         text-gray-800 dark:text-white rounded-lg p-2 text-sm"
+                          {...form.register("checkInsPerWeek", {
+                            valueAsNumber: true,
+                          })}
+                        />
+                      </label>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="tags"
@@ -432,8 +519,8 @@ const CreateChallengeForm = ({
             <div className="flex gap-2">
               <Button
                 type="button"
-                variant="ghost"
-                className="w-1/2 text-md py-2 border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-all"
+                variant="destructive"
+                className="w-1/8 bg-red-500/50 text-[8px]"
                 onClick={() => setShowCreateForm && setShowCreateForm(false)}
               >
                 Cancel
@@ -441,9 +528,9 @@ const CreateChallengeForm = ({
               <Button
                 type="submit"
                 variant="outline"
-                className="w-1/2 text-md py-2 border border-purple-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all dark:shadow-[0_0_10px_2px_rgba(168,85,247,0.4)]"
+                className="w-7/8  bg-blue-800/50 border border-blue-600 text-xs "
               >
-                🏁 Create & Compete
+                Create Challenge
               </Button>
             </div>
           </form>

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { UsersRound, Home, Medal, Camera, UserRound } from "lucide-react";
+import { Home, Medal, Camera, UserRound } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import {
@@ -50,11 +50,6 @@ const AppSideBar = () => {
       title: "Challenges",
       url: "/challenges",
       icon: Medal,
-    },
-    {
-      title: "Connections",
-      url: "/connections",
-      icon: UsersRound,
     },
   ];
   return (
