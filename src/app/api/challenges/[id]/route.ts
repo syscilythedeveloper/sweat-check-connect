@@ -4,7 +4,7 @@ import { getAuth } from "@clerk/nextjs/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId: signedInUserId } = getAuth(request);
@@ -12,7 +12,7 @@ export async function GET(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const challengeId = params.id;
+    const { id: challengeId } = await params;
     console.log("Fetching challenge details for ID:", challengeId);
 
     // Fetch the specific challenge with all related data
