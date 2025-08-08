@@ -2,14 +2,41 @@
 useUserContext to display user information in a contact card
  
  */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
 const ContactCard = () => {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure component only renders on client side to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Show loading skeleton until component is mounted and user data is loaded
+  if (!mounted || !isLoaded) {
+    return (
+      <Card className="bg-sidebar-accent-foreground dark:bg-slate-800 shadow-[0_0_10px_2px_rgba(168,85,247,0.2)] border border-transparent rounded-2xl p-4">
+        <CardHeader className="p-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="rounded-full bg-gray-300 dark:bg-gray-600 w-[40px] h-[40px] ring-2 ring-purple-200 dark:ring-purple-600 animate-pulse" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-20" />
+                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-16" />
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   const contactInfo = {
     Image: user?.imageUrl || "/images/user.png",

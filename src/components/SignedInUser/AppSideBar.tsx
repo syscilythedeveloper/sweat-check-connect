@@ -11,15 +11,13 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarHeader,
 } from "@/components/ui/sidebar";
 import { Toaster } from "react-hot-toast";
 import { Separator } from "@/components/ui/separator";
 import CheckInDialog from "@/components/CheckIn/CheckInDialog";
-import ContactCard from "@/components/SignedInUser/ContactCard";
+
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/SignedInUser/mode-toggle";
-import QuickStats from "./QuickStats";
 
 const AppSideBar = () => {
   const pathname = usePathname();
@@ -57,10 +55,6 @@ const AppSideBar = () => {
       <Toaster />
 
       <Sidebar className="border border-transparent  dark:bg-slate-900 rounded-2xl shadow-purple-glow  p-4 space-y-4">
-        <SidebarHeader className="space-y-2 ">
-          <ContactCard />
-          <QuickStats />
-        </SidebarHeader>
         <Separator className="my-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-[1px]" />
 
         <SidebarContent>
