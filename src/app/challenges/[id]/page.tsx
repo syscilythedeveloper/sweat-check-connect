@@ -1,212 +1,150 @@
-// "use client";
-// import { useParams } from "next/navigation";
-// import { useEffect, useState } from "react";
-// import { ChallengeCardProps } from "../../../types/challenge";
-// import {
-//   fetchChallengeData
-// } from "../../../utils/challengeFunctions";
-// import Image from "next/image";
-// import {
-//   getChallengeMessages,
-//   updateThreadMessages,
-// } from "../../../utils/challengeCheckInFunctions";
-// import ChallengeThread from "../../../components/Challenges/ChallengeThread";
-// import { Message } from "../../../components/Challenges/ChallengeThread"; // Import the Message interface
-// import { useUser } from "@clerk/nextjs";
+"use client";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ChallengeCardProps } from "../../../types/challenge";
+import { fetchChallengeData } from "../../../utils/challengeFunctions";
+import { ChallengeTab } from "../../../types/challenge";
 
-// import ChallengeCheckInForm from "../../../components/Challenges/ChallengeCheckInForm";
+import ChallengeCheckInForm from "../../../components/Challenges/ChallengeCheckInForm";
+import { Plus } from "lucide-react";
 
-// export default function ChallengeDetails() {
-//   const { user } = useUser();
-//   const params = useParams();
-//   const [mounted, setMounted] = useState(false);
-//   const [challenge, setChallenge] = useState<ChallengeCardProps | null>(null);
-//   const [loading, setLoading] = useState(true);
-//   const [showCheckInForm, setShowCheckInForm] = useState(false);
-//   const [messages, setMessages] = useState<Message[]>([]);
+const ChallengeDetails = () => {
+  const params = useParams();
 
-//   useEffect(() => {
-//     setMounted(true);
-//   }, []);
+  const [mounted, setMounted] = useState(false);
+  const [challenge, setChallenge] = useState<ChallengeCardProps | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showCheckInForm, setShowCheckInForm] = useState(false);
+  const [activeTab, setActiveTab] = useState<ChallengeTab>(
+    ChallengeTab.CHECKINS
+  );
 
-//   useEffect(() => {
-//     if (mounted) {
-//       const fetchChallenge = async () => {
-//         const allChallenges = [
-//           ...(await getChallengesInProgress("dummy-user-id")),
-//           ...(await getPreviousChallenges("dummy-user-id")),
-//           ...(await getNewChallenges("dummy-user-id")),
-//         ];
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-//         const found = allChallenges.find((c) => c.id === params.id);
-//         setChallenge(found || null);
-//         setLoading(false);
-//       };
+  useEffect(() => {
+    console.log("Fetching challenge data for ID:", params.id);
+    fetchChallengeData(params.id as string);
+  }, [params.id, mounted]);
 
-//       fetchChallenge();
-//     }
-//   }, [params.id, mounted]);
+  // Prevent hydration issues by waiting for mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-//   useEffect(() => {
-//     if (mounted && challenge) {
-//       const challengeMessages = getChallengeMessages(challenge.id);
-//       setMessages(challengeMessages);
-//     }
-//   }, [mounted, challenge]);
+  useEffect(() => {
+    if (mounted && params?.id) {
+      setIsLoading(true);
 
-//   if (!mounted) {
-//     return null;
-//   }
+      fetchChallengeData(params.id as string)
+        .then((data) => {
+          console.log("Fetched dashboard data:", data);
 
-//   if (loading) {
-//     return <div className="p-6">Loading...</div>;
-//   }
+          setChallenge(data.challenge);
+        })
+        .catch((error) => {
+          console.error("Error fetching dashboard data:", error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [mounted, params?.id]);
 
-//   if (!challenge) {
-//     return <div className="p-6">Challenge not found</div>;
-//   }
+  if (!mounted) {
+    return null;
+  }
 
-//   const handleSendMessage = (message: string) => {
-//     // For now, we'll just console.log the message
-//     console.log("New message:", message);
-//     if (!user) return;
-//     const newMessage: Message = {
-//       id: `${user.id}-${challenge.id}} - ${Date.now()}`,
-//       username: user.username || user.firstName || "User",
-//       avatar: user.imageUrl,
-//       timeAgo: "Just Now",
-//       message: message,
-//       likes: 0,
-//     };
+  if (isLoading) {
+    return <div className="p-6">Loading...</div>;
+  }
 
-//     setMessages((prevMessages) => [...prevMessages, newMessage]);
-//     updateThreadMessages(challenge.id, newMessage);
-//   };
+  if (!challenge) {
+    return <div className="p-6">Challenge not found</div>;
+  }
 
-//   return (
-//     <div className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4">
-//       <div className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-blue-glow border-1 border-blue-900/50 p-2 sm:p-6">
-//         <div className="space-y-4">
-//           {/* Header Section */}
-//           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-//             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
-//               {challenge.title}
-//             </h1>
-//             <button
-//               onClick={() => setShowCheckInForm(true)}
-//               className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
-//             >
-//               Check In
-//             </button>
-//           </div>
+  let displayedThread: "Messages" | "Check Ins" = "Check Ins";
 
-//           {/* Creator and Tags Section */}
-//           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-//             <div className="flex items-center space-x-4">
-//               <Image
-//                 width={40}
-//                 height={40}
-//                 src={challenge.creatorAvatar}
-//                 alt={challenge.creator}
-//                 className="w-12 h-12 rounded-full"
-//               />
-//               <div>
-//                 <p className="text-gray-600 dark:text-gray-300 text-xs">
-//                   Created by
-//                 </p>
-//                 <p className="font-semibold text-gray-800 dark:text-white text-sm">
-//                   {challenge.creator}
-//                 </p>
-//               </div>
-//             </div>
+  if (activeTab === ChallengeTab.MESSAGE) {
+    displayedThread = "Messages";
+  } else if (activeTab === ChallengeTab.CHECKINS) {
+    displayedThread = "Check Ins";
+  }
 
-//             {challenge.tags && challenge.tags.length > 0 && (
-//               <div className="flex flex-wrap gap-2">
-//                 <span className="text-gray-600 dark:text-gray-300 text-sm">
-//                   Tags:
-//                 </span>
-//                 {challenge.tags?.map((tag) => (
-//                   <span
-//                     key={tag}
-//                     className="px-3 py-1 bg-gray-100 dark:bg-slate-700 rounded-full text-xs text-gray-600 dark:text-gray-300"
-//                   >
-//                     {tag}
-//                   </span>
-//                 ))}
-//               </div>
-//             )}
-//           </div>
+  return (
+    <div
+      className="flex flex-col h-screen"
+      suppressHydrationWarning
+    >
+      {/* Header */}
+      <div className=" bg-white dark:bg-slate-800/10  p-2 sm:p-6">
+        {/* TikTok-Style Header & Tabs */}
+        <div className="w-full max-w-full mx-auto text h-16 ">
+          <div className="flex items-center justify-between w-full">
+            <button
+              onClick={() => setShowCheckInForm(true)}
+              className="bg-blue-100 dark:bg-slate-800/10 hover:bg-blue-200 text-blue-700 rounded-full w-10 h-10 flex items-center justify-center shadow-blue-glow"
+            >
+              <Plus className="w-6 h-6" />
+            </button>
+          </div>
 
-//           {/* Description */}
-//           <div className="prose dark:prose-invert max-w-none">
-//             <p className="text-gray-600 dark:text-gray-300">
-//               {challenge.description}
-//             </p>
-//           </div>
+          {/* TikTok-style Tabs */}
+          <div className="flex justify-center items-center ">
+            {[
+              {
+                label: "Check Ins",
+                tab: ChallengeTab.CHECKINS,
+              },
+              {
+                label: "Discussion",
+                tab: ChallengeTab.MESSAGE,
+              },
+            ].map(({ label, tab }) => (
+              <button
+                key={label}
+                onClick={() => setActiveTab(tab)}
+                className={`mx-3 px-0 pb-2 text-base font-semibold transition-all 
+        ${
+          activeTab === tab
+            ? "text-blue-500 dark:text-blue-300 border-b-2 border-blue-500 dark:border-blue-300"
+            : "text-slate-400 dark:text-slate-500"
+        }
+      `}
+                style={{ background: "none", outline: "none" }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      {showCheckInForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-800/10 w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
+            <div className=" bg-white dark:bg-slate-800/10 p-4 border-b border-gray-200 dark:border-slate-600 rounded-t-2xl">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white text-center">
+                {challenge.title}{" "}
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  Check In
+                </span>
+              </h2>
+            </div>
+            <div className="p-2">
+              <ChallengeCheckInForm
+                setShowCheckInForm={setShowCheckInForm}
+                challengeId={challenge.id}
+                challengeName={challenge.title}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
-//           {/* Challenge Stats Grid */}
-//           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
-//             <div>
-//               <p className="text-gray-600 dark:text-gray-400">Duration</p>
-//               <p className="font-semibold text-gray-800 dark:text-white">
-//                 {challenge.duration} days
-//               </p>
-//             </div>
-//             <div>
-//               <p className="text-gray-600 dark:text-gray-400">Participants</p>
-//               <p className="font-semibold text-gray-800 dark:text-white">
-//                 {challenge.participants.length} joined
-//               </p>
-//             </div>
-//             <div>
-//               <p className="text-gray-600 dark:text-gray-400">Start Date</p>
-//               <p className="font-semibold text-gray-800 dark:text-white">
-//                 {new Date(challenge.startDate).toLocaleDateString()}
-//               </p>
-//             </div>
-//             <div>
-//               <p className="text-gray-600 dark:text-gray-400">End Date</p>
-//               <p className="font-semibold text-gray-800 dark:text-white">
-//                 {new Date(challenge.endDate).toLocaleDateString()}
-//               </p>
-//             </div>
-//           </div>
+      {displayedThread}
+    </div>
+  );
+};
 
-//           {/* Participants Section */}
-//           <div className="flex items-center gap-2 py-2">
-//             <h3 className="font-semibold text-gray-800 dark:text-white whitespace-nowrap">
-//               Participants:
-//             </h3>
-//             <div className="flex flex-wrap gap-2">
-//               {challenge.participants.map((participant) => (
-//                 <span
-//                   key={participant}
-//                   className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-full text-xs text-blue-600 dark:text-blue-300"
-//                 >
-//                   {participant}
-//                 </span>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       <ChallengeThread
-//         messages={messages}
-//         onSendMessage={handleSendMessage}
-//       />
-
-//       {/* Check-in Form Modal */}
-//       {showCheckInForm && (
-//         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//           <div className="bg-white dark:bg-slate-800 w-full max-w-md mx-2 sm:mx-4 rounded-2xl shadow-purple-glow p-3 sm:p-6">
-//             <ChallengeCheckInForm
-//               challengeId={challenge.id}
-//               challengeName={challenge.title}
-//               onClose={() => setShowCheckInForm(false)}
-//             />
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
+export default ChallengeDetails;

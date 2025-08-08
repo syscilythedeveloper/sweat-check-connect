@@ -247,6 +247,7 @@ const ChallengeCard = ({
                   variant="destructive"
                   onClick={handleLeaveChallenge}
                   disabled={isLeaving || hasLeft}
+                  className="text-[8px]"
                 >
                   {isLeaving
                     ? "Leaving..."
@@ -257,7 +258,7 @@ const ChallengeCard = ({
                 <Button
                   variant="ghost"
                   onClick={handleViewDetails}
-                  className="text-xs text-blue-500 hover:text-blue-600 dark:text-blue-100 dark:hover:text-blue-500 hover:underline hover:bg-transparent"
+                  className="flex-1 text-xs text-blue-500 hover:text-blue-600 dark:text-blue-100 dark:hover:text-blue-500 hover:underline hover:bg-transparent"
                 >
                   View Challenge Details
                 </Button>

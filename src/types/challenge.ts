@@ -17,6 +17,11 @@ export enum ChallengeType {
   CREATED = "created",
 }
 
+export enum ChallengeTab {
+  MESSAGE = "message",
+  CHECKINS = "checkins",
+}
+
 export interface ChallengeCardProps {
   id: string;
   title: string;
