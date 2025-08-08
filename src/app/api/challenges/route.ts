@@ -140,6 +140,31 @@ async function getUserChallenges(userId: string) {
 }
 
 export async function POST(request: NextRequest) {
+  /*Sample dayta for weekly challenges
+    title: '567890',
+  description: 'erdcfvgbhnpjkm,l',
+  startDate: '08/09/2025',
+  duration: 28,
+  maxParticipants: 3,
+  frequencyType: 'WEEKLY',
+  checkInsPerWeek: 4,
+  creatorId: 'user_30yfee8QNG1XXZc1JhpWgvPsKf0',
+  requiredCheckIns: 16
+}
+ POST /api/challenges 200 in 2353ms
+ {
+  title: 'fvgbhljnkm',
+  description: 'fghjnkmdad',
+  startDate: '08/10/2025',
+  duration: 20,
+  maxParticipants: 3,
+  frequencyType: 'DAILY',
+  creatorId: 'user_30yfee8QNG1XXZc1JhpWgvPsKf0',
+  requiredCheckIns: 20
+}
+
+
+  */
   try {
     const { userId: signedInUserId } = getAuth(request);
     if (!signedInUserId) {
@@ -152,6 +177,8 @@ export async function POST(request: NextRequest) {
       "API Request Received: Creating challenge with data:",
       newChallenge
     );
+
+    return new NextResponse(newChallenge);
   } catch (error) {
     console.error("Error creating challenge:", error);
     return NextResponse.json(

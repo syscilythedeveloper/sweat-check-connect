@@ -228,7 +228,7 @@ const ChallengeCard = ({
             {challengeType === ChallengeType.JOINED && (
               <>
                 <Button
-                  variant="outline"
+                  variant="destructive"
                   onClick={handleLeaveChallenge}
                   disabled={isLeaving || hasLeft}
                 >

@@ -5,12 +5,9 @@ export interface ChallengeData {
   description: string;
   duration: number;
   startDate: string;
-  endDate: string;
   maxParticipants?: number;
-  participants: string[];
   creatorId: string;
-  tags?: string[];
-  frequencyType: "DAILY" | "WEEKLY";
+  requiredCheckIns: number
 }
 
 export enum ChallengeType {

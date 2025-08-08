@@ -57,8 +57,8 @@ const formSchema = z
 
     maxParticipants: z
       .number()
-      .min(2, {
-        message: "Maximum participants must be at least 2.",
+      .min(1, {
+        message: "Challenge must have at least 1 participant",
       })
       .max(20, {
         message: "Maximum participants cannot exceed 20.",
@@ -69,7 +69,10 @@ const formSchema = z
       )
       .optional(),
     frequencyType: z.enum(["DAILY", "WEEKLY"]),
-    checkInsPerWeek: z.number().optional(),
+    checkInsPerWeek: z
+      .number()
+      .max(7, { message: "Cannot exceed more than 7 check ins per week" })
+      .optional(),
   })
   .refine(
     (data) => {
@@ -133,6 +136,10 @@ const CreateChallengeForm = ({
     },
   });
 
+  const freq = form.watch("frequencyType");
+  const durationDays = form.watch("duration") || 0;
+  const currentWeeks = Math.max(1, Math.round(durationDays / 7));
+
   const handleTagInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTagInput(e.target.value);
     setTagError("");
@@ -158,6 +165,21 @@ const CreateChallengeForm = ({
     setTagError("");
   };
 
+  const getRequiredCheckIns = (
+    duration: number,
+    frequencyType: "DAILY" | "WEEKLY",
+    checkInsPerWeek?: number
+  ): number => {
+    if (frequencyType === "DAILY") {
+      // For daily challenges, required check-ins = duration in days
+      return duration;
+    } else {
+      // For weekly challenges, calculate based on weeks and check-ins per week
+      const weeks = Math.ceil(duration / 7);
+      return weeks * (checkInsPerWeek || 1); // Default to 1 if undefined
+    }
+  };
+
   const onSubmit = (formData: FormData) => {
     if (!user?.id) {
       alert("You must be signed in to create a challenge.");
@@ -167,18 +189,21 @@ const CreateChallengeForm = ({
       setTagError("Maximum of 3 tags allowed");
       return;
     }
+    const requiredCheckIns = getRequiredCheckIns(
+      formData.duration,
+      formData.frequencyType,
+      formData.checkInsPerWeek
+    );
 
     console.log("Creating challenge...");
     setIsLoading(true);
 
-    const endDate = calculateEndDate(formData.startDate, formData.duration);
-
     const challengeData: ChallengeData = {
       ...formData,
-      tags,
-      endDate, // calculated here
+
+      // calculated here
       creatorId: user.id,
-      participants: [],
+      requiredCheckIns: requiredCheckIns,
     };
 
     createChallenge(challengeData)
@@ -260,7 +285,7 @@ const CreateChallengeForm = ({
               )}
             />
 
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="startDate"
@@ -333,82 +358,57 @@ const CreateChallengeForm = ({
                   );
                 }}
               />
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="duration"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-700 dark:text-gray-200">
-                        Duration (days)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min={1}
-                          max={31}
-                          className=" bg-white dark:bg-slate-800/30 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white p-6 "
-                          placeholder="e.g. 7"
-                          {...field}
-                          onChange={(e) => {
-                            const val = e.target.value.replace(/^0+/, "");
-                            field.onChange(val === "" ? "" : Number(val));
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-red-500" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="maxParticipants"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-700 dark:text-gray-200">
-                        Max Participants
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min={2}
-                          max={20}
-                          className=" bg-white  border-gray-300 dark:bg-slate-800/30 dark:border-slate-800 text-gray-800 dark:text-white  p-6 "
-                          placeholder="e.g. 10"
-                          {...field}
-                          onChange={(e) => {
-                            const val = e.target.value.replace(/^0+/, "");
-                            field.onChange(val === "" ? "" : Number(val));
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-red-500" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              {Number(form.watch("duration")) > 31 && (
-                <div className="text-red-500 text-sm mt-1">
-                  Duration cannot exceed 31 days.
-                </div>
-              )}
-              {Number(form.watch("maxParticipants")) > 20 && (
-                <div className="text-red-500 text-sm mt-1">
-                  Max participants cannot exceed 20.
-                </div>
-              )}
+
+              <FormField
+                control={form.control}
+                name="maxParticipants"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 dark:text-gray-200">
+                      Max Participants
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={20}
+                        className=" bg-white  border-gray-300 dark:bg-slate-800/30 dark:border-slate-800 text-gray-800 dark:text-white  p-6 "
+                        placeholder="e.g. 10"
+                        {...field}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/^0+/, "");
+                          field.onChange(val === "" ? "" : Number(val));
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
             </div>
+            {Number(form.watch("duration")) > 31 && (
+              <div className="text-red-500 text-sm mt-1">
+                Duration cannot exceed 31 days.
+              </div>
+            )}
+            {Number(form.watch("maxParticipants")) > 20 && (
+              <div className="text-red-500 text-sm mt-1">
+                Max participants cannot exceed 20.
+              </div>
+            )}
+
+            {/* Frequency */}
             <FormField
               control={form.control}
               name="frequencyType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 dark:text-gray-600 text-center justify-center">
+                  <FormLabel className="text-gray-700 dark:text-gray-600">
                     SweatCheck Frequency
                   </FormLabel>
                   <FormControl>
-                    <div className="flex flex-row justify-between ">
-                      {/* Daily Option */}
+                    <div className="space-y-2 grid grid-cols-2 gap-4">
+                      {/* DAILY */}
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
@@ -416,52 +416,126 @@ const CreateChallengeForm = ({
                           checked={field.value === "DAILY"}
                           onChange={() => {
                             field.onChange("DAILY");
-                            form.setValue("checkInsPerWeek", undefined);
-                            form.clearErrors("checkInsPerWeek"); // Clear any validation errors
+                            form.setValue("checkInsPerWeek", undefined, {
+                              shouldValidate: true,
+                            });
                           }}
                           className="w-4 h-4 accent-pink-500"
                         />
                         <span className="text-gray-800 dark:text-gray-200 font-medium">
-                          Every Day
+                          Daily
                         </span>
                       </label>
 
-                      {/* Custom Option (with inline input always visible) */}
+                      {/* WEEKLY */}
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
                           value="WEEKLY"
                           checked={field.value === "WEEKLY"}
-                          onChange={() => {
-                            field.onChange("WEEKLY");
-                            // Don't clear the value when switching to WEEKLY, let user enter it
-                          }}
+                          onChange={() => field.onChange("WEEKLY")}
                           className="w-4 h-4 accent-violet-500"
                         />
-
-                        <Input
-                          type="number"
-                          min={1}
-                          max={7}
-                          placeholder=""
-                          className="w-20 bg-white dark:bg-slate-800/30 
-                         border-gray-300 dark:border-slate-800 
-                         text-gray-800 dark:text-white rounded-lg p-2 text-sm"
-                          {...form.register("checkInsPerWeek", {
-                            valueAsNumber: true,
-                          })}
-                          disabled={field.value === "DAILY"} // Disable input when Daily is selected
-                        />
                         <span className="text-gray-800 dark:text-gray-200 font-medium">
-                          Per Week
+                          Weekly
                         </span>
                       </label>
                     </div>
                   </FormControl>
-                  <FormMessage className="text-red-500" />
+                  <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Duration: switch UI based on frequency */}
+            {freq === "DAILY" ? (
+              <FormField
+                control={form.control}
+                name="duration"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 dark:text-gray-200">
+                      Duration (days)
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={31}
+                        placeholder="e.g. 7"
+                        className="bg-white dark:bg-slate-800/30 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white p-6"
+                        {...field}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/^0+/, "");
+                          field.onChange(v === "" ? "" : Number(v));
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              <FormItem>
+                <FormLabel className="text-gray-700 dark:text-gray-200">
+                  Duration (weeks)
+                </FormLabel>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    min={2}
+                    max={4}
+                    className="w-24 bg-white dark:bg-slate-800/30 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white rounded-lg p-2 text-sm"
+                    value={currentWeeks}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/^0+/, "");
+                      const weeks = raw === "" ? NaN : Number(raw);
+                      const clamped = Number.isFinite(weeks)
+                        ? Math.max(2, Math.min(weeks, 4))
+                        : 2;
+                      form.setValue("duration", clamped * 7, {
+                        shouldValidate: true,
+                      });
+                    }}
+                  />
+                  <span className="text-xs text-gray-600 dark:text-gray-400">
+                    *Weekly challenge must be at least 14 weeks long
+                  </span>
+                </div>
+
+                <FormMessage />
+              </FormItem>
+            )}
+
+            {/* Check-ins per week (only for WEEKLY) */}
+            {freq === "WEEKLY" && (
+              <FormField
+                control={form.control}
+                name="checkInsPerWeek"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 dark:text-gray-200">
+                      Check-ins per week
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={7}
+                        placeholder="e.g. 3"
+                        className="w-24 bg-white dark:bg-slate-800/30 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white rounded-lg p-2 text-sm"
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/^0+/, "");
+                          field.onChange(v === "" ? undefined : Number(v));
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
