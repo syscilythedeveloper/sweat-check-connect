@@ -24,7 +24,7 @@ const ChallengesPage = () => {
 
   const [newChallenges, setNewChallenges] = useState<Challenge[]>([]);
   const [activeChallenges, setActiveChallenges] = useState<Challenge[]>([]);
-  const [pastChallenges, setPastChallenges] = useState<Challenge[]>([]);
+  const [createdChallenges, setCreatedChallenges] = useState<Challenge[]>([]);
   const handleChallengeJoined = (joinedChallenge: Challenge) => {
     // Remove from newChallenges
     setNewChallenges((prev) => prev.filter((c) => c.id !== joinedChallenge.id));
@@ -43,6 +43,21 @@ const ChallengesPage = () => {
     setNewChallenges((prev) => [...prev, leftChallenge]);
   };
 
+  const handleChallengeCreated = (createdChallenge: Challenge) => {
+    // Add to createdChallenges (since creator becomes participant)
+    setCreatedChallenges((prev) => [createdChallenge, ...prev]);
+
+    // Optionally switch to "My Challenges" tab
+    setActiveTab(ChallengeType.CREATED);
+  };
+
+  const handleChallengeDeleted = (deletedChallenge: Challenge) => {
+    // Remove from createdChallenges
+    setCreatedChallenges((prev) =>
+      prev.filter((c) => c.id !== deletedChallenge.id)
+    );
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -57,12 +72,12 @@ const ChallengesPage = () => {
           fetchedChallengeData.newChallenges,
           "Current Challenges: ",
           fetchedChallengeData.currentChallenges,
-          "Past Challenges: ",
-          fetchedChallengeData.pastChallenges
+          "Created Challenges: ",
+          fetchedChallengeData.createdChallenges
         );
         setNewChallenges(fetchedChallengeData.newChallenges);
         setActiveChallenges(fetchedChallengeData.currentChallenges);
-        setPastChallenges(fetchedChallengeData.pastChallenges);
+        setCreatedChallenges(fetchedChallengeData.createdChallenges);
       });
     }
   }, [mounted]);
@@ -75,12 +90,12 @@ const ChallengesPage = () => {
   } else if (activeTab === ChallengeType.JOINED) {
     displayedChallenges = activeChallenges;
     challengeType = ChallengeType.JOINED;
-  } else if (activeTab === ChallengeType.PAST) {
-    displayedChallenges = pastChallenges;
-    challengeType = ChallengeType.PAST;
+  } else if (activeTab === ChallengeType.CREATED) {
+    displayedChallenges = createdChallenges;
+    challengeType = ChallengeType.CREATED;
   }
 
-  if (isLoading || !mounted) {
+  if (!mounted) {
     return <div className="p-6">Loading...</div>;
   }
 
@@ -110,14 +125,14 @@ const ChallengesPage = () => {
                 tab: ChallengeType.DISCOVER,
               },
               {
-                label: "Active",
+                label: "Joined",
                 tab: ChallengeType.JOINED,
                 count: activeChallenges.length,
               },
               {
-                label: "Past",
-                tab: ChallengeType.PAST,
-                count: pastChallenges.length,
+                label: "My Challenges",
+                tab: ChallengeType.CREATED,
+                count: createdChallenges.length,
               },
             ].map(({ label, tab, count }) => (
               <button
@@ -148,7 +163,10 @@ const ChallengesPage = () => {
               </h2>
             </div>
             <div className="p-4">
-              <CreateChallengeForm setShowCreateForm={setShowCreateForm} />
+              <CreateChallengeForm
+                setShowCreateForm={setShowCreateForm}
+                onChallengeCreated={handleChallengeCreated}
+              />
             </div>
           </div>
         </div>
@@ -161,6 +179,7 @@ const ChallengesPage = () => {
             challengeType={challengeType}
             onChallengeJoined={handleChallengeJoined}
             onChallengeLeft={handleChallengeLeft}
+            onChallengeDeleted={handleChallengeDeleted}
           />
         </div>
       </div>

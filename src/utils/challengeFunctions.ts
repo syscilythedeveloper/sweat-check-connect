@@ -58,6 +58,20 @@ export const leaveChallenge = async (challengeId: string) => {
   }
   return response.json();
 };
+export const deleteChallenge = async (challengeId: string) => {
+  const response = await fetch(`/api/challenges`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ challengeId }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete challenge");
+  }
+  return response.json();
+};
 
 export function calculateDaysUntilStart(startDate: Date) {
   const today = new Date();

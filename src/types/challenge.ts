@@ -8,13 +8,13 @@ export interface ChallengeData {
   maxParticipants: number;
   creatorId: string;
   requiredCheckIns: number;
-  tags?: string[]
+  tags?: string[];
 }
 
 export enum ChallengeType {
   DISCOVER = "discover",
   JOINED = "joined",
-  PAST = "past",
+  CREATED = "created",
 }
 
 export interface ChallengeCardProps {

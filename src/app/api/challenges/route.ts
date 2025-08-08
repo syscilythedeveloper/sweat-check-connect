@@ -12,12 +12,12 @@ export async function GET(request: NextRequest) {
     console.log("Signed-in user ID:", signedInUserId);
     const newChallenges = await getNewChallenges(signedInUserId);
     const userChallenges = await getUserChallenges(signedInUserId);
-    const [currentChallenges, pastChallenges] = userChallenges;
+    const [currentChallenges, createdChallenges] = userChallenges;
 
     return NextResponse.json({
       newChallenges,
       currentChallenges,
-      pastChallenges,
+      createdChallenges,
     });
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -117,26 +117,20 @@ async function getUserChallenges(userId: string) {
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + challenge.duration - 1);
 
-    return endDate >= todaysDate;
+    // Only include challenges that are still active AND user didn't create
+    return endDate >= todaysDate && challenge.createdById !== userId;
   });
 
   console.log("Found in-progress challenges:", inProgressChallenges.length);
 
-  const pastChallenges = userChallenges.filter((challenge) => {
-    // Calculate end date: endDate = startDate + duration - 1
-    const startDate = new Date(challenge.startDate);
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + challenge.duration);
-
-    // If endDate < today, it's in the past
-    return endDate < todaysDate;
-    // Or use isBefore(endDate, todaysDate) if using date-fns
+  const createdChallenges = userChallenges.filter((challenge) => {
+    return challenge.createdById === userId;
   });
 
-  console.log("Found past challenges:", pastChallenges.length);
+  console.log("Found past challenges:", createdChallenges.length);
 
   console.log("Found challenges:", userChallenges.length);
-  return [inProgressChallenges, pastChallenges];
+  return [inProgressChallenges, createdChallenges];
 }
 
 export async function POST(request: NextRequest) {
@@ -216,6 +210,66 @@ export async function POST(request: NextRequest) {
     console.error("Error creating challenge:", error);
     return NextResponse.json(
       { error: "Failed to create challenge" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { userId: signedInUserId } = getAuth(request);
+    if (!signedInUserId) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    const { challengeId } = await request.json();
+    console.log("API Request Received: Deleting challenge", challengeId);
+
+    // Check if the challenge exists and the user is authorized to delete it
+    const challenge = await prisma.challenge.findUnique({
+      where: {
+        id: challengeId,
+        createdById: signedInUserId,
+      },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!challenge) {
+      return NextResponse.json(
+        {
+          error:
+            "Challenge not found or you don't have permission to delete it",
+        },
+        { status: 404 }
+      );
+    }
+
+    // Delete all participants first (to avoid foreign key constraint)
+    await prisma.userChallenge.deleteMany({
+      where: { challengeId: challengeId },
+    });
+
+    // Then delete the challenge
+    await prisma.challenge.delete({
+      where: { id: challengeId },
+    });
+
+    console.log("Challenge deleted successfully:", challengeId);
+
+    return NextResponse.json(
+      { success: true, message: "Challenge deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting challenge:", error);
+    return NextResponse.json(
+      { error: "Failed to delete challenge" },
       { status: 500 }
     );
   }

@@ -22,7 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChallengeData } from "@/types/challenge";
+import { ChallengeData, Challenge } from "@/types/challenge";
 import { createChallenge } from "@/utils/challengeFunctions";
 import React from "react";
 import { useUser } from "@clerk/nextjs";
@@ -110,10 +110,10 @@ const calculateEndDate = (startDate: string, duration: number): string => {
 type FormData = z.infer<typeof formSchema>;
 const MAX_TAGS = 5;
 
-type CreateChallengeFormProps = {
+interface CreateChallengeFormProps {
   setShowCreateForm?: (show: boolean) => void;
-  onChallengeCreated?: (challenge: ChallengeData) => void;
-};
+  onChallengeCreated?: (challenge: Challenge) => void;
+}
 
 const CreateChallengeForm = ({
   setShowCreateForm,

@@ -12,6 +12,7 @@ import {
   leaveChallenge,
   calculateDaysUntilStart,
   calculateCurrentDay,
+  deleteChallenge,
 } from "@/utils/challengeFunctions";
 import { GiOnTarget } from "react-icons/gi";
 
@@ -27,11 +28,13 @@ const ChallengeCard = ({
   challengeType,
   onChallengeJoined,
   onChallengeLeft,
+  onChallengeDeleted,
 }: {
   challenge: Challenge;
   challengeType: ChallengeType;
   onChallengeJoined?: (challenge: Challenge) => void;
   onChallengeLeft?: (challenge: Challenge) => void;
+  onChallengeDeleted?: (challenge: Challenge) => void;
 }) => {
   const {
     title,
@@ -52,7 +55,9 @@ const ChallengeCard = ({
   const [isJoining, setIsJoining] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [hasLeft, setHasLeft] = useState(false);
+  const [hasDeleted, setHasDeleted] = useState(false);
 
   const handleViewDetails = () => {
     router.push(`/challenges/${challenge.id}`);
@@ -100,6 +105,28 @@ const ChallengeCard = ({
       })
       .finally(() => {
         setIsLeaving(false);
+      });
+  };
+  const handleDeleteChallenge = () => {
+    setIsDeleting(true);
+    deleteChallenge(challenge.id)
+      .then(() => {
+        toast.success(`Successfully deleted "${challenge.title}"!`, {
+          duration: 3000,
+          position: "top-center",
+        });
+        setHasDeleted(true);
+        onChallengeDeleted?.(challenge);
+      })
+      .catch((error) => {
+        console.error("Error deleting challenge:", error);
+        toast.error("Failed to delete challenge. Please try again.", {
+          duration: 3000,
+          position: "top-center",
+        });
+      })
+      .finally(() => {
+        setIsDeleting(false);
       });
   };
 
@@ -156,40 +183,26 @@ const ChallengeCard = ({
 
           {/* Challenge Status */}
           <div className="my-6 flex items-center gap-2 justify-center">
-            {challengeType !== ChallengeType.PAST && (
+            {startDateObj > new Date() ? (
               <>
-                {startDateObj > new Date() ? (
-                  <>
-                    <div
-                      className={
-                        "h-2 w-2 rounded-full animate-pulse bg-yellow-500"
-                      }
-                    />
+                <div
+                  className={"h-2 w-2 rounded-full animate-pulse bg-yellow-500"}
+                />
 
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Starts in {daysUntilStart} days
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex flex-col items-center gap-2 w-full">
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        Day {currentDay} of {duration}
-                      </div>
-                      <Progress
-                        value={(currentDay / duration) * 100}
-                        className="h-3 bg-gray-200 dark:bg-gray-700"
-                      />
-                    </div>
-                  </>
-                )}
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  Starts in {daysUntilStart} days
+                </div>
               </>
-            )}
-            {challengeType === ChallengeType.PAST && (
+            ) : (
               <>
-                <div className="h-2 w-2 rounded-full bg-gray-500" />
-                <div className="text-xs text-gray-600 dark:text-gray-400">
-                  Challenge Completed
+                <div className="flex flex-col items-center gap-2 w-full">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    Day {currentDay} of {duration}
+                  </div>
+                  <Progress
+                    value={(currentDay / duration) * 100}
+                    className="h-3 bg-gray-200 dark:bg-gray-700"
+                  />
                 </div>
               </>
             )}
@@ -214,7 +227,7 @@ const ChallengeCard = ({
 
         {/* Card Footer - Discover Mode */}
         <div className="px-6 py-2 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-100 dark:border-slate-600 flex justify-center items-center">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 w-full">
             {challengeType === ChallengeType.DISCOVER && (
               <Button
                 variant="outline"
@@ -250,8 +263,28 @@ const ChallengeCard = ({
                 </Button>
               </>
             )}
-            {challengeType === ChallengeType.PAST && (
-              <p> Challenge Completed On</p>
+            {challengeType === ChallengeType.CREATED && (
+              <>
+                <Button
+                  variant="destructive"
+                  onClick={handleDeleteChallenge}
+                  disabled={isDeleting || hasDeleted}
+                  className="text-[8px]"
+                >
+                  {isDeleting
+                    ? "Deleting..."
+                    : hasDeleted
+                    ? "Deleted!"
+                    : "Delete"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={handleViewDetails}
+                  className="flex-1 text-xs text-blue-500 hover:text-blue-600 dark:text-blue-100 dark:hover:text-blue-500 hover:underline hover:bg-transparent"
+                >
+                  View Challenge Details
+                </Button>
+              </>
             )}
           </div>
         </div>
