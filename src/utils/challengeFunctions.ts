@@ -1,8 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChallengeData } from "@/types/challenge";
+import { ChallengeData } from "../types/challenge";
 
-export const fetchChallengeData = async () => {
+export const fetchChallengesData = async () => {
   const response = await fetch(`/api/challenges`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch challenge data");
+  }
+
+  return response.json();
+};
+export const fetchChallengeData = async (challengeId: string) => {
+  const response = await fetch(`/api/challenges/${challengeId}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch challenge data");

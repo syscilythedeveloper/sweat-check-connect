@@ -140,45 +140,78 @@ async function getUserChallenges(userId: string) {
 }
 
 export async function POST(request: NextRequest) {
-  /*Sample dayta for weekly challenges
-    title: '567890',
-  description: 'erdcfvgbhnpjkm,l',
-  startDate: '08/09/2025',
-  duration: 28,
-  maxParticipants: 3,
-  frequencyType: 'WEEKLY',
-  checkInsPerWeek: 4,
-  creatorId: 'user_30yfee8QNG1XXZc1JhpWgvPsKf0',
-  requiredCheckIns: 16
-}
- POST /api/challenges 200 in 2353ms
- {
-  title: 'fvgbhljnkm',
-  description: 'fghjnkmdad',
-  startDate: '08/10/2025',
-  duration: 20,
-  maxParticipants: 3,
-  frequencyType: 'DAILY',
-  creatorId: 'user_30yfee8QNG1XXZc1JhpWgvPsKf0',
-  requiredCheckIns: 20
-}
-
-
-  */
   try {
     const { userId: signedInUserId } = getAuth(request);
     if (!signedInUserId) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const newChallenge = await request.json();
+    const challengeData = await request.json();
 
     console.log(
       "API Request Received: Creating challenge with data:",
-      newChallenge
+      challengeData
     );
+    const [month, day, year] = challengeData.startDate.split("/").map(Number);
+    const startDate = new Date(year, month - 1, day); // month is 0-indexed
 
-    return new NextResponse(newChallenge);
+    // Create the challenge in the database
+    const createdChallenge = await prisma.challenge.create({
+      data: {
+        title: challengeData.title,
+        description: challengeData.description,
+        startDate: startDate,
+        duration: challengeData.duration,
+        maxParticipants: challengeData.maxParticipants,
+        requiredCheckIns: challengeData.requiredCheckIns,
+        tags: challengeData.tags || [],
+        createdById: signedInUserId,
+        totalCheckIns: 0,
+        // Automatically add the creator as a participant
+        participants: {
+          create: {
+            userId: signedInUserId,
+            joinedAt: new Date(),
+          },
+        },
+      },
+      include: {
+        createdBy: {
+          select: {
+            username: true,
+            name: true,
+            avatar: true,
+          },
+        },
+        participants: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                name: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            participants: true,
+          },
+        },
+      },
+    });
+
+    console.log("Challenge created successfully:", createdChallenge.id);
+
+    return NextResponse.json(
+      {
+        success: true,
+        challenge: createdChallenge,
+        message: "Challenge created and you've been added as a participant!",
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Error creating challenge:", error);
     return NextResponse.json(
@@ -186,8 +219,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-  return NextResponse.json(
-    { message: "Challenge created successfully" },
-    { status: 200 }
-  );
 }

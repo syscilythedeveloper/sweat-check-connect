@@ -3,13 +3,14 @@ import React, { useState, useEffect } from "react";
 
 //import { useUser } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
-import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
+//import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
+import CreateChallengeForm from "../../components/Challenges/CreateChallengeForm";
 
-import { Challenge } from "@/types/challenge";
+import { Challenge, ChallengeType } from "../../types/challenge";
 
-import { fetchChallengeData } from "@/utils/challengeFunctions";
-import { ChallengeType } from "@/types/challenge";
-import ChallengeFeed from "@/components/Challenges/ChallengeFeed";
+import { fetchChallengesData } from "../../utils/challengeFunctions";
+
+import ChallengeFeed from "../../components/Challenges/ChallengeFeed";
 
 const ChallengesPage = () => {
   const [mounted, setMounted] = useState(false);
@@ -49,7 +50,7 @@ const ChallengesPage = () => {
   useEffect(() => {
     if (mounted) {
       setIsLoading(true);
-      Promise.all([fetchChallengeData()]).then(([fetchedChallengeData]) => {
+      Promise.all([fetchChallengesData()]).then(([fetchedChallengeData]) => {
         setIsLoading(false);
         console.log(
           "New Challenges: ",

@@ -8,6 +8,7 @@ export interface ChallengeData {
   maxParticipants: number;
   creatorId: string;
   requiredCheckIns: number;
+  tags?: string[]
 }
 
 export enum ChallengeType {

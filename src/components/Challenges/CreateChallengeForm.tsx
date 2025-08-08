@@ -112,10 +112,12 @@ const MAX_TAGS = 5;
 
 type CreateChallengeFormProps = {
   setShowCreateForm?: (show: boolean) => void;
+  onChallengeCreated?: (challenge: ChallengeData) => void;
 };
 
 const CreateChallengeForm = ({
   setShowCreateForm,
+  onChallengeCreated,
 }: CreateChallengeFormProps) => {
   const { user } = useUser();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -186,7 +188,7 @@ const CreateChallengeForm = ({
       return;
     }
     if (tags.length > MAX_TAGS) {
-      setTagError("Maximum of 3 tags allowed");
+      setTagError(`Maximum of ${MAX_TAGS} tags allowed`);
       return;
     }
     const requiredCheckIns = getRequiredCheckIns(
@@ -200,8 +202,8 @@ const CreateChallengeForm = ({
 
     const challengeData: ChallengeData = {
       ...formData,
-
-      // calculated here
+      // Include tags from component state
+      tags: tags,
       creatorId: user.id,
       requiredCheckIns: requiredCheckIns,
     };
@@ -209,22 +211,29 @@ const CreateChallengeForm = ({
     createChallenge(challengeData)
       .then((response) => {
         if (response.ok) {
-          const result = response.json();
-
-          console.log("Challenge created:", result);
-          toast.success(
-            `Challenge "${challengeData.title}" created successfully!`
-          );
-
-          form.reset();
-          if (setShowCreateForm) setShowCreateForm(false); // Close modal on submit
+          return response.json(); // Add return here
         } else {
-          alert("Failed to create challenge. Please try again.");
+          throw new Error("Failed to create challenge. Please try again.");
         }
+      })
+      .then((result) => {
+        console.log("Challenge created:", result);
+        toast.success(
+          `Challenge "${challengeData.title}" created successfully!`
+        );
+
+        // Call the callback with the created challenge
+        if (onChallengeCreated && result.challenge) {
+          onChallengeCreated(result.challenge);
+        }
+
+        form.reset();
+        setTags([]); // Reset tags state
+        if (setShowCreateForm) setShowCreateForm(false);
       })
       .catch((error) => {
         console.error("Error creating challenge:", error);
-        alert("An error occurred while creating the challenge.");
+        toast.error("An error occurred while creating the challenge.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -499,7 +508,7 @@ const CreateChallengeForm = ({
                     }}
                   />
                   <span className="text-xs text-gray-600 dark:text-gray-400">
-                    *Weekly challenge must be at least 14 weeks long
+                    *Weekly challenge must be at least 2 weeks long
                   </span>
                 </div>
 
