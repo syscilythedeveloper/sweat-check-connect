@@ -63,7 +63,11 @@ const formSchema = z
       .max(20, {
         message: "Maximum participants cannot exceed 20.",
       }),
-    tags: z.array(z.enum(["cardio", "weight", "glute"])).optional(),
+    tags: z
+      .array(
+        z.enum(["cardio", "weight", "glute", "strength", "yoga", "running"])
+      )
+      .optional(),
     frequencyType: z.enum(["DAILY", "WEEKLY"]),
     checkInsPerWeek: z.number().optional(),
   })
@@ -101,7 +105,7 @@ const calculateEndDate = (startDate: string, duration: number): string => {
 };
 
 type FormData = z.infer<typeof formSchema>;
-const MAX_TAGS = 3;
+const MAX_TAGS = 5;
 
 type CreateChallengeFormProps = {
   setShowCreateForm?: (show: boolean) => void;
@@ -138,7 +142,7 @@ const CreateChallengeForm = ({
     if ((e.key === "Enter" || e.key === ",") && tagInput.trim()) {
       e.preventDefault();
       if (tags.length >= MAX_TAGS) {
-        setTagError("Maximum of 3 tags allowed");
+        setTagError(`Maximum of ${MAX_TAGS} tags allowed`);
         return;
       }
       const newTag = tagInput.trim().replace(/,$/, "");
@@ -203,7 +207,7 @@ const CreateChallengeForm = ({
   };
 
   return (
-    <div className="w-full ">
+    <div className="w-full p-2 pb-20">
       {isLoading && (
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-purple-500"></div>
@@ -213,7 +217,7 @@ const CreateChallengeForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6 bg-white dark:bg-blue-800/15 shadow-lg p-6"
+            className="space-y-4 bg-white dark:bg-blue-800/15 shadow-lg p-4"
           >
             <FormField
               control={form.control}
@@ -225,7 +229,7 @@ const CreateChallengeForm = ({
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className=" bg-white dark:bg-slate-800/15 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white p-6"
+                      className=" bg-white dark:bg-slate-800/15 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white p-6 text-sm"
                       placeholder="e.g. 30-Day Plank Challenge"
                       {...field}
                     />
@@ -245,7 +249,7 @@ const CreateChallengeForm = ({
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      className="resize-none  bg-white dark:bg-slate-800/15 border-gray-300  dark:border-slate-800 text-gray-800 dark:text-white p-6 "
+                      className="resize-none  bg-white dark:bg-slate-800/15 border-gray-300  dark:border-slate-800 text-gray-800 dark:text-white p-6 text-sm "
                       placeholder="Describe the challenge goals, rules, etc."
                       rows={4}
                       {...field}
@@ -287,7 +291,7 @@ const CreateChallengeForm = ({
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent
-                          className="w-auto overflow-hidden p-0"
+                          className="w-auto overflow-hidden p-0 border-2 dark:border-blue-950/50"
                           align="start"
                         >
                           <Calendar
@@ -343,7 +347,7 @@ const CreateChallengeForm = ({
                           type="number"
                           min={1}
                           max={31}
-                          className=" bg-white dark:bg-slate-800/30 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white rounded-2xl p-6 "
+                          className=" bg-white dark:bg-slate-800/30 border-gray-300 dark:border-slate-800 text-gray-800 dark:text-white p-6 "
                           placeholder="e.g. 7"
                           {...field}
                           onChange={(e) => {
@@ -399,11 +403,11 @@ const CreateChallengeForm = ({
               name="frequencyType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 dark:text-gray-200">
-                    Frequency
+                  <FormLabel className="text-gray-700 dark:text-gray-600 text-center justify-center">
+                    SweatCheck Frequency
                   </FormLabel>
                   <FormControl>
-                    <div className="flex flex-col gap-3">
+                    <div className="flex flex-row justify-between ">
                       {/* Daily Option */}
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -413,11 +417,12 @@ const CreateChallengeForm = ({
                           onChange={() => {
                             field.onChange("DAILY");
                             form.setValue("checkInsPerWeek", undefined);
+                            form.clearErrors("checkInsPerWeek"); // Clear any validation errors
                           }}
                           className="w-4 h-4 accent-pink-500"
                         />
                         <span className="text-gray-800 dark:text-gray-200 font-medium">
-                          Daily
+                          Every Day
                         </span>
                       </label>
 
@@ -427,25 +432,29 @@ const CreateChallengeForm = ({
                           type="radio"
                           value="WEEKLY"
                           checked={field.value === "WEEKLY"}
-                          onChange={() => field.onChange("WEEKLY")}
+                          onChange={() => {
+                            field.onChange("WEEKLY");
+                            // Don't clear the value when switching to WEEKLY, let user enter it
+                          }}
                           className="w-4 h-4 accent-violet-500"
                         />
-                        <span className="text-gray-800 dark:text-gray-200 font-medium">
-                          Custom:
-                        </span>
 
                         <Input
                           type="number"
                           min={1}
                           max={7}
-                          placeholder="Days"
+                          placeholder=""
                           className="w-20 bg-white dark:bg-slate-800/30 
                          border-gray-300 dark:border-slate-800 
                          text-gray-800 dark:text-white rounded-lg p-2 text-sm"
                           {...form.register("checkInsPerWeek", {
                             valueAsNumber: true,
                           })}
+                          disabled={field.value === "DAILY"} // Disable input when Daily is selected
                         />
+                        <span className="text-gray-800 dark:text-gray-200 font-medium">
+                          Per Week
+                        </span>
                       </label>
                     </div>
                   </FormControl>
@@ -459,41 +468,109 @@ const CreateChallengeForm = ({
               name="tags"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 dark:text-gray-200">
+                  <FormLabel className="text-gray-700 dark:text-gray-200 text-sm">
                     Tags (optional)
                   </FormLabel>
                   <FormControl>
-                    <div className="flex flex-wrap items-center gap-2 bg-transparent rounded-xl min-h-[48px] px-3 py-2 border border-gray-300 dark:border-slate-600 focus-within:ring-2 focus-within:ring-violet-500 transition">
-                      {tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="flex items-center gap-1 px-3 py-1 rounded-full bg-violet-600/20 text-violet-300 text-sm font-medium"
-                        >
-                          {tag}
+                    <div className="space-y-3">
+                      {/* Predefined Tag Buttons */}
+                      <div className="flex flex-wrap gap-2 text-xs">
+                        {[
+                          "cardio",
+                          "weight",
+                          "glute",
+                          "strength",
+                          "yoga",
+                          "running",
+                        ].map((predefinedTag) => (
                           <button
+                            key={predefinedTag}
                             type="button"
-                            className="ml-1 focus:outline-none group"
-                            tabIndex={-1}
-                            onClick={() => removeTag(tag)}
+                            onClick={() => {
+                              if (tags.includes(predefinedTag)) {
+                                // Remove tag if already selected
+                                setTags(
+                                  tags.filter((t) => t !== predefinedTag)
+                                );
+                              } else if (tags.length < MAX_TAGS) {
+                                setTags([...tags, predefinedTag]);
+                              } else {
+                                setTagError("Maximum of 3 tags allowed");
+                              }
+                            }}
+                            className={`px-3 py-2 rounded-full text-sm font-medium transition-all ${
+                              tags.includes(predefinedTag)
+                                ? "bg-violet-600 text-white shadow-md"
+                                : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600"
+                            }`}
                           >
-                            <X className="w-4 h-4 text-violet-400 group-hover:text-violet-500 transition-colors" />
+                            {predefinedTag}
+                            {tags.includes(predefinedTag) && (
+                              <span className="ml-1">✓</span>
+                            )}
                           </button>
-                        </span>
-                      ))}
-                      {tags.length < MAX_TAGS && (
+                        ))}
+                      </div>
+
+                      {/* Custom Tag Input with Add Button */}
+                      <div className="flex gap-2">
                         <input
                           type="text"
                           value={tagInput}
                           onChange={handleTagInput}
                           onKeyDown={handleTagKeyDown}
-                          className="bg-transparent outline-none border-none text-violet-300 placeholder-violet-400 flex-1 min-w-[80px] py-1 px-2 text-sm"
-                          placeholder={
-                            tags.length === 0
-                              ? "Add a tag and press Enter or Comma"
-                              : ""
-                          }
+                          className="flex-1 bg-white dark:bg-slate-800/30 border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                          placeholder="Custom tag..."
                           disabled={tags.length >= MAX_TAGS}
                         />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newTag = tagInput.trim();
+                            if (
+                              newTag &&
+                              !tags.includes(newTag) &&
+                              tags.length < MAX_TAGS
+                            ) {
+                              setTags([...tags, newTag]);
+                              setTagInput("");
+                              setTagError("");
+                            } else if (tags.length >= MAX_TAGS) {
+                              setTagError("Maximum of 3 tags allowed");
+                            }
+                          }}
+                          disabled={!tagInput.trim() || tags.length >= MAX_TAGS}
+                          className="px-4 py-2 bg-violet-600 dark:bg-blue-950 text-white rounded-lg text-sm font-medium disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-violet-700 transition-colors"
+                        >
+                          Add
+                        </button>
+                      </div>
+
+                      {/* Selected Tags Display */}
+                      {tags.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Selected ({tags.length}/{MAX_TAGS}):
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className="flex items-center gap-2 px-3 py-2 rounded-full bg-violet-600/20 text-violet-700 dark:text-violet-300 text-sm font-medium border border-violet-300 dark:border-violet-600"
+                              >
+                                {tag}
+                                <button
+                                  type="button"
+                                  onClick={() => removeTag(tag)}
+                                  className="flex items-center justify-center w-5 h-5 rounded-full bg-violet-600/30 hover:bg-violet-600/50 transition-colors"
+                                  aria-label={`Remove ${tag} tag`}
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   </FormControl>
