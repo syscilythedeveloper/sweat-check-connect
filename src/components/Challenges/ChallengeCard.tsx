@@ -26,10 +26,12 @@ const ChallengeCard = ({
   challenge,
   challengeType,
   onChallengeJoined,
+  onChallengeLeft,
 }: {
   challenge: Challenge;
   challengeType: ChallengeType;
   onChallengeJoined?: (challenge: Challenge) => void;
+  onChallengeLeft?: (challenge: Challenge) => void;
 }) => {
   const {
     title,
@@ -60,7 +62,7 @@ const ChallengeCard = ({
 
     joinChallenge(challenge.id)
       .then(() => {
-        toast.success(`Successfully joined "${title}"!`, {
+        toast.success(`Successfully joined "${challenge.title}"!`, {
           duration: 3000,
           position: "top-center",
         });
@@ -82,11 +84,12 @@ const ChallengeCard = ({
     setIsLeaving(true);
     leaveChallenge(challenge.id)
       .then(() => {
-        toast.success(`Successfully left "${title}"!`, {
+        toast.success(`Successfully left "${challenge.title}"!`, {
           duration: 3000,
           position: "top-center",
         });
         setHasLeft(true);
+        onChallengeLeft?.(challenge);
       })
       .catch((error) => {
         console.error("Error leaving challenge:", error);

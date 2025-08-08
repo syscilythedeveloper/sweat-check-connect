@@ -9,6 +9,7 @@ interface ChallengeFeedProps {
   isLoading?: boolean;
   challengeType: ChallengeType;
   onChallengeJoined?: (challenge: Challenge) => void;
+  onChallengeLeft?: (challenge: Challenge) => void;
 }
 
 const ChallengeFeed: React.FC<ChallengeFeedProps> = ({
@@ -16,6 +17,7 @@ const ChallengeFeed: React.FC<ChallengeFeedProps> = ({
   isLoading,
   challengeType,
   onChallengeJoined,
+  onChallengeLeft,
 }) => (
   <div>
     {/* Sticky search bar */}
@@ -41,6 +43,7 @@ const ChallengeFeed: React.FC<ChallengeFeedProps> = ({
             challenge={challenge}
             challengeType={challengeType}
             onChallengeJoined={onChallengeJoined}
+            onChallengeLeft={onChallengeLeft}
           />
         ))
       ) : (

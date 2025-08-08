@@ -5,9 +5,9 @@ export interface ChallengeData {
   description: string;
   duration: number;
   startDate: string;
-  maxParticipants?: number;
+  maxParticipants: number;
   creatorId: string;
-  requiredCheckIns: number
+  requiredCheckIns: number;
 }
 
 export enum ChallengeType {

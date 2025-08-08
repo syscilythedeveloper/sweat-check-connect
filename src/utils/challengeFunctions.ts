@@ -36,8 +36,18 @@ export const joinChallenge = async (challengeId: string) => {
   return response.json();
 };
 export const leaveChallenge = async (challengeId: string) => {
-  console.log(`Leaving challenge ${challengeId}`);
-  return "Challenge left successfully";
+  const response = await fetch(`/api/challenges/join`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ challengeId }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to join challenge");
+  }
+  return response.json();
 };
 
 export function calculateDaysUntilStart(startDate: Date) {

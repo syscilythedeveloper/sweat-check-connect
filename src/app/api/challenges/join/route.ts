@@ -82,3 +82,59 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    // Get signed-in userId from Clerk
+    const { userId: signedInUserId } = getAuth(request);
+    if (!signedInUserId) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    const { challengeId } = await request.json();
+    if (!challengeId) {
+      return NextResponse.json(
+        { error: "Missing challengeId" },
+        { status: 400 }
+      );
+    }
+
+    // Check if user is currently in the challenge
+    const existing = await prisma.userChallenge.findUnique({
+      where: {
+        userId_challengeId: {
+          userId: signedInUserId,
+          challengeId: challengeId,
+        },
+      },
+    });
+
+    if (!existing) {
+      return NextResponse.json(
+        { message: "You are not part of this challenge." },
+        { status: 200 }
+      );
+    }
+
+    // Remove the participant
+    await prisma.userChallenge.delete({
+      where: {
+        userId_challengeId: {
+          userId: signedInUserId,
+          challengeId: challengeId,
+        },
+      },
+    });
+
+    return NextResponse.json(
+      { message: `User ${signedInUserId} left challenge ${challengeId}` },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Leave challenge error:", error);
+    return NextResponse.json(
+      { error: "Failed to leave challenge" },
+      { status: 500 }
+    );
+  }
+}

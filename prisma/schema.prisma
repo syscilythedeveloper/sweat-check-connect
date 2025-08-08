@@ -130,10 +130,8 @@ model Challenge {
   description     String
   startDate       DateTime
   duration        Int       
-  frequencyType   FrequencyType @default(DAILY) // enum: DAILY or WEEKLY
-  checkInsPerWeek Int? // only relevant if frequencyType = WEEKLY
   requiredCheckIns  Int
-  maxParticipants Int?      
+  maxParticipants Int      
   isPrivate       Boolean   @default(false)
   tags            String[] // PostgreSQL supports string arrays
   createdById     String?
@@ -150,11 +148,6 @@ model Challenge {
   @@index([status])
   @@index([startDate])
 
-}
-
-enum FrequencyType {
-  DAILY
-  WEEKLY
 }
 
 model ChallengeMessage {

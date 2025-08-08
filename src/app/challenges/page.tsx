@@ -32,6 +32,16 @@ const ChallengesPage = () => {
     setActiveChallenges((prev) => [...prev, joinedChallenge]);
   };
 
+  const handleChallengeLeft = (leftChallenge: Challenge) => {
+    // Remove from activeChallenges
+    setActiveChallenges((prev) =>
+      prev.filter((c) => c.id !== leftChallenge.id)
+    );
+
+    // Add back to newChallenges (so user can rejoin if they want)
+    setNewChallenges((prev) => [...prev, leftChallenge]);
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -149,6 +159,7 @@ const ChallengesPage = () => {
             isLoading={isLoading}
             challengeType={challengeType}
             onChallengeJoined={handleChallengeJoined}
+            onChallengeLeft={handleChallengeLeft}
           />
         </div>
       </div>

@@ -358,7 +358,7 @@ async function main() {
         title: "Pilates Princesses!",
         description: "Pilates for 4 weeks, 3x a week! 💃🏾",
         createdById: users[2].id,
-        startDate: new Date("2025-08-07"),
+        startDate: new Date("2025-08-20"),
         tags: ["pilates", "stretch", "yoga"],
         duration: 30,
         requiredCheckIns: 12,
