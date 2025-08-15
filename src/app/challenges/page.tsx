@@ -100,14 +100,11 @@ const ChallengesPage = () => {
   }
 
   return (
-    <div
-      className="flex flex-col h-screen"
-      suppressHydrationWarning
-    >
+    <div className="flex flex-col h-screen">
       {/* Header */}
       <div className=" bg-white dark:bg-slate-800/10  p-2 sm:p-6">
         {/* TikTok-Style Header & Tabs */}
-        <div className="w-full max-w-full mx-auto text h-16 ">
+        <div className="w-full max-w-full mx-auto h-16 ">
           <div className="flex items-center justify-between w-full">
             <button
               onClick={() => setShowCreateForm(true)}

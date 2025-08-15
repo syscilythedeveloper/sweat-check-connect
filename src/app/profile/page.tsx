@@ -1,62 +1,227 @@
 "use client";
-import React from "react";
-import { Calendar } from "lucide-react";
-import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useEffect, useState } from "react";
 
-const Profile = () => {
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [userProfile, setUserProfile] = useState<UserDetails | null>(null);
-  //const user = useUser();
+import Image from "next/image";
+import {
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
+import { Card, CardContent } from "@/components/ui/card";
+import { useUser } from "@clerk/nextjs";
+import { ProfileDisplayType, UserCheckIn } from "@/types/profile";
+import { Separator } from "@/components/ui/separator";
+import ProfileCheckInFeed from "@/components/Profile/ProfileCheckInFeed";
+import { fetchProfileData } from "@/utils/profileFunctions";
+
+const GradientDefs = () => {
+  // Hidden SVG that defines the gradient used by the ring stroke
+  return (
+    <svg style={{ height: 0, width: 0, position: "absolute" }}>
+      <defs>
+        <linearGradient
+          id="sccRing"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="0%"
+        >
+          <stop
+            offset="0%"
+            stopColor="#8b5cf6"
+          />{" "}
+          {/* purple */}
+          <stop
+            offset="100%"
+            stopColor="#3b82f6"
+          />{" "}
+          {/* blue   */}
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
+export function ActiveDaysRing({ activeDays = 6 }: { activeDays?: number }) {
+  const clamped = Math.max(0, Math.min(activeDays, 100));
 
   return (
-    <div className="w-full max-w-full mx-auto px-2 sm:px-4 py-2 space-y-4">
-      <Card className="bg-white dark:bg-slate-800/80 rounded-2xl shadow-blue-glow  border-1 border-blue-900/50 p-2 sm:p-6">
+    <div className="relative flex items-center gap-4">
+      <GradientDefs />
+
+      <div className="w-10 h-10">
+        {" "}
+        {/* size of the ring */}
+        <CircularProgressbarWithChildren
+          value={clamped}
+          maxValue={100}
+          strokeWidth={12}
+          styles={buildStyles({
+            // Use the gradient & rounded ends like the mock
+            pathColor: "url(#sccRing)",
+            trailColor: "rgba(255,255,255,0.08)",
+            strokeLinecap: "round",
+            pathTransition: "none",
+          })}
+        >
+          {/* Center content */}
+          <div className="flex flex-col items-center -mt-1">
+            <span className=" text-md text-purple-500 font-bold leading-none">
+              {clamped}
+            </span>
+          </div>
+        </CircularProgressbarWithChildren>
+      </div>
+
+      <div className="flex flex-col leading-tight">
+        <span className="text-purple-500 font-semibold text-xs">
+          Days Active in 2025
+        </span>
+        <span className="text-gray-400 text-xs">
+          Reach the 100 check-in milestone
+        </span>
+      </div>
+    </div>
+  );
+}
+
+const Profile = () => {
+  const [activeTab, setActiveTab] = useState<ProfileDisplayType>(
+    ProfileDisplayType.CHECKINS
+  );
+  const [userCheckIns, setUserCheckIns] = useState<UserCheckIn[]>([]);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  let currentDisplay = userCheckIns;
+
+  if (activeTab === ProfileDisplayType.CHECKINS) {
+    currentDisplay = userCheckIns;
+  } else if (activeTab === ProfileDisplayType.FOLLOWERS) {
+    currentDisplay = followers;
+  } else if (activeTab === ProfileDisplayType.FOLLOWING) {
+    currentDisplay = following;
+  }
+
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [userProfile, setUserProfile] = useState<UserDetails | null>(null);
+  const user = useUser();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      setIsLoading(true);
+      Promise.all([fetchProfileData()]).then(([fetchedProfileData]) => {
+        setIsLoading(false);
+        console.log(
+          "User Check-Ins:",
+          fetchedProfileData.checkIns,
+          "Following: ",
+          fetchedProfileData.following,
+          "Followers: ",
+          fetchedProfileData.followers
+        );
+        setUserCheckIns(fetchedProfileData.checkIns);
+        console.log("User Check-Ins:", fetchedProfileData.checkIns);
+        setFollowing(fetchedProfileData.following);
+        console.log("Following:", fetchedProfileData.following);
+        setFollowers(fetchedProfileData.followers);
+        console.log("Followers:", fetchedProfileData.followers);
+      });
+    }
+  }, [mounted]);
+
+  return (
+    <div className="fixed inset-0 flex flex-col overflow-hidden">
+      <Card className="flex-shrink-0 bg-white rounded-2xl border-1 border-slate-900/50 dark:bg-slate-800/30  p-2 sm:p-6">
         <CardContent className="relative p-4">
           <>
             <div className="flex items-center gap-4 justify-center">
               <Image
-                src={"/images/defaultUser.png"}
+                src={user.user?.imageUrl || "/images/user.png"}
                 width={48}
                 height={48}
                 alt={"syscily"}
-                className="rounded-full w-12 h-12 object-cover border shadow-purple-glow"
+                className="rounded-full w-12 h-12 object-cover"
               />
               <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                 <h1 className="text-xs font-semibold text-gray-900 dark:text-gray-400/40">
-                  {"sys"}
+                  {user.user?.fullName || user.user?.firstName || "User"}
                 </h1>
-                <p className="text-sm text-foreground">@{"sys"}</p>
+
+                <p className="text-sm text-foreground">
+                  @{user.user?.username || "sys"}
+                </p>
               </div>
             </div>
+            <span className="text-xs  dark:text-gray-400/40"></span>
 
-            <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-muted-foreground justify-center">
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3 w-3 text-blue-400" />
-                Joined
-              </span>
-              <div className="flex gap-4">
-                <span>
-                  <strong className="text-foreground">23</strong> Followers
-                </span>
-                <span>
-                  <strong className="text-foreground">43</strong> Following
-                </span>
-              </div>
-            </div>
-
-            <p className="mt-2 text-xs font-medium text-gray-900 dark:text-gray-400/40 text-center italic">
+            <p className="mt-2 mb-2 text-xs font-medium text-gray-900 dark:text-gray-400/40 text-center italic">
               {
-                "sys's bio goes here. This is a placeholder text to demonstrate the profile layout."
+                "I'm Sys, the creator of this app. Good luck beating me on the leaderboard!(you won't though)"
               }
             </p>
-          </>
+            <Separator className="my-1 bg-gray-500/10" />
 
-          <div className="flex justify-center items-center min-h-[200px]">
-            <div className="text-muted-foreground">No profile data found</div>
-          </div>
+            <ActiveDaysRing activeDays={6} />
+            <Separator className="my-1 bg-gray-500/10" />
+
+            <div className="flex justify-center items-center mt-2">
+              {[
+                {
+                  label: "Sweat Checks",
+                  tab: ProfileDisplayType.CHECKINS,
+                  count: 7,
+                },
+                {
+                  label: "Following",
+                  tab: ProfileDisplayType.FOLLOWING,
+                  count: 8,
+                },
+                {
+                  label: "Followers",
+                  tab: ProfileDisplayType.FOLLOWERS,
+                  count: 9,
+                },
+              ].map(({ label, tab, count }) => (
+                <button
+                  key={label}
+                  onClick={() => setActiveTab(tab)}
+                  className={`mx-3 px-0 pb-2 text-xs font-semibold transition-all 
+                ${
+                  activeTab === tab
+                    ? "text-blue-500 dark:text-blue-300 border-b-2 border-blue-500 dark:border-blue-300"
+                    : "text-slate-400 dark:text-slate-500"
+                }
+              `}
+                  style={{ background: "none", outline: "none" }}
+                >
+                  <div className="flex flex-col items-center">
+                    {count && (
+                      <span className="text-xs font-bold">{count}</span>
+                    )}
+                    <span>{label}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </>
         </CardContent>
       </Card>
+
+      <div className="flex-1 overflow-y-auto px-2 sm:px-4">
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-gray-500">Loading...</p>
+          </div>
+        ) : null}
+        {currentDisplay === userCheckIns ? (
+          <ProfileCheckInFeed userCheckIns={userCheckIns} />
+        ) : null}
+      </div>
     </div>
   );
 };
