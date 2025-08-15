@@ -32,52 +32,57 @@ async function getCheckIns(userId: string) {
     {
       id: "1",
       checkInDate: "August 1, 2025",
-      checkInThumbNail: "/images/sys_lightbgs.png",
-      videoUrl: "/videos/sysLightBgs.MOV",
+      checkInThumbNail:
+        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1755282034/sys_lightBgs_tluhv4.png",
+      videoUrl:
+        "https://res.cloudinary.com/dbmgioxbm/video/upload/v1755281763/sysLightBgs_nup9eb.mp4",
       caption: "light werkkkkk ",
     },
     {
       id: "2",
 
       checkInDate: "August 2, 2025",
-      checkInThumbNail: "/images/sys_backExtension.png",
-      videoUrl: "/videos/backExtension.MOV",
+      checkInThumbNail:
+        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1755282033/sys_backExtension_e6ncbe.png",
+      videoUrl:
+        "https://res.cloudinary.com/dbmgioxbm/video/upload/v1755281771/sys_backextensions_usmxux.mov",
       caption: "Back Day ",
     },
     {
       id: "3",
       checkInDate: "August 3, 2025",
-      checkInThumbNail: "/images/sys_singleArmRow.png",
-      videoUrl: "/videos/sys_singleArmRows.MOV",
+      checkInThumbNail:
+        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1755282034/sys_singleArmRow_nbqd9o.png",
+      videoUrl:
+        "https://res.cloudinary.com/dbmgioxbm/video/upload/v1755281763/sys_singleArmRows_av6hzc.mov",
       caption: "Don't neglect upper body!",
-    },
-    {
-      id: "4",
-      checkInDate: "August 5, 2025",
-      checkInThumbNail: "/images/sys_gluteDrive.png",
-      videoUrl: "/videos/sys_gluteDrive.MOV",
-      caption: "up to 280lbs 💪🏿!",
     },
 
     {
-      id: "5",
+      id: "4",
       checkInDate: "August 7, 2025",
-      checkInThumbNail: "/images/sys_bgs.png",
-      videoUrl: "/videos/sys_bgs.MOV",
+      checkInThumbNail:
+        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1755282034/sys_bgs_g0w1kz.png",
+      videoUrl:
+        "https://res.cloudinary.com/dbmgioxbm/video/upload/v1755281763/sys_bgs_zmzrrc.mp4",
       caption: "progressive overload is key!",
     },
     {
-      id: "6",
+      id: "5",
       checkInDate: "August 8, 2025",
-      checkInThumbNail: "/images/sys_stairmaster.png",
-      videoUrl: "/videos/sys_stairmaster.MOV",
+      checkInThumbNail:
+        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1755282034/sys_stairmaster_wfmtzq.png",
+      videoUrl:
+        "https://res.cloudinary.com/dbmgioxbm/video/upload/v1755281763/sys_stairmaster_rhfryd.mov",
       caption: "Stairmaster Sys",
     },
     {
-      id: "7",
+      id: "6",
       checkInDate: "August 9, 2025",
-      checkInThumbNail: "/images/sys_standingAb.png",
-      videoUrl: "/videos/sys_standingabs.MOV",
+      checkInThumbNail:
+        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1755282034/sys_standingAb_k7j0v3.png",
+      videoUrl:
+        "https://res.cloudinary.com/dbmgioxbm/video/upload/v1755281770/sys_standingabs_nltfgi.mov",
       caption: "Weighted abWork!",
     },
   ];
