@@ -12,6 +12,7 @@ import { ProfileDisplayType, UserCheckIn } from "@/types/profile";
 import { Separator } from "@/components/ui/separator";
 import ProfileCheckInFeed from "@/components/Profile/ProfileCheckInFeed";
 import { fetchProfileData } from "@/utils/profileFunctions";
+import ConnectionsFeed from "@/components/Profile/ConnectionsFeed";
 
 const GradientDefs = () => {
   // Hidden SVG that defines the gradient used by the ring stroke
@@ -174,17 +175,17 @@ const Profile = () => {
                 {
                   label: "Sweat Checks",
                   tab: ProfileDisplayType.CHECKINS,
-                  count: 7,
+                  count: userCheckIns.length,
                 },
                 {
                   label: "Following",
                   tab: ProfileDisplayType.FOLLOWING,
-                  count: 8,
+                  count: following.length,
                 },
                 {
                   label: "Followers",
                   tab: ProfileDisplayType.FOLLOWERS,
-                  count: 9,
+                  count: followers.length,
                 },
               ].map(({ label, tab, count }) => (
                 <button
@@ -221,6 +222,17 @@ const Profile = () => {
         {currentDisplay === userCheckIns ? (
           <ProfileCheckInFeed userCheckIns={userCheckIns} />
         ) : null}
+        {currentDisplay === following ? (
+          <ConnectionsFeed
+            connections={following}
+            type={ProfileDisplayType.FOLLOWING}
+          />
+        ) : (
+          <ConnectionsFeed
+            connections={followers}
+            type={ProfileDisplayType.FOLLOWERS}
+          />
+        )}
       </div>
     </div>
   );

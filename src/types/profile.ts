@@ -11,3 +11,9 @@ export interface UserCheckIn {
   videoUrl: string;
   caption: string;
 }
+
+export interface Connection {
+  id: string;
+  username: string;
+  profilePicture: string;
+}

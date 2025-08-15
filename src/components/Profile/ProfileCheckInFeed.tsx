@@ -22,6 +22,7 @@ const ProfileCheckInFeed: React.FC<ProfileCheckInFeedProps> = ({
               >
                 {/* Thumbnail image */}
                 <Image
+                  sizes="100vw"
                   src={checkIn.checkInThumbNail}
                   alt={checkIn.caption}
                   fill
