@@ -22,11 +22,11 @@ const ProfileCheckInFeed: React.FC<ProfileCheckInFeedProps> = ({
               >
                 {/* Thumbnail image */}
                 <Image
-                  sizes="100vw"
                   src={checkIn.checkInThumbNail}
                   alt={checkIn.caption}
-                  fill
                   className="object-cover"
+                  fill
+                  sizes="(max-width: 640px) 33vw, (max-width: 1024px) 33vw, 33vw"
                 />
 
                 {/* Overlay for date and caption */}

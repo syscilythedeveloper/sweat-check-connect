@@ -94,18 +94,7 @@ const Profile = () => {
   const [following, setFollowing] = useState([]);
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  let currentDisplay = userCheckIns;
 
-  if (activeTab === ProfileDisplayType.CHECKINS) {
-    currentDisplay = userCheckIns;
-  } else if (activeTab === ProfileDisplayType.FOLLOWERS) {
-    currentDisplay = followers;
-  } else if (activeTab === ProfileDisplayType.FOLLOWING) {
-    currentDisplay = following;
-  }
-
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [userProfile, setUserProfile] = useState<UserDetails | null>(null);
   const user = useUser();
 
   useEffect(() => {
@@ -218,20 +207,24 @@ const Profile = () => {
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-500">Loading...</p>
           </div>
-        ) : null}
-        {currentDisplay === userCheckIns ? (
-          <ProfileCheckInFeed userCheckIns={userCheckIns} />
-        ) : null}
-        {currentDisplay === following ? (
-          <ConnectionsFeed
-            connections={following}
-            type={ProfileDisplayType.FOLLOWING}
-          />
         ) : (
-          <ConnectionsFeed
-            connections={followers}
-            type={ProfileDisplayType.FOLLOWERS}
-          />
+          <>
+            {activeTab === ProfileDisplayType.CHECKINS && (
+              <ProfileCheckInFeed userCheckIns={userCheckIns} />
+            )}
+            {activeTab === ProfileDisplayType.FOLLOWING && (
+              <ConnectionsFeed
+                connections={following}
+                type={ProfileDisplayType.FOLLOWING}
+              />
+            )}
+            {activeTab === ProfileDisplayType.FOLLOWERS && (
+              <ConnectionsFeed
+                connections={followers}
+                type={ProfileDisplayType.FOLLOWERS}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
