@@ -20,11 +20,11 @@ const Dashboard = () => {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckInData[]>([]);
+  const [globalCheckIns, setGlobalCheckIns] = useState<RecentCheckInData[]>([]);
   const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
 
   const [activeTab, setActiveTab] = useState<DashboardDisplay>(
-    DashboardDisplay.challenge_discovery
+    DashboardDisplay.followingCheckIns
   );
 
   // Prevent hydration issues by waiting for mount
@@ -43,7 +43,7 @@ const Dashboard = () => {
 
           setLeaderboardData(data.leaderboard);
 
-          setRecentCheckIns(data.recentCheckins);
+          setGlobalCheckIns(data.globalCheckIns);
 
           //replace later with checkins from people the user
         })
@@ -58,7 +58,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const shouldLock =
-      activeTab === DashboardDisplay.challenge_discovery ||
+      activeTab === DashboardDisplay.followingCheckIns ||
       activeTab === DashboardDisplay.leaderboard;
 
     if (shouldLock) {
@@ -84,10 +84,10 @@ const Dashboard = () => {
           <div className="flex justify-center items-center ">
             {[
               {
-                label: "Find Challenges",
-                tab: DashboardDisplay.challenge_discovery,
+                label: "Following",
+                tab: DashboardDisplay.followingCheckIns,
               },
-              { label: "Sweat Checks", tab: DashboardDisplay.check_ins },
+              { label: "Sweat Checks", tab: DashboardDisplay.globalCheckIns },
               { label: "Leaderboard", tab: DashboardDisplay.leaderboard },
             ].map(({ label, tab }) => (
               <button
@@ -111,16 +111,19 @@ const Dashboard = () => {
 
       {/* Content Area */}
       <div className="flex-1 min-h-0 relative overflow-hidden">
-        {activeTab === DashboardDisplay.challenge_discovery ? (
+        {activeTab === DashboardDisplay.followingCheckIns ? (
           <div className="h-full overflow-y-auto ">
-            <p> Display follower check ins </p>
+            <p> Display following check ins </p>
           </div>
-        ) : activeTab === DashboardDisplay.check_ins &&
-          recentCheckIns.length > 0 ? (
+        ) : activeTab === DashboardDisplay.globalCheckIns &&
+          globalCheckIns.length > 0 ? (
           // Scrollable Check-ins Layout
 
           <div className="h-full overflow-y-auto pb-20">
-            <CheckInFeed checkIns={recentCheckIns} />
+            <CheckInFeed
+              checkIns={globalCheckIns}
+              CheckInType="global"
+            />
           </div>
         ) : (
           // Leaderboard Layout

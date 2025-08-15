@@ -17,9 +17,9 @@ export interface UserDetails {
 }
 
 export enum DashboardDisplay {
-  check_ins = "check_ins",
+  globalCheckIns = "check_ins",
   leaderboard = "leaderboard",
-  challenge_discovery = "challenge_discovery",
+  followingCheckIns = "following_check_ins",
 }
 
 export type RecentCheckIns = {

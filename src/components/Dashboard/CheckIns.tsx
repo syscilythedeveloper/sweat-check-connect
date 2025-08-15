@@ -2,7 +2,7 @@
 import React, { useRef, useState } from "react";
 import { format } from "date-fns";
 import Image from "next/image";
-import { Volume2, VolumeX } from "lucide-react";
+import { Volume2, VolumeX, UserRoundPlus } from "lucide-react";
 
 interface CheckInData {
   id: string;
@@ -10,6 +10,7 @@ interface CheckInData {
   videoUrl: string;
   thumbnailUrl?: string;
   createdAt: string;
+  CheckInType?: "global" | "following";
   user: {
     username: string;
     avatar: string;
@@ -17,7 +18,8 @@ interface CheckInData {
 }
 
 const DashboardCheckIn = (checkIn: CheckInData) => {
-  const { caption, videoUrl, thumbnailUrl, createdAt, user } = checkIn;
+  const { caption, videoUrl, thumbnailUrl, createdAt, user, CheckInType } =
+    checkIn;
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const toggleMute = () => {
@@ -25,6 +27,10 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
       videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
     }
+  };
+  const toggleFollowing = () => {
+    // Handle following/unfollowing logic here
+    console.log("Toggle following for user:", user.username);
   };
 
   return (
@@ -39,6 +45,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
           <Volume2 className="w-5 h-5" />
         )}
       </button>
+
       <video
         className="w-full h-full object-contain"
         autoPlay
@@ -57,15 +64,26 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
 
       {/* Overlay sits ON TOP of the video */}
       <div className="absolute w-full top-2/3 z-20 text-white bg-black/50 p-2 ">
-        <div className="flex items-center gap-2  p-2 rounded-lg">
-          <Image
-            src={user.avatar}
-            alt={user.username}
-            width={32}
-            height={32}
-            className="w-10 h-10 rounded-full border border-white"
-          />
-          <span className="font-bold text-lg">@{user.username}</span>
+        <div className="flex items-center justify-between gap-2 p-2 rounded-lg">
+          <div className="flex items-center gap-2">
+            <Image
+              src={user.avatar}
+              alt={user.username}
+              width={32}
+              height={32}
+              className="w-10 h-10 rounded-full border border-white"
+            />
+            <span className="font-bold text-lg">@{user.username}</span>
+          </div>
+
+          {CheckInType === "global" && (
+            <button
+              onClick={toggleFollowing}
+              className="bg-black/50 rounded-full p-2 text-white hover:bg-black/70 transition-colors"
+            >
+              <UserRoundPlus className="w-5 h-5" />
+            </button>
+          )}
         </div>
         {caption && (
           <div className="max-w-xs break-words text-base font-medium">

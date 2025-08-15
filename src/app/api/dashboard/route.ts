@@ -14,10 +14,14 @@ export async function GET(request: NextRequest) {
     console.log("Signed-in user ID:", signedInUserId);
 
     const leaderboard = await getLeaderboardData();
-    const recentCheckins = await getRecentCheckins(signedInUserId);
-    const newChallenges = await getNewChallenges(signedInUserId);
+    const globalCheckIns = await getGlobalCheckins(signedInUserId);
+    const followingCheckIns = await getFollowingCheckins(signedInUserId);
 
-    return NextResponse.json({ leaderboard, recentCheckins, newChallenges });
+    return NextResponse.json({
+      leaderboard,
+      globalCheckIns,
+      followingCheckIns,
+    });
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.json(
@@ -52,7 +56,7 @@ async function getLeaderboardData() {
   return users;
 }
 
-async function getRecentCheckins(userId: string) {
+async function getGlobalCheckins(userId: string) {
   const globalCheckins = await prisma.checkIn.findMany({
     where: {
       userId: {
@@ -76,8 +80,8 @@ async function getRecentCheckins(userId: string) {
 
   return globalCheckins;
 }
-async function getNewChallenges(userId: string) {
-  console.log("Fetching new challenges for user:", userId);
+async function getFollowingCheckins(userId: string) {
+  console.log("Fetching following check-ins for user:", userId);
 
   // Get challenges where the user is NOT the creator AND not already participating
   const challenges = await prisma.challenge.findMany({
