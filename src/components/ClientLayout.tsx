@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import { useRouter, usePathname } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/SignedInUser/AppSideBar";
 
@@ -11,11 +12,26 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const [mounted, setMounted] = useState(false);
-  const { isLoaded } = useUser();
+  const { isLoaded, isSignedIn } = useUser();
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted || !isLoaded) return;
+    if (isSignedIn) {
+      if (pathname.startsWith("/sign-in")) {
+        router.push("/");
+      }
+    } else {
+      if (!pathname.startsWith("/sign-in")) {
+        router.push("/sign-in");
+      }
+    }
+  }, [mounted, isLoaded, isSignedIn, pathname, router]);
 
   // Show loading state until component is mounted and Clerk is loaded
   if (!mounted || !isLoaded) {
@@ -43,7 +59,14 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       </SignedIn>
 
       <SignedOut>
-        <main className="flex-1">{children}</main>
+        {/* Only show children on sign-in page, otherwise redirect will handle it */}
+        {pathname.startsWith("/sign-in") ? (
+          <main className="flex-1">{children}</main>
+        ) : (
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-purple-500"></div>
+          </div>
+        )}
       </SignedOut>
     </>
   );

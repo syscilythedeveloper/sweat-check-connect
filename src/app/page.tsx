@@ -1,68 +1,144 @@
-import Image from "next/image";
+"use client";
+import React, { useState, useEffect } from "react";
 
-import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { ArrowRight } from "lucide-react";
-import CheckInDialog from "@/components/CheckIn/CheckInDialog";
+import {
+  DashboardDisplay,
+  LeaderboardData,
+  RecentCheckInData,
+} from "@/types/userDetails";
 
-export default async function Home() {
+import LeaderboardList from "@/components/Dashboard/LeaderboardFeed";
+
+import CheckInFeed from "@/components/Dashboard/CheckInFeed";
+
+import { useUser } from "@clerk/nextjs";
+
+import { fetchDashboardData } from "@/utils/DashboardFunctions";
+
+const Home = () => {
+  const { user } = useUser();
+  const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [globalCheckIns, setGlobalCheckIns] = useState<RecentCheckInData[]>([]);
+  const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
+
+  const [activeTab, setActiveTab] = useState<DashboardDisplay>(
+    DashboardDisplay.followingCheckIns
+  );
+
+  // Prevent hydration issues by waiting for mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Promise-based dashboard data fetching
+  useEffect(() => {
+    if (mounted && user?.id) {
+      setIsLoading(true);
+
+      fetchDashboardData()
+        .then((data) => {
+          console.log("Fetched dashboard data:", data);
+
+          setLeaderboardData(data.leaderboard);
+
+          setGlobalCheckIns(data.globalCheckIns);
+
+          //replace later with checkins from people the user
+        })
+        .catch((error) => {
+          console.error("Error fetching dashboard data:", error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [mounted, user?.id]);
+
+  useEffect(() => {
+    const shouldLock =
+      activeTab === DashboardDisplay.followingCheckIns ||
+      activeTab === DashboardDisplay.leaderboard;
+
+    if (shouldLock) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [activeTab]);
+  // reroute to login if user is not authenticated
+
+  // Don't render anything until client-side mount is complete
+  if (!mounted) return null;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <section className="relative h-[calc(100vh-1rem)] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/hero-workout.png"
-            alt="People working out together"
-            fill
-            className="object-cover"
-            priority
-            style={{ opacity: 0.6 }}
-          />
-          <div className="absolute inset-0 bg-black/40" />
+    <div className="flex flex-col h-screen">
+      {/* Header */}
+      <div className=" bg-white dark:bg-slate-800/10  p-2 sm:p-6">
+        {/* TikTok-Style Header & Tabs */}
+        <div className="w-full max-w-full mx-auto text h-16 ">
+          {/* TikTok-style Tabs */}
+          <div className="flex justify-center items-center ">
+            {[
+              {
+                label: "Following",
+                tab: DashboardDisplay.followingCheckIns,
+              },
+              { label: "Sweat Checks", tab: DashboardDisplay.globalCheckIns },
+              { label: "Leaderboard", tab: DashboardDisplay.leaderboard },
+            ].map(({ label, tab }) => (
+              <button
+                key={label}
+                onClick={() => setActiveTab(tab)}
+                className={`mx-3 px-0 pb-2 text-base font-semibold transition-all 
+          ${
+            activeTab === tab
+              ? "text-blue-500 dark:text-blue-300 border-b-2 border-blue-500 dark:border-blue-300"
+              : "text-slate-400 dark:text-slate-500"
+          }
+        `}
+                style={{ background: "none", outline: "none" }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
+      </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-6">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Connect. Sweat.
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-              Grow Together.
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-gray-200">
-            Your fitness journey, powered by community.
-          </p>
-          <p className="text-lg mb-12 text-gray-300">
-            Join challenges, share workouts, and level up your health.
-          </p>
+      {/* Content Area */}
+      <div className="flex-1 min-h-0 relative overflow-hidden">
+        {activeTab === DashboardDisplay.followingCheckIns ? (
+          <div className="h-full overflow-y-auto ">
+            <p> Display following check ins </p>
+          </div>
+        ) : activeTab === DashboardDisplay.globalCheckIns &&
+          globalCheckIns.length > 0 ? (
+          // Scrollable Check-ins Layout
 
-          <SignedIn>
-            <CheckInDialog
-              trigger={
-                <button className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                  Check In
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-              }
+          <div className="h-full overflow-y-auto pb-20">
+            <CheckInFeed
+              checkIns={globalCheckIns}
+              CheckInType="global"
             />
-          </SignedIn>
-
-          <SignedOut>
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-              <SignInButton>
-                <button className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                  Sign In
-                </button>
-              </SignInButton>
-
-              <SignUpButton>
-                <button className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                  Sign Up
-                </button>
-              </SignUpButton>
+          </div>
+        ) : (
+          // Leaderboard Layout
+          <div className="h-full overflow-y-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-background gap-4 rounded-xl p-4 min-h-full overflow-y-auto">
+              <LeaderboardList
+                leaderboard={leaderboard}
+                isLoading={isLoading}
+              />
             </div>
-          </SignedOut>
-        </div>
-      </section>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
