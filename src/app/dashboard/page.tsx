@@ -39,13 +39,9 @@ const Dashboard = () => {
 
       fetchDashboardData()
         .then((data) => {
-          console.log("Fetched dashboard data:", data);
-
           setLeaderboardData(data.leaderboard);
 
           setGlobalCheckIns(data.globalCheckIns);
-
-          //replace later with checkins from people the user
         })
         .catch((error) => {
           console.error("Error fetching dashboard data:", error);
@@ -56,6 +52,7 @@ const Dashboard = () => {
     }
   }, [mounted, user?.id]);
 
+  //can possibly remove this because the containers already have h-full overflow-y-auto
   useEffect(() => {
     const shouldLock =
       activeTab === DashboardDisplay.followingCheckIns ||
@@ -69,9 +66,7 @@ const Dashboard = () => {
       };
     }
   }, [activeTab]);
-  // reroute to login if user is not authenticated
 
-  // Don't render anything until client-side mount is complete
   if (!mounted) return null;
 
   return (

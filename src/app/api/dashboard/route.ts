@@ -5,17 +5,16 @@ import { getAuth } from "@clerk/nextjs/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId: signedInUserId } = getAuth(request);
-    if (!signedInUserId) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
     // const url = new URL(request.url);
     // console.log("URL:", url);
-    console.log("Signed-in user ID:", signedInUserId);
+    const { userId } = getAuth(request);
+    if (!userId) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
 
     const leaderboard = await getLeaderboardData();
-    const globalCheckIns = await getGlobalCheckins(signedInUserId);
-    const followingCheckIns = await getFollowingCheckins(signedInUserId);
+    const globalCheckIns = await getGlobalCheckins();
+    const followingCheckIns = await getFollowingCheckins(userId);
 
     return NextResponse.json({
       leaderboard,
@@ -56,13 +55,8 @@ async function getLeaderboardData() {
   return users;
 }
 
-async function getGlobalCheckins(userId: string) {
+async function getGlobalCheckins() {
   const globalCheckins = await prisma.checkIn.findMany({
-    where: {
-      userId: {
-        not: userId, // Exclude the signed-in user's check-ins
-      },
-    },
     include: {
       user: {
         select: {
@@ -75,51 +69,40 @@ async function getGlobalCheckins(userId: string) {
     orderBy: {
       createdAt: "desc",
     },
-    // Limit to 5 global check-ins
+    take: 30,
   });
 
   return globalCheckins;
 }
 async function getFollowingCheckins(userId: string) {
-  console.log("Fetching following check-ins for user:", userId);
-
   // Get challenges where the user is NOT the creator AND not already participating
-  const challenges = await prisma.challenge.findMany({
-    where: {
-      AND: [
-        {
-          createdById: {
-            not: userId, // Exclude challenges created by this user
-          },
-        },
-        {
-          participants: {
-            none: {
-              userId: userId, // Exclude challenges user is already participating in
-            },
-          },
-        },
-      ],
-    },
+
+  const following = await prisma.userFollow.findMany({
+    where: { followerId: userId, status: "ACCEPTED" },
+    select: { followingId: true },
+  });
+
+  const followingIds = following.map((f) => f.followingId);
+  if (followingIds.length === 0) return [];
+
+  const followingCheckIns = await prisma.checkIn.findMany({
     include: {
-      createdBy: {
+      user: {
         select: {
           username: true,
-          name: true,
           avatar: true,
+          name: true,
         },
       },
-      _count: {
-        select: {
-          participants: true,
-        },
-      },
+    },
+    where: {
+      userId: { in: followingIds },
     },
     orderBy: {
       createdAt: "desc", // Show newest challenges first
     },
+    take: 30,
+    //_count: { select: {reactions:true, comments:true}} ----> use this later for when you need to display the count of any query results
   });
-
-  console.log("Found challenges:", challenges.length);
-  return challenges;
+  return followingCheckIns;
 }

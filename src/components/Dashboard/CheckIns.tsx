@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { Volume2, VolumeX, UserRoundPlus } from "lucide-react";
-
+import { followUser } from "@/utils/userInteractions";
 interface CheckInData {
   id: string;
   caption?: string;
@@ -31,6 +31,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
   const toggleFollowing = () => {
     // Handle following/unfollowing logic here
     console.log("Toggle following for user:", user.username);
+    followUser(user.username);
   };
 
   return (

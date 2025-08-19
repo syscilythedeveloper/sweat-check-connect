@@ -267,6 +267,7 @@ model UserFollow {
   following    User @relation("followers", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
+  @@index([followerId,status])
 }
 
 enum FollowStatus {
