@@ -105,3 +105,42 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { username } = await request.json();
+    const { userId: followerId } = getAuth(request);
+
+    if (!followerId) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    const userToUnfollow = await prisma.user.findUnique({
+      where: { username },
+      select: { id: true, isPrivate: true, username: true },
+    });
+
+    if (!userToUnfollow) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const followingId = userToUnfollow.id;
+
+    await prisma.userFollow.delete({
+      where: {
+        followerId_followingId: { followerId, followingId },
+      },
+    });
+
+    return NextResponse.json(
+      { message: `Unfollowed @${userToUnfollow.username}` },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Unfollow error:", error);
+    return NextResponse.json(
+      { error: "Failed to unfollow user" },
+      { status: 500 }
+    );
+  }
+}

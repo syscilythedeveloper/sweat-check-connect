@@ -5,10 +5,9 @@ import DashboardCheckIn from "./CheckIns";
 
 interface CheckInFeedProps {
   checkIns: any[];
-  CheckInType: "global" | "following";
 }
 
-const DashboardCheckInFeed = ({ checkIns, CheckInType }: CheckInFeedProps) => {
+const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const safeIndex = Math.max(0, Math.min(currentIndex, checkIns.length - 1));
@@ -73,7 +72,6 @@ const DashboardCheckInFeed = ({ checkIns, CheckInType }: CheckInFeedProps) => {
         <DashboardCheckIn
           key={checkIns[safeIndex].id}
           {...checkIns[safeIndex]}
-          CheckInType={CheckInType}
         />
       )}
     </div>

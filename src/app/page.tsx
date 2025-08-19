@@ -22,6 +22,9 @@ const Home = () => {
 
   const [globalCheckIns, setGlobalCheckIns] = useState<RecentCheckInData[]>([]);
   const [leaderboard, setLeaderboardData] = useState<LeaderboardData[]>([]);
+  const [followingCheckIns, setFollowingCheckIns] = useState<
+    RecentCheckInData[]
+  >([]);
 
   const [activeTab, setActiveTab] = useState<DashboardDisplay>(
     DashboardDisplay.followingCheckIns
@@ -42,6 +45,7 @@ const Home = () => {
           console.log("Fetched dashboard data:", data);
 
           setLeaderboardData(data.leaderboard);
+          setFollowingCheckIns(data.followingCheckIns);
 
           setGlobalCheckIns(data.globalCheckIns);
 
@@ -79,15 +83,16 @@ const Home = () => {
       {/* Header */}
       <div className=" bg-white dark:bg-slate-800/10  p-2 sm:p-6">
         {/* TikTok-Style Header & Tabs */}
-        <div className="w-full max-w-full mx-auto text h-16 ">
+        <div className="w-full max-w-full mx-auto text ">
           {/* TikTok-style Tabs */}
           <div className="flex justify-center items-center ">
             {[
+              { label: "SweatChecks", tab: DashboardDisplay.globalCheckIns },
               {
                 label: "Following",
                 tab: DashboardDisplay.followingCheckIns,
               },
-              { label: "Sweat Checks", tab: DashboardDisplay.globalCheckIns },
+
               { label: "Leaderboard", tab: DashboardDisplay.leaderboard },
             ].map(({ label, tab }) => (
               <button
@@ -111,19 +116,17 @@ const Home = () => {
 
       {/* Content Area */}
       <div className="flex-1 min-h-0 relative overflow-hidden">
-        {activeTab === DashboardDisplay.followingCheckIns ? (
+        {activeTab === DashboardDisplay.followingCheckIns &&
+        followingCheckIns.length > 0 ? (
           <div className="h-full overflow-y-auto ">
-            <p> Display following check ins </p>
+            <CheckInFeed checkIns={followingCheckIns} />
           </div>
         ) : activeTab === DashboardDisplay.globalCheckIns &&
           globalCheckIns.length > 0 ? (
           // Scrollable Check-ins Layout
 
-          <div className="h-full overflow-y-auto pb-20">
-            <CheckInFeed
-              checkIns={globalCheckIns}
-              CheckInType="global"
-            />
+          <div className="h-full overflow-y-auto">
+            <CheckInFeed checkIns={globalCheckIns} />
           </div>
         ) : (
           // Leaderboard Layout

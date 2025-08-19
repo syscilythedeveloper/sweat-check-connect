@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     }
 
     const leaderboard = await getLeaderboardData();
-    const globalCheckIns = await getGlobalCheckins();
+    const globalCheckIns = await getGlobalCheckins(userId);
     const followingCheckIns = await getFollowingCheckins(userId);
 
     return NextResponse.json({
@@ -55,7 +55,7 @@ async function getLeaderboardData() {
   return users;
 }
 
-async function getGlobalCheckins() {
+async function getGlobalCheckins(currentUserId: string) {
   const globalCheckins = await prisma.checkIn.findMany({
     include: {
       user: {
@@ -63,6 +63,12 @@ async function getGlobalCheckins() {
           username: true,
           avatar: true,
           name: true,
+          isPrivate: true,
+          followers: {
+            where: { followerId: currentUserId },
+            select: { status: true },
+            take: 1,
+          },
         },
       },
     },
@@ -74,11 +80,11 @@ async function getGlobalCheckins() {
 
   return globalCheckins;
 }
-async function getFollowingCheckins(userId: string) {
+async function getFollowingCheckins(currentUserId: string) {
   // Get challenges where the user is NOT the creator AND not already participating
 
   const following = await prisma.userFollow.findMany({
-    where: { followerId: userId, status: "ACCEPTED" },
+    where: { followerId: currentUserId, status: "ACCEPTED" },
     select: { followingId: true },
   });
 
@@ -92,6 +98,12 @@ async function getFollowingCheckins(userId: string) {
           username: true,
           avatar: true,
           name: true,
+          isPrivate: true,
+          followers: {
+            where: { followerId: currentUserId },
+            select: { status: true },
+            take: 1,
+          },
         },
       },
     },
