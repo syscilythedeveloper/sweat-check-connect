@@ -7,14 +7,14 @@ export async function GET(request: NextRequest) {
   try {
     // const url = new URL(request.url);
     // console.log("URL:", url);
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const { userId: signedInUserId } = getAuth(request);
+    if (!signedInUserId) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
     const leaderboard = await getLeaderboardData();
-    const globalCheckIns = await getGlobalCheckins(userId);
-    const followingCheckIns = await getFollowingCheckins(userId);
+    const globalCheckIns = await getGlobalCheckins(signedInUserId);
+    const followingCheckIns = await getFollowingCheckins(signedInUserId);
 
     return NextResponse.json({
       leaderboard,

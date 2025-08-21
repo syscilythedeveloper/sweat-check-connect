@@ -1,9 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-//import { useUser } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
-//import CreateChallengeForm from "@/components/Challenges/CreateChallengeForm";
 import CreateChallengeForm from "../../components/Challenges/CreateChallengeForm";
 
 import { Challenge, ChallengeType } from "../../types/challenge";
@@ -14,7 +12,6 @@ import ChallengeFeed from "../../components/Challenges/ChallengeFeed";
 
 const ChallengesPage = () => {
   const [mounted, setMounted] = useState(false);
-  //const { user } = useUser();
   const [activeTab, setActiveTab] = useState<ChallengeType>(
     ChallengeType.DISCOVER
   );

@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-// import prisma from "../../../../../prisma/utils/prisma";
+import prisma from "../../../../prisma/utils/prisma";
 import { getAuth } from "@clerk/nextjs/server";
 
 export async function GET(request: NextRequest) {
@@ -90,30 +90,26 @@ async function getCheckIns(userId: string) {
   return checkIns;
 }
 
-async function getFollowing(userId: string) {
-  console.log("Fetching following for user:", userId);
-  const following = [
-    {
-      id: "1",
-      username: "XoxoKi_Breon",
-      profilePicture:
-        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604075/kiara_eoarvx.png",
-    },
-    {
-      id: "2",
-      username: "smiley",
-      profilePicture:
-        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604111/enijah_sfdym5.png",
-    },
-    {
-      id: "3",
-      username: "gabrielle_elyse",
-      profilePicture:
-        "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604052/gabby_gqqlp3.png",
-    },
-  ];
+async function getFollowing(signedInUserId: string) {
+  console.log("Fetching following for user:", signedInUserId);
+  const following = await prisma.userFollow.findMany({
+    where: { followerId: signedInUserId, status: "ACCEPTED" },
+    select: { followingId: true },
+  });
 
-  return following;
+  //get following id
+  const followingIds = following.map((f) => f.followingId);
+  if (followingIds.length === 0) return [];
+
+  const usersFollowed = await prisma.user.findMany({
+    select: {
+      id: true,
+      username: true,
+      avatar: true,
+    },
+    where: { id: { in: followingIds } },
+  });
+  return usersFollowed;
 }
 
 async function getFollowers(userId: string) {

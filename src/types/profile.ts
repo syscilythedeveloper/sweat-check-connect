@@ -15,5 +15,5 @@ export interface UserCheckIn {
 export interface Connection {
   id: string;
   username: string;
-  profilePicture: string;
+  avatar: string;
 }

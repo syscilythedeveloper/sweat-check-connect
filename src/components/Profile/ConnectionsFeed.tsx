@@ -3,21 +3,25 @@ import Image from "next/image";
 
 import { Connection, ProfileDisplayType } from "@/types/profile";
 import { Button } from "../ui/button";
-import { handleUnfollow } from "@/utils/profileFunctions"; // Assuming you have a utility function for unfollow logic
-
-// Define the props for the ConnectionsFeed component
+import { unfollowUser } from "@/utils/userInteractions";
 
 interface ConnectionsFeedProps {
   connections: Connection[];
-  type: ProfileDisplayType; // Optional type for future use
+  type: ProfileDisplayType;
 }
 
-const ConnectionsFeed: React.FC<ConnectionsFeedProps> = ({
-  connections,
-  type,
-}) => {
+const ConnectionsFeed = ({ connections, type }: ConnectionsFeedProps) => {
   console.log("ConnectionsFeed type:", type);
   console.log("ProfileDisplayType.FOLLOWING:", ProfileDisplayType.FOLLOWING);
+  const handleUnfollow = async (connectionId: string) => {
+    try {
+      await unfollowUser(connectionId);
+      // Optionally, you can add logic to update the UI after unfollowing
+      console.log(`Unfollowed user with ID: ${connectionId}`);
+    } catch (error) {
+      console.error("Error unfollowing user:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -31,11 +35,11 @@ const ConnectionsFeed: React.FC<ConnectionsFeedProps> = ({
               {/* Left side: profile pic + username */}
               <div className="flex items-center">
                 <Image
-                  src={connection.profilePicture}
+                  src={connection.avatar}
                   alt={connection.username}
                   width={48}
                   height={48}
-                  className="w-12 h-12 rounded-full object-cover mr-3"
+                  className="w-10 h-10 rounded-full object-cover mr-3 border-1 border-gray-500"
                 />
                 <span className="text-gray-800 dark:text-gray-200 font-medium">
                   @{connection.username}
