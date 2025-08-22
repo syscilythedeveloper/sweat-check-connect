@@ -67,7 +67,6 @@ async function getGlobalCheckins(currentUserId: string) {
           followers: {
             where: { followerId: currentUserId },
             select: { status: true },
-            take: 1,
           },
         },
       },
@@ -81,8 +80,6 @@ async function getGlobalCheckins(currentUserId: string) {
   return globalCheckins;
 }
 async function getFollowingCheckins(currentUserId: string) {
-  // Get challenges where the user is NOT the creator AND not already participating
-
   const following = await prisma.userFollow.findMany({
     where: { followerId: currentUserId, status: "ACCEPTED" },
     select: { followingId: true },

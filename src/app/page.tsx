@@ -46,7 +46,6 @@ const Home = () => {
 
           setLeaderboardData(data.leaderboard);
           setFollowingCheckIns(data.followingCheckIns);
-
           setGlobalCheckIns(data.globalCheckIns);
         })
         .catch((error) => {
