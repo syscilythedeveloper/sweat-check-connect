@@ -5,9 +5,10 @@ import DashboardCheckIn from "./CheckIns";
 
 interface CheckInFeedProps {
   checkIns: any[];
+  onStatusChange?: (username: string, status: string) => void;
 }
 
-const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
+const DashboardCheckInFeed = ({ checkIns, onStatusChange }: CheckInFeedProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const safeIndex = Math.max(0, Math.min(currentIndex, checkIns.length - 1));
@@ -72,6 +73,7 @@ const DashboardCheckInFeed = ({ checkIns }: CheckInFeedProps) => {
         <DashboardCheckIn
           key={checkIns[safeIndex].id}
           {...checkIns[safeIndex]}
+          onStatusChange={onStatusChange}
         />
       )}
     </div>

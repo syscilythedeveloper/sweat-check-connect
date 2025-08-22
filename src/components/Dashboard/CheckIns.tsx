@@ -23,7 +23,6 @@ interface CheckInData {
   videoUrl: string;
   thumbnailUrl?: string;
   createdAt: string;
-
   user: {
     username: string;
     avatar: string;
@@ -31,8 +30,13 @@ interface CheckInData {
   };
 }
 
-const DashboardCheckIn = (checkIn: CheckInData) => {
-  const { caption, videoUrl, thumbnailUrl, createdAt, user } = checkIn;
+interface DashboardCheckInProps extends CheckInData {
+  onStatusChange?: (username: string, status: string) => void;
+}
+
+const DashboardCheckIn = (checkIn: DashboardCheckInProps) => {
+  const { caption, videoUrl, thumbnailUrl, createdAt, user, onStatusChange } =
+    checkIn;
   //console.log("following status:", user.followers[0].status);
   const [followingStatus, setFollowingStatus] = useState<
     FollowStatus | undefined
@@ -68,9 +72,13 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
     setActionInProgress("follow");
     try {
       const res = await followUser(user.username);
-      if (res?.status === FollowStatus.accepted)
+      if (res?.status === FollowStatus.accepted) {
         setFollowingStatus(FollowStatus.accepted);
-      else setFollowingStatus(FollowStatus.requested);
+        onStatusChange?.(user.username, FollowStatus.accepted);
+      } else {
+        setFollowingStatus(FollowStatus.requested);
+        onStatusChange?.(user.username, FollowStatus.requested);
+      }
     } finally {
       setIsLoading(false);
       setActionInProgress(null);
@@ -82,6 +90,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
     try {
       await unfollowUser(user.username);
       setFollowingStatus(FollowStatus.not_following);
+      onStatusChange?.(user.username, FollowStatus.not_following);
     } finally {
       setIsLoading(false);
       setActionInProgress(null);
@@ -186,7 +195,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
       </button>
 
       <video
-        className="w-full h-full object-contain"
+        className="w-full h-full object-cover"
         autoPlay
         muted={isMuted}
         poster={thumbnailUrl}

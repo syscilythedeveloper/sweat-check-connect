@@ -73,6 +73,36 @@ const Home = () => {
 
   if (!mounted) return null;
 
+  // Handler to update follow status in check-in arrays
+  const handleStatusChange = (username: string, status: string) => {
+    setGlobalCheckIns((prev) =>
+      prev.map((checkIn) =>
+        checkIn.user.username === username
+          ? {
+              ...checkIn,
+              user: {
+                ...checkIn.user,
+                followers: [{ status }],
+              },
+            }
+          : checkIn
+      )
+    );
+    setFollowingCheckIns((prev) =>
+      prev.map((checkIn) =>
+        checkIn.user.username === username
+          ? {
+              ...checkIn,
+              user: {
+                ...checkIn.user,
+                followers: [{ status }],
+              },
+            }
+          : checkIn
+      )
+    );
+  };
+
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
@@ -114,7 +144,10 @@ const Home = () => {
         {activeTab === DashboardDisplay.followingCheckIns ? (
           followingCheckIns.length > 0 ? (
             <div className="h-full overflow-y-auto ">
-              <CheckInFeed checkIns={followingCheckIns} />
+              <CheckInFeed
+                checkIns={followingCheckIns}
+                onStatusChange={handleStatusChange}
+              />
             </div>
           ) : (
             <div className="flex items-center justify-center h-full">
@@ -126,7 +159,10 @@ const Home = () => {
         ) : activeTab === DashboardDisplay.globalCheckIns &&
           globalCheckIns.length > 0 ? (
           <div className="h-full overflow-y-auto">
-            <CheckInFeed checkIns={globalCheckIns} />
+            <CheckInFeed
+              checkIns={globalCheckIns}
+              onStatusChange={handleStatusChange}
+            />
           </div>
         ) : (
           <div className="h-full overflow-y-auto">
