@@ -1,5 +1,5 @@
 //To do: Display reactions (likes, comments, etc.) below the video
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { format } from "date-fns";
 import Image from "next/image";
 import {
@@ -9,6 +9,7 @@ import {
   UserRoundPlus,
   UserRoundMinus,
 } from "lucide-react";
+import { FollowStatus } from "@/types/connections";
 import { followUser, unfollowUser } from "@/utils/userInteractions";
 interface CheckInData {
   id: string;
@@ -33,13 +34,13 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    if (user.followers.length > 0) {
-      setFollowingStatus("FOLLOWING");
-    } else {
-      setFollowingStatus("PENDING");
-    }
-  }, [user.followers]);
+  // useEffect(() => {
+  //   if (user.followers.length > 0) {
+  //     setFollowingStatus("FOLLOWING");
+  //   } else {
+  //     setFollowingStatus("PENDING");
+  //   }
+  // }, [user.followers]);
   const toggleMute = () => {
     if (videoRef.current) {
       videoRef.current.muted = !isMuted;
@@ -51,8 +52,9 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
     try {
       const res = await followUser(user.username); // await!
       // If your API returns status, set accordingly:
-      if (res?.status === "ACCEPTED") setFollowingStatus("FOLLOWING");
-      else setFollowingStatus("PENDING");
+      if (res?.status === FollowStatus.accepted)
+        setFollowingStatus(FollowStatus.accepted);
+      else setFollowingStatus(FollowStatus.requested);
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +63,7 @@ const DashboardCheckIn = (checkIn: CheckInData) => {
     setIsLoading(true);
     try {
       await unfollowUser(user.username);
-      setFollowingStatus("PENDING");
+      setFollowingStatus(FollowStatus.not_following);
     } finally {
       setIsLoading(false);
     }

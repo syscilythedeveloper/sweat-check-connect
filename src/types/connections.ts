@@ -11,3 +11,9 @@ export interface ConnectionCardProps {
   bio?: string;
   userFollows?: boolean;
 }
+
+export enum FollowStatus {
+  requested = "REQUESTED",
+  accepted = "ACCEPTED",
+  not_following = "NOT_FOLLOWING",
+}

@@ -48,8 +48,6 @@ const Home = () => {
           setFollowingCheckIns(data.followingCheckIns);
 
           setGlobalCheckIns(data.globalCheckIns);
-
-          //replace later with checkins from people the user
         })
         .catch((error) => {
           console.error("Error fetching dashboard data:", error);
@@ -73,9 +71,7 @@ const Home = () => {
       };
     }
   }, [activeTab]);
-  // reroute to login if user is not authenticated
 
-  // Don't render anything until client-side mount is complete
   if (!mounted) return null;
 
   return (
@@ -116,20 +112,24 @@ const Home = () => {
 
       {/* Content Area */}
       <div className="flex-1 min-h-0 relative overflow-hidden">
-        {activeTab === DashboardDisplay.followingCheckIns &&
-        followingCheckIns.length > 0 ? (
-          <div className="h-full overflow-y-auto ">
-            <CheckInFeed checkIns={followingCheckIns} />
-          </div>
+        {activeTab === DashboardDisplay.followingCheckIns ? (
+          followingCheckIns.length > 0 ? (
+            <div className="h-full overflow-y-auto ">
+              <CheckInFeed checkIns={followingCheckIns} />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <span className="text-lg text-gray-500">
+                You aren&apos;t following anyone!
+              </span>
+            </div>
+          )
         ) : activeTab === DashboardDisplay.globalCheckIns &&
           globalCheckIns.length > 0 ? (
-          // Scrollable Check-ins Layout
-
           <div className="h-full overflow-y-auto">
             <CheckInFeed checkIns={globalCheckIns} />
           </div>
         ) : (
-          // Leaderboard Layout
           <div className="h-full overflow-y-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-blue-50/50 dark:bg-background gap-4 rounded-xl p-4 min-h-full overflow-y-auto">
               <LeaderboardList

@@ -24,8 +24,6 @@ model User {
   currentActiveStreak  Int      @default(0)
   longestActiveStreak  Int      @default(0)
 
-
-
   checkIns       CheckIn[]
   challenges     UserChallenge[]   // Participating challenges (via join table)
   sentMessages   DirectMessage[] @relation("sentMessages")
@@ -260,7 +258,7 @@ model UserFollow {
   id           String   @id @default(cuid())
   followerId   String
   followingId  String
-  status       FollowStatus @default(PENDING)
+  status       FollowStatus
   createdAt    DateTime @default(now())
 
   follower     User @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
@@ -268,12 +266,14 @@ model UserFollow {
 
   @@unique([followerId, followingId])
   @@index([followerId,status])
+  @@index([followingId, status])      // fetch incoming requests for a user
+
 }
 
 enum FollowStatus {
-    PENDING
-    ACCEPTED
-    BLOCKED
+  REQUESTED  
+  ACCEPTED
+  BLOCKED
 
 }
 
