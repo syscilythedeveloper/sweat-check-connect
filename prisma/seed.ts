@@ -4,12 +4,17 @@ const prisma = new PrismaClient();
 // Use the imported enum MembershipType from "@/types/user"
 async function main() {
   console.log("🌱 Starting seed...");
+  // Clear tables before seeding to avoid unique constraint errors
+  await prisma.user.deleteMany({});
+  await prisma.userFollow.deleteMany({});
+  await prisma.checkIn.deleteMany({});
+  await prisma.challenge.deleteMany({});
 
   // Create test users
   const users = await Promise.all([
     prisma.user.create({
       data: {
-        username: "XoxoKi_Breon",
+        username: "xokiarabrieon",
         email: "kiara@example.com",
         name: "Kiara McCalvin",
         avatar:
@@ -25,7 +30,7 @@ async function main() {
 
     prisma.user.create({
       data: {
-        username: "smiley",
+        username: "smileyyy.e",
         email: "enijah@example.com",
         name: "Enijah Smith",
         avatar:
@@ -41,7 +46,7 @@ async function main() {
 
     prisma.user.create({
       data: {
-        username: "gabby_m",
+        username: "gabayyymormor_",
         email: "gabby@example.com",
         name: "Gabby Morris",
         avatar:
@@ -57,7 +62,7 @@ async function main() {
 
     prisma.user.create({
       data: {
-        username: "william_o",
+        username: "beforethebillions",
         email: "william@example.com",
         name: "William Orgertrice",
         avatar:
@@ -73,7 +78,7 @@ async function main() {
 
     prisma.user.create({
       data: {
-        username: "vmack",
+        username: "jusssmackin",
         email: "victoria@example.com",
         name: "Young Warden",
         avatar:
@@ -88,7 +93,7 @@ async function main() {
     }),
     prisma.user.create({
       data: {
-        username: "daniel",
+        username: "danny.r.l",
         email: "daniel@example.com",
         name: "Daniel",
         avatar:
@@ -103,7 +108,7 @@ async function main() {
     }),
     prisma.user.create({
       data: {
-        username: "aneesah",
+        username: "a_plus211",
         email: "aneesah@example.com",
         name: "Aneesah",
         avatar:
@@ -118,7 +123,7 @@ async function main() {
     }),
     prisma.user.create({
       data: {
-        username: "amanda",
+        username: "queenherc",
         email: "amanda@example.com",
         name: "Amanda",
         avatar:
@@ -134,7 +139,7 @@ async function main() {
 
     prisma.user.create({
       data: {
-        username: "ashlye",
+        username: "marathon_mamiiii",
         email: "ashlye@example.com",
         name: "Ashlye",
         avatar:
@@ -165,115 +170,70 @@ async function main() {
       {
         userId: users[5].id,
         caption: "Upper body workout complete! 💪🏿",
-        createdAt: new Date("2025-08-11T09:30:00Z"),
+        createdAt: new Date("2025-08-10T12:00:00Z"),
         videoUrl:
           "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754517234/daniel_upper_qpzb5a.mov",
         fileSize: 250,
         mimeType: "video/mp4",
       },
       {
-        userId: users[5].id,
-        caption: "Dead Lift 🦵🏿",
-        createdAt: new Date("2025-08-12T08:35:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754517233/daniel_lower_lx4jvu.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[5].id,
-        caption: "Leg Press ",
-        createdAt: new Date("2025-08-13T08:30:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754517234/daniel_legpress_dv6yqd.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[0].id,
-        caption: "Bulgarian Split Squat 🦵🏿",
-        createdAt: new Date("2025-08-15T12:30:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516903/ki_bgs_ankeka.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[0].id,
-        caption: "Cardio Check In🦵🏿",
-        createdAt: new Date("2025-08-16T14:32:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516903/ki_cardio_brs97v.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
         userId: users[7].id,
         caption: "Workwork don't stop",
-        createdAt: new Date("2025-08-17T05:30:00Z"),
+        createdAt: new Date("2025-08-10T14:00:00Z"),
         videoUrl:
           "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516913/amanda_lunges_wmar1f.mov",
         fileSize: 250,
         mimeType: "video/mp4",
       },
       {
-        userId: users[7].id,
-        caption: "Leg Dayyyyy",
-        createdAt: new Date("2025-08-20T08:12:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516900/amanda_deadlift_o82peh.mp4",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[7].id,
-        caption: "💪🏿",
-        createdAt: new Date("2025-08-21T06:30:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516911/amanda_glutebridge_kdwrcx.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[7].id,
-        caption: "Leg Dayyyyy",
-        createdAt: new Date("2025-08-21T12:43:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516907/amanda_abs_x051cm.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[6].id,
-        caption: "Upper Body Workout 🏋🏿‍♀️",
-        createdAt: new Date("2025-08-21T15:12:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516899/aneesah_upper_udoy0e.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[6].id,
-        caption: "Glute Day🦵🏿",
-        createdAt: new Date("2025-08-20T13:27:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516898/aneesah_glutebridge_wo763p.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
         userId: users[2].id,
         caption: "Full Bodyyyyy ",
-        createdAt: new Date("2025-08-13T08:30:00Z"),
+        createdAt: new Date("2025-08-10T16:00:00Z"),
         videoUrl:
           "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516903/gabby_lunges_jhajfp.mov",
         fileSize: 250,
         mimeType: "video/mp4",
       },
       {
+        userId: users[3].id,
+        caption: "�🏽‍♂️",
+        createdAt: new Date("2025-08-10T18:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516832/will_lower_abo7xd.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[0].id,
+        caption: "Bulgarian Split Squat 🦵🏿",
+        createdAt: new Date("2025-08-11T10:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516903/ki_bgs_ankeka.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[5].id,
+        caption: "Dead Lift 🦵🏿",
+        createdAt: new Date("2025-08-11T12:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754517233/daniel_lower_lx4jvu.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[7].id,
+        caption: "Leg Dayyyyy",
+        createdAt: new Date("2025-08-11T14:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516900/amanda_deadlift_o82peh.mp4",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
         userId: users[2].id,
         caption: "Glute Day🦵🏿",
-        createdAt: new Date("2025-08-15T08:30:00Z"),
+        createdAt: new Date("2025-08-11T16:00:00Z"),
         videoUrl:
           "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516904/gabby_squats_jdnvhh.mov",
         fileSize: 250,
@@ -282,43 +242,70 @@ async function main() {
       {
         userId: users[3].id,
         caption: "🏋🏽‍♂️",
-        createdAt: new Date("2025-08-11T08:35:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516832/will_lower_abo7xd.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[3].id,
-        caption: "🏋🏽‍♂️",
-        createdAt: new Date("2025-08-06T08:30:00Z"),
-        videoUrl:
-          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516832/will_upper_jtwq2j.mov",
-        fileSize: 250,
-        mimeType: "video/mp4",
-      },
-      {
-        userId: users[3].id,
-        caption: "🏋🏽‍♂️",
-        createdAt: new Date("2025-08-14T08:30:00Z"),
+        createdAt: new Date("2025-08-11T18:00:00Z"),
         videoUrl:
           "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516832/will_bicep_curls_qxo9iv.mov",
         fileSize: 250,
         mimeType: "video/mp4",
       },
       {
+        userId: users[0].id,
+        caption: "Cardio Check In🦵",
+        createdAt: new Date("2025-08-12T10:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516903/ki_cardio_brs97v.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[5].id,
+        caption: "Leg Press ",
+        createdAt: new Date("2025-08-12T12:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754517234/daniel_legpress_dv6yqd.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[7].id,
+        caption: "💪🏿",
+        createdAt: new Date("2025-08-12T14:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516911/amanda_glutebridge_kdwrcx.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[6].id,
+        caption: "Glute Day🦵🏿",
+        createdAt: new Date("2025-08-12T16:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516898/aneesah_glutebridge_wo763p.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
         userId: users[1].id,
         caption: "🏋🏽‍♂️",
-        createdAt: new Date("2025-08-07T09:32:00Z"),
+        createdAt: new Date("2025-08-12T18:00:00Z"),
         videoUrl:
           "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516841/enijah_bgs_l3rjer.mov",
         fileSize: 250,
         mimeType: "video/mp4",
       },
       {
+        userId: users[6].id,
+        caption: "Upper Body Workout 🏋�‍♀️",
+        createdAt: new Date("2025-08-13T10:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516899/aneesah_upper_udoy0e.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
         userId: users[8].id,
         caption: "🏋🏽Bent ova rowssssssss",
-        createdAt: new Date("2025-08-05T07:34:00Z"),
+        createdAt: new Date("2025-08-13T12:00:00Z"),
         videoUrl:
           "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754604429/ashlye_upper_gsnulo.mov",
         fileSize: 250,
@@ -327,9 +314,18 @@ async function main() {
       {
         userId: users[8].id,
         caption: "RDLs for the win ",
-        createdAt: new Date("2025-08-12T08:30:00Z"),
+        createdAt: new Date("2025-08-13T14:00:00Z"),
         videoUrl:
           "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754604429/ashley_lower_mppepx.mov",
+        fileSize: 250,
+        mimeType: "video/mp4",
+      },
+      {
+        userId: users[3].id,
+        caption: "🏋🏽‍♂️",
+        createdAt: new Date("2025-08-13T16:00:00Z"),
+        videoUrl:
+          "https://res.cloudinary.com/dbmgioxbm/video/upload/v1754516832/will_upper_jtwq2j.mov",
         fileSize: 250,
         mimeType: "video/mp4",
       },

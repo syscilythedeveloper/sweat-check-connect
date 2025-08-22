@@ -118,55 +118,55 @@ async function getFollowers(userId: string) {
     {
       id: "1",
       username: "XoxoKi_Breon",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604075/kiara_eoarvx.png",
     },
     {
       id: "2",
       username: "smiley",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604111/enijah_sfdym5.png",
     },
     {
       id: "3",
       username: "gabrielle_elyse",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604052/gabby_gqqlp3.png",
     },
     {
       id: "4",
       username: "future_Billionaire",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754604052/will_aberc7.png",
     },
     {
       id: "5",
       username: "vmackkk",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603858/victoria_oehw6x.png",
     },
     {
       id: "6",
       username: "drummerDanny",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603477/daniel_huwkmx.png",
     },
     {
       id: "7",
       username: "dr.aneesah",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603476/aneesah_vlagrt.png",
     },
     {
       id: "8",
       username: "QueenHerc",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603476/amanda_fuyzbl.png",
     },
     {
       id: "9",
       username: "ashlye_fay",
-      profilePicture:
+      avatar:
         "https://res.cloudinary.com/dbmgioxbm/image/upload/v1754603250/ashlye_u14tip.jpg",
     },
   ];

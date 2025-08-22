@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
 import DashboardCheckIn from "./CheckIns";
 
@@ -8,7 +9,10 @@ interface CheckInFeedProps {
   onStatusChange?: (username: string, status: string) => void;
 }
 
-const DashboardCheckInFeed = ({ checkIns, onStatusChange }: CheckInFeedProps) => {
+const DashboardCheckInFeed = ({
+  checkIns,
+  onStatusChange,
+}: CheckInFeedProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const safeIndex = Math.max(0, Math.min(currentIndex, checkIns.length - 1));
@@ -47,7 +51,7 @@ const DashboardCheckInFeed = ({ checkIns, onStatusChange }: CheckInFeedProps) =>
     };
   }, [checkIns.length]);
 
-  // Arrow key navigation (optional but feels great)
+  // Arrow key navigation
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown") {
@@ -69,13 +73,23 @@ const DashboardCheckInFeed = ({ checkIns, onStatusChange }: CheckInFeedProps) =>
         touchAction: "none",
       }}
     >
-      {checkIns.length > 0 && (
-        <DashboardCheckIn
-          key={checkIns[safeIndex].id}
-          {...checkIns[safeIndex]}
-          onStatusChange={onStatusChange}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {checkIns.length > 0 && (
+          <motion.div
+            key={checkIns[safeIndex].id}
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 450, damping: 30 }}
+            style={{ height: "100%" }}
+          >
+            <DashboardCheckIn
+              {...checkIns[safeIndex]}
+              onStatusChange={onStatusChange}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
