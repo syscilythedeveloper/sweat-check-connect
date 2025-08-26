@@ -20,34 +20,6 @@ Sweat Check Connect is a comprehensive fitness social platform built with Next.j
 - Connect with like-minded individuals
 - Build your fitness community
 
-### 🤖 **AI-Powered Recommendations**
-
-- Get personalized workout suggestions
-- Receive nutrition advice based on your goals
-- AI-driven fitness coaching and tips
-- Smart recommendations for optimal performance
-
-### 🎵 **Spotify Integration**
-
-- Share your workout playlists
-- Discover new music from the community
-- Sync your favorite tracks for motivation
-- Create collaborative workout playlists
-
-### 🍎 **Nutrition & Training Plans**
-
-- Share and discover meal plans
-- Exchange gym workout routines
-- Save favorite plans from other users
-- Track nutritional goals and progress
-
-### 📊 **Progress Tracking**
-
-- Visual progress charts and analytics
-- Workout history and statistics
-- Goal setting and achievement tracking
-- Performance insights and trends
-
 ## 🚀 Getting Started
 
 ### Prerequisites
