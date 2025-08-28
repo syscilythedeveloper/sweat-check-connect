@@ -13,7 +13,7 @@ import {
   calculateDaysUntilStart,
   calculateCurrentDay,
   deleteChallenge,
-} from "@/utils/challengeFunctions";
+} from "@/utils/challengeData";
 import { GiOnTarget } from "react-icons/gi";
 
 const tagColorClasses = [

@@ -8,7 +8,7 @@ import {
   deleteChallenge,
   calculateDaysUntilStart,
   calculateCurrentDay,
-} from "../utils/challengeFunctions";
+} from "../utils/challengeData";
 
 describe("Retrieving challenge data", () => {
   beforeEach(() => {

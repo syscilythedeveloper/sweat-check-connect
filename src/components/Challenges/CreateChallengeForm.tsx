@@ -23,7 +23,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ChallengeData, Challenge } from "@/types/challenge";
-import { createChallenge } from "@/utils/challengeFunctions";
+import { createChallenge } from "@/utils/challengeData";
 import React from "react";
 import { useUser } from "@clerk/nextjs";
 import { ChevronDownIcon } from "lucide-react";

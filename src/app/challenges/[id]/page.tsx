@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChallengeCardProps } from "../../../types/challenge";
-import { fetchChallengeData } from "../../../utils/challengeFunctions";
+import { fetchChallengeData } from "../../../utils/challengeData";
 import { ChallengeTab } from "../../../types/challenge";
 
 import ChallengeCheckInForm from "../../../components/Challenges/ChallengeCheckInForm";

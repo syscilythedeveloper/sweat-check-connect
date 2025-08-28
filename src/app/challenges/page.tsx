@@ -6,7 +6,7 @@ import CreateChallengeForm from "../../components/Challenges/CreateChallengeForm
 
 import { Challenge, ChallengeType } from "../../types/challenge";
 
-import { fetchChallengesData } from "../../utils/challengeFunctions";
+import { fetchChallengesData } from "../../utils/challengeData";
 
 import ChallengeFeed from "../../components/Challenges/ChallengeFeed";
 
