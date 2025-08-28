@@ -13,7 +13,7 @@ import CheckInFeed from "@/components/Dashboard/CheckInFeed";
 
 import { useUser } from "@clerk/nextjs";
 
-import { fetchDashboardData } from "@/utils/DashboardFunctions";
+import { fetchDashboardData } from "@/utils/dashboardData";
 
 const Home = () => {
   const { user } = useUser();
