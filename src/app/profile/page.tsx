@@ -11,7 +11,7 @@ import { useUser } from "@clerk/nextjs";
 import { ProfileDisplayType, UserCheckIn } from "@/types/profile";
 import { Separator } from "@/components/ui/separator";
 import ProfileCheckInFeed from "@/components/Profile/ProfileCheckInFeed";
-import { fetchProfileData } from "@/utils/profileFunctions";
+import { fetchProfileData } from "@/utils/profileData";
 import ConnectionsFeed from "@/components/Profile/ConnectionsFeed";
 
 const GradientDefs = () => {

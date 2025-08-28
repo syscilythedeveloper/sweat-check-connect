@@ -11,7 +11,7 @@ import {
   Check,
 } from "lucide-react";
 import { FollowStatus } from "@/types/connections";
-import { followUser, unfollowUser } from "@/utils/userInteractions";
+import { followUser, unfollowUser } from "@/utils/connectionInteractions";
 interface Follower {
   id: string;
   status: string;

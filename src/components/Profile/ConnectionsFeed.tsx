@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { Connection, ProfileDisplayType } from "@/types/profile";
 import { Button } from "../ui/button";
-import { unfollowUser } from "@/utils/userInteractions";
+import { unfollowUser } from "@/utils/connectionInteractions";
 
 interface ConnectionsFeedProps {
   connections: Connection[];
