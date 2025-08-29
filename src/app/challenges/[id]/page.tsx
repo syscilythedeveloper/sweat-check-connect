@@ -135,7 +135,6 @@ const ChallengeDetails = () => {
               <ChallengeCheckInForm
                 setShowCheckInForm={setShowCheckInForm}
                 challengeId={challenge.id}
-                challengeName={challenge.title}
               />
             </div>
           </div>

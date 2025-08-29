@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 
 interface ChallengeCheckInFormProps {
   challengeId: string;
-  challengeName: string;
   setShowCheckInForm: (show: boolean) => void;
 }
 

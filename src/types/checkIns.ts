@@ -10,6 +10,11 @@ export type CheckInData = {
   challengeId?: string;
 };
 
+export enum CheckInType {
+  solo = "solo",
+  challenge = "challenge",
+}
+
 export type CheckInResponse = {
   success: boolean;
 };
