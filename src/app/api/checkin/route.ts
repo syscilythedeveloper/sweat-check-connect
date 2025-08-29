@@ -4,6 +4,8 @@ import {
   UploadApiResponse,
 } from "cloudinary";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "../../../../prisma/utils/prisma";
+import { getAuth } from "@clerk/nextjs/server";
 
 export const runtime = "nodejs"; // ensure Node runtime (not edge)
 
@@ -26,7 +28,7 @@ type VideoInfo = {
 
 type CheckInInput = {
   caption: string;
-  video: VideoInfo;
+  videoInfo: VideoInfo;
   challengeId?: string; // optional
 };
 
@@ -71,6 +73,13 @@ async function uploadVideoToCloudinary(
 
 export async function POST(req: NextRequest) {
   const checkInInfo = await req.formData();
+  const { userId } = getAuth(req);
+  if (!userId) {
+    return NextResponse.json(
+      { error: "User not authenticated" },
+      { status: 401 }
+    );
+  }
 
   const video = checkInInfo.get("video");
   const caption = checkInInfo.get("caption") || "";
@@ -89,16 +98,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid caption" }, { status: 400 });
   }
 
-  // const videoInfo = await getVideoUrl(video);
-  const videoInfo = {
-    videoURL: "",
-    publicId: "",
-    duration: 21,
-    fileSize: 32,
-    mimeType: video.type,
-  };
+  const videoInfo = await getVideoUrl(video);
 
-  await saveCheckIn({ caption, video: videoInfo, challengeId });
+  await saveCheckIn({ caption, videoInfo: videoInfo, challengeId }, userId);
 
   return NextResponse.json({ message: "Check-in successful" });
 }
@@ -115,56 +117,27 @@ export async function getVideoUrl(videoFile: File) {
   return videoInfo;
 }
 
-export const postSoloCheckIn = async (
-  // this is the function to post the check-in data to prisma
-  videoInfo: {
-    videoURL: string;
-    publicId: string;
-    duration: number;
-    fileSize: number;
-    mimeType: string;
-  },
-  caption: string
-) => {
-  console.log("Posting solo check in");
-  console.log("Posting check-in with video info:", videoInfo);
-  console.log("Posting check-in with caption:", caption);
-};
+async function saveCheckIn(
+  { caption, videoInfo, challengeId }: CheckInInput,
+  userId: string
+) {
+  const { videoURL, fileSize, mimeType, duration } = videoInfo;
 
-export const postChallengeCheckIn = async (
-  // this is the function to post the check-in data to prisma
-  videoInfo: {
-    videoURL: string;
-    publicId: string;
-    duration: number;
-    fileSize: number;
-    mimeType: string;
-  },
-  caption: string,
-  challengeId: string
-) => {
-  console.log("Posting challenge check-in");
-  console.log("Posting check-in with video info:", videoInfo);
-  console.log("Posting check-in with caption:", caption);
-  console.log("Posting check-in with challenge ID:", challengeId);
-};
-
-async function saveCheckIn({ caption, video, challengeId }: CheckInInput) {
-  // Example Prisma shape — adjust to your actual schema
-  // await prisma.checkIn.create({
-  //   data: {
-  //     caption,
-  //     challengeId,             // optional, Prisma will store null if undefined
-  //     videoPublicId: video.publicId,
-  //     videoUrl: video.videoURL,
-  //     videoMp4Url: video.mp4Url,
-  //     videoHlsUrl: video.hlsUrl,
-  //     videoDuration: video.duration,
-  //     videoBytes: video.fileSize,
-  //     videoFormat: video.format,
-  //     videoMimeType: video.mimeType,
-  //     status: "ready",
-  //   },
-  // });
-  console.log("Saving check-in", { caption, challengeId, video });
+  try {
+    const response = await prisma.checkIn.create({
+      data: {
+        userId: userId,
+        challengeId,
+        caption,
+        videoUrl: videoURL,
+        fileSize: fileSize || 32,
+        mimeType: mimeType || "video",
+        duration: duration,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
