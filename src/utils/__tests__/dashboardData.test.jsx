@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { fetchDashboardData } from "../utils/dashboardData";
+import { fetchDashboardData } from "../dashboardData";
 
 describe("Retrieving dashboard data", () => {
   beforeEach(() => {

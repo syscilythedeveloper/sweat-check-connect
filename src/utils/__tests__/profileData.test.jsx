@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { fetchProfileData } from "../utils/profileData";
+import { fetchProfileData } from "../profileData";
 
 describe("Retrieving profile data", () => {
   beforeEach(() => {

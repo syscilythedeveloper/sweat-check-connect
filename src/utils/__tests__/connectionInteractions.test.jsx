@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { followUser, unfollowUser } from "../utils/connectionInteractions";
+import { followUser, unfollowUser } from "../connectionInteractions";
 
 describe("functions for following/unfollowing users", () => {
   beforeEach(() => {

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Video, X, BicepsFlexed } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import getVideoUrl from "@/utils/cloudinary";
 import toast from "react-hot-toast";
 
 interface ChallengeCheckInFormProps {
@@ -11,23 +12,19 @@ interface ChallengeCheckInFormProps {
 
 const ChallengeCheckInForm = ({
   challengeId,
-  challengeName,
   setShowCheckInForm,
 }: ChallengeCheckInFormProps) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
-
   const [caption, setCaption] = useState("");
-
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("video/")) {
-      const maxSize = 50 * 1024 * 1024;
+      const maxSize = 100 * 1024 * 1024;
       if (file.size > maxSize) {
-        alert("Video must be less than 50MB");
+        alert("Video must be less than 100MB");
         return;
       }
 
@@ -38,8 +35,6 @@ const ChallengeCheckInForm = ({
 
       tempVideo.onloadedmetadata = () => {
         const duration = tempVideo.duration;
-
-        // Check if video is between 15-30 seconds
 
         if (duration > 120) {
           toast.error(
@@ -75,7 +70,6 @@ const ChallengeCheckInForm = ({
             />
           ),
         });
-
         setVideoFile(file);
         setVideoPreviewUrl(url);
         console.log(`✅ Video duration: ${duration.toFixed(1)} seconds`);
@@ -114,20 +108,34 @@ const ChallengeCheckInForm = ({
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const submitFormData = (formData: FormData) => {
+    // convert video function
+
+    //function to make api call, function will take params of checkinId, video URL, and caption`
+
+    console.log("FormData contents:");
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const formData = new FormData();
-    formData.append("video", videoFile!);
-    formData.append("caption", caption);
-    console.log("Submitting check-in for challenge:", challengeId);
-    console.log("Challenge Name:", challengeName);
-    console.log("Caption:", caption);
-    // Here you would typically send formData to your server
-    // For example:
-    // await postCheckIn(formData, challengeId);
 
+    // getVideoUrl
+    const videoURL = getVideoUrl(videoFile);
+    console.log("Video URL is ", videoURL);
+    console.log("Submitting check-in for challenge:", challengeId);
+    const formData = new FormData();
+    formData.append("video", videoURL);
+    formData.append("caption", caption);
+    formData.append("challengeId", challengeId);
+
+    console.log("Caption:", caption);
     console.log(formData);
+
+    submitFormData(formData);
     setIsSubmitting(false);
     setShowCheckInForm(false);
   };

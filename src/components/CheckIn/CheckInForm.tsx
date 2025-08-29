@@ -6,6 +6,7 @@ import { Camera, Video, X, BicepsFlexed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { RiVideoUploadLine } from "react-icons/ri";
 
 const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -20,9 +21,9 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("video/")) {
-      const maxSize = 50 * 1024 * 1024;
+      const maxSize = 100 * 1024 * 1024;
       if (file.size > maxSize) {
-        alert("Video must be less than 50MB");
+        alert("Video must be less than 100MB");
         return;
       }
 
@@ -34,38 +35,16 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
       tempVideo.onloadedmetadata = () => {
         const duration = tempVideo.duration;
 
-        // Check if video is between 15-30 seconds
-        if (duration < 15) {
-          toast.error(
-            `Video too short (${duration.toFixed(1)}s). Need 15-30 seconds.`,
-            {
-              duration: 4000,
-              position: "top-center",
-              style: {
-                background: "#ef4444",
-                color: "white",
-              },
-              icon: "⏱️",
-            }
-          );
-          URL.revokeObjectURL(url);
-          if (fileInputRef.current) fileInputRef.current.value = "";
-          return;
-        }
-
-        if (duration > 30) {
-          toast.error(
-            `Video too long (${duration.toFixed(1)}s). Need 15-30 seconds.`,
-            {
-              duration: 4000,
-              position: "top-center",
-              style: {
-                background: "#ef4444",
-                color: "white",
-              },
-              icon: "⏱️",
-            }
-          );
+        if (duration > 100) {
+          toast.error(`Video too long (${duration.toFixed(1)}s)`, {
+            duration: 4000,
+            position: "top-center",
+            style: {
+              background: "#ef4444",
+              color: "white",
+            },
+            icon: "⏱️",
+          });
           URL.revokeObjectURL(url);
           if (fileInputRef.current) fileInputRef.current.value = "";
           return;
@@ -245,27 +224,17 @@ const CheckInForm = ({ onClose }: { onClose: () => void }) => {
                 </Button>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-4">
-                <Video
+              <div className="flex flex-col items-center justify-center py-4 h-48">
+                <RiVideoUploadLine
                   size={40}
-                  className="text-purple-400 dark:text-purple-500 mb-2 sm:mb-3 sm:w-12 sm:h-12"
+                  className="text-gray-300 mb-2 sm:mb-3 sm:w-12 sm:h-12"
                 />
-                <p className="text-gray-700 dark:text-gray-200 font-semibold text-base sm:text-lg">
-                  Upload Your Workout Video
-                </p>
-                <p className="text-purple-600 dark:text-purple-400 text-xs sm:text-sm mt-1 font-medium">
-                  Must be 15-30 seconds long
-                </p>
+
                 <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mt-1">
-                  Tap to upload
+                  Tap to upload your workout video
                 </p>
               </div>
             )}
-          </div>
-          <div className="text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              📹 Video requirements: 15-30 seconds, max 50MB
-            </p>
           </div>
 
           {/* Caption */}

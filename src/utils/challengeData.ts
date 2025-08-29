@@ -20,7 +20,6 @@ export const fetchChallengeData = async (challengeId: string) => {
 };
 
 export const createChallenge = async (data: ChallengeData) => {
-  console.log("Creating challenge with data:", data);
   const response = await fetch(`/api/challenges`, {
     method: "POST",
     headers: {
