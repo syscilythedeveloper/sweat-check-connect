@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../prisma/utils/prisma";
 import { getAuth } from "@clerk/nextjs/server";
 
-export const runtime = "nodejs"; // ensure Node runtime (not edge)
+export const runtime = "nodejs";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -16,8 +16,7 @@ cloudinary.config({
 });
 
 type VideoInfo = {
-  videoURL: string; // prefer mp4 eager url when available
-  publicId: string;
+  videoURL: string;
   duration?: number;
   fileSize?: number;
   format?: string;
@@ -29,7 +28,7 @@ type VideoInfo = {
 type CheckInInput = {
   caption: string;
   videoInfo: VideoInfo;
-  challengeId?: string; // optional
+  challengeId?: string;
 };
 
 async function uploadVideoToCloudinary(
@@ -98,7 +97,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid caption" }, { status: 400 });
   }
 
-  const videoInfo = await getVideoUrl(video);
+  let videoInfo: VideoInfo;
+  try {
+    videoInfo = await getVideoUrl(video);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Unknown upload error";
+
+    // Map simple error codes (prefix before ':') to HTTP statuses
+    const code = msg.split(":")[0];
+    const status =
+      code === "NO_FILE" || code === "EMPTY_FILE" || code === "VALIDATION"
+        ? 400
+        : code === "UPLOAD_FAILED" || code === "MISSING_FIELDS"
+        ? 502
+        : 500;
+
+    return NextResponse.json({ error: msg }, { status });
+  }
 
   await saveCheckIn({ caption, videoInfo: videoInfo, challengeId }, userId);
 
@@ -106,15 +121,37 @@ export async function POST(req: NextRequest) {
 }
 
 export async function getVideoUrl(videoFile: File) {
-  const uploadRes = await uploadVideoToCloudinary(videoFile);
-  const videoURL = uploadRes.secure_url;
-  const publicId = uploadRes.public_id;
-  const duration = uploadRes.duration;
-  const fileSize = uploadRes.bytes;
-  const mimeType = uploadRes.format;
+  if (!videoFile) {
+    throw new Error("No file provided.");
+  }
+  if (videoFile.size <= 0) {
+    throw new Error("File is empty.");
+  }
+  try {
+    const uploadRes = await uploadVideoToCloudinary(videoFile);
 
-  const videoInfo = { videoURL, publicId, duration, fileSize, mimeType };
-  return videoInfo;
+    // Guard the fields you rely on
+    if (!uploadRes?.secure_url || !uploadRes?.bytes) {
+      throw new Error(
+        "MISSING_FIELDS: Upload response missing secure_url/bytes."
+      );
+    }
+
+    const videoURL = uploadRes.secure_url as string;
+    const duration =
+      typeof uploadRes.duration === "number" ? uploadRes.duration : undefined;
+    const fileSize = uploadRes.bytes as number;
+
+    // Cloudinary often gives `format` (e.g., "mp4"); infer a MIME if possible
+    const mimeType = uploadRes.format
+      ? `video/${String(uploadRes.format).toLowerCase()}`
+      : undefined;
+
+    return { videoURL, duration, fileSize, mimeType };
+  } catch (e: unknown) {
+    const base = e instanceof Error ? e.message : "unknown cause";
+    throw new Error(`UPLOAD_FAILED: ${base}`);
+  }
 }
 
 async function saveCheckIn(
