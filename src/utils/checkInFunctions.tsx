@@ -13,11 +13,15 @@ export function challengeCheckIn(challengeId: string, userId: string) {
   return { challengeId, userId };
 }
 
-export default function getVideoUrl(videoId: string) {
-  //make post req to api/cloudinary
-  console.log("Video ID:", videoId);
+export const postCheckIn = async (formData: FormData) => {
+  const response = await fetch(`/api/checkin`, {
+    method: "POST",
+    body: formData,
+  });
 
-  const videoURL = "Here is the video url created by cloudinary";
+  if (!response.ok) {
+    throw new Error("Failed to submit form");
+  }
 
-  return videoURL;
-}
+  return response.json();
+};

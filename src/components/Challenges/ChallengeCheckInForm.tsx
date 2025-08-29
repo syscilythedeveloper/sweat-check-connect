@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Video, X, BicepsFlexed } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import getVideoUrl from "@/utils/cloudinary";
+import { postCheckIn } from "@/utils/checkInFunctions";
 import toast from "react-hot-toast";
 
 interface ChallengeCheckInFormProps {
@@ -108,34 +108,30 @@ const ChallengeCheckInForm = ({
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const submitFormData = (formData: FormData) => {
-    // convert video function
-
-    //function to make api call, function will take params of checkinId, video URL, and caption`
-
-    console.log("FormData contents:");
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // getVideoUrl
-    const videoURL = getVideoUrl(videoFile);
-    console.log("Video URL is ", videoURL);
-    console.log("Submitting check-in for challenge:", challengeId);
+    if (!videoFile) {
+      toast.error("Please upload a video before submitting.", {
+        duration: 4000,
+        position: "top-center",
+        style: {
+          background: "#ef4444",
+          color: "white",
+        },
+      });
+      setIsSubmitting(false);
+      return;
+    }
     const formData = new FormData();
-    formData.append("video", videoURL);
-    formData.append("caption", caption);
+    formData.append("video", videoFile);
     formData.append("challengeId", challengeId);
+    formData.append("caption", caption);
 
-    console.log("Caption:", caption);
-    console.log(formData);
+    // postCheckIn
+    const checkinresponse = await postCheckIn(formData);
+    console.log("Check-in response:", checkinresponse);
 
-    submitFormData(formData);
     setIsSubmitting(false);
     setShowCheckInForm(false);
   };
@@ -234,7 +230,8 @@ const ChallengeCheckInForm = ({
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               rows={3}
-              placeholder="Enter caption (optional)"
+              required
+              placeholder="Enter caption"
               className="w-full p-3 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition resize-none text-sm sm:text-base text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 bg-white dark:bg-slate-900"
             ></textarea>
           </div>

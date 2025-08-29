@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function getLeaderboardData() {
+export async function getLeaderboardData() {
   const users = await prisma.user.findMany({
     select: {
       username: true,
@@ -55,7 +55,7 @@ async function getLeaderboardData() {
   return users;
 }
 
-async function getGlobalCheckins(currentUserId: string) {
+export async function getGlobalCheckins(currentUserId: string) {
   const globalCheckins = await prisma.checkIn.findMany({
     include: {
       user: {
@@ -79,7 +79,7 @@ async function getGlobalCheckins(currentUserId: string) {
 
   return globalCheckins;
 }
-async function getFollowingCheckins(currentUserId: string) {
+export async function getFollowingCheckins(currentUserId: string) {
   const following = await prisma.userFollow.findMany({
     where: { followerId: currentUserId, status: "ACCEPTED" },
     select: { followingId: true },
