@@ -1,18 +1,16 @@
-/**
- * @jest-environment node
- */
-
 import { prismaMock } from "./mocks/prisma";
 
-// IMPORTANT: This path must exactly match how your code imports prisma
-// If your util imports prisma from "@/prisma/utils/prisma", update the string below accordingly.
 jest.mock("../../../../prisma/utils/prisma", () => ({
   __esModule: true,
   default: prismaMock,
 }));
 
 // Adjust this import to wherever your function lives (e.g., "@/server/feeds")
-import { getLeaderboardData } from "../utils/feedFunctions";
+import {
+  getLeaderboardData,
+  getGlobalCheckins,
+  getFollowingCheckins,
+} from "../utils/feedFunctions";
 
 describe("getLeaderboardData", () => {
   beforeEach(() => {
@@ -65,5 +63,110 @@ describe("getLeaderboardData", () => {
   it("bubbles up prisma errors", async () => {
     prismaMock.user.findMany.mockRejectedValue(new Error("db down"));
     await expect(getLeaderboardData()).rejects.toThrow("db down");
+  });
+});
+
+describe("getGlobalCheckins", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("queries prisma with correct shape and returns checkins", async () => {
+    const userId = "user123";
+    const checkins = [{ id: 1 }, { id: 2 }];
+    prismaMock.checkIn = { findMany: jest.fn().mockResolvedValue(checkins) };
+
+    const result = await getGlobalCheckins(userId);
+
+    expect(prismaMock.checkIn.findMany).toHaveBeenCalledWith({
+      include: {
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+            name: true,
+            isPrivate: true,
+            followers: {
+              where: { followerId: userId },
+              select: { status: true },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 30,
+    });
+    expect(result).toEqual(checkins);
+  });
+
+  it("bubbles up prisma errors", async () => {
+    const userId = "user123";
+    prismaMock.checkIn = {
+      findMany: jest.fn().mockRejectedValue(new Error("fail")),
+    };
+    await expect(getGlobalCheckins(userId)).rejects.toThrow("fail");
+  });
+});
+
+describe("getFollowingCheckins", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns empty array if no following", async () => {
+    const userId = "user123";
+    prismaMock.userFollow = { findMany: jest.fn().mockResolvedValue([]) };
+    const result = await getFollowingCheckins(userId);
+    expect(result).toEqual([]);
+  });
+
+  it("queries prisma with correct shape and returns checkins", async () => {
+    const userId = "user123";
+    const following = [{ followingId: "f1" }, { followingId: "f2" }];
+    const checkins = [{ id: 1 }, { id: 2 }];
+    prismaMock.userFollow = {
+      findMany: jest.fn().mockResolvedValue(following),
+    };
+    prismaMock.checkIn = { findMany: jest.fn().mockResolvedValue(checkins) };
+
+    const result = await getFollowingCheckins(userId);
+
+    expect(prismaMock.userFollow.findMany).toHaveBeenCalledWith({
+      where: { followerId: userId, status: "ACCEPTED" },
+      select: { followingId: true },
+    });
+    expect(prismaMock.checkIn.findMany).toHaveBeenCalledWith({
+      include: {
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+            name: true,
+            isPrivate: true,
+            followers: {
+              where: { followerId: userId },
+              select: { status: true },
+              take: 1,
+            },
+          },
+        },
+      },
+      where: { userId: { in: ["f1", "f2"] } },
+      orderBy: { createdAt: "desc" },
+      take: 30,
+    });
+    expect(result).toEqual(checkins);
+  });
+
+  it("bubbles up prisma errors", async () => {
+    const userId = "user123";
+    const following = [{ followingId: "f1" }];
+    prismaMock.userFollow = {
+      findMany: jest.fn().mockResolvedValue(following),
+    };
+    prismaMock.checkIn = {
+      findMany: jest.fn().mockRejectedValue(new Error("fail")),
+    };
+    await expect(getFollowingCheckins(userId)).rejects.toThrow("fail");
   });
 });
