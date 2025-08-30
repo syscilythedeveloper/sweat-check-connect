@@ -1,4 +1,4 @@
-import { prismaMock } from "./mocks/prisma";
+import { prismaMock } from "../mocks/prisma";
 
 jest.mock("../../../../prisma/utils/prisma", () => ({
   __esModule: true,
